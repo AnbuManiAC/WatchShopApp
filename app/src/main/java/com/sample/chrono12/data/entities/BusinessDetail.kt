@@ -1,5 +1,6 @@
 package com.sample.chrono12.data.entities
 
+import android.icu.number.FractionPrecision
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -12,20 +13,15 @@ import androidx.room.PrimaryKey
             childColumns = ["userId"],
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = Product::class,
-            parentColumns = ["id"],
-            childColumns = ["productId"],
-            onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.RESTRICT
         )
     ]
 )
-data class Cart(
+data class BusinessDetail(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val userId: Int,
-    val productId: Int,
-    var quantity: Int = 1
+    val GSTIN: String,
+    val businessName: String,
+    val entityType: String,
+    val businessType: String
 )

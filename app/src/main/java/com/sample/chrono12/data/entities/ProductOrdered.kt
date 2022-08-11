@@ -3,15 +3,16 @@ package com.sample.chrono12.data.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import java.net.IDN
 
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = User::class,
+            entity = Order::class,
             parentColumns = ["id"],
-            childColumns = ["userId"],
+            childColumns = ["orderId"],
             onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.RESTRICT
         ),
         ForeignKey(
             entity = Product::class,
@@ -22,10 +23,10 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class Cart(
+data class ProductOrdered(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val userId: Int,
+    val orderId: Int,
     val productId: Int,
-    var quantity: Int = 1
+    val quantity: Int = 1
 )

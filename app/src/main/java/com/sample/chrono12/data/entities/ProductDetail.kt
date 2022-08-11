@@ -1,13 +1,24 @@
 package com.sample.chrono12.data.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Product::class,
+            parentColumns = ["id"],
+            childColumns = ["productId"],
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
 data class ProductDetail(
     @PrimaryKey(autoGenerate = true)
-    val productDetailId: Int = 0,
+    val id: Int = 0,
     val productId: Int,
-    val productDetailTitle: String,
-    val productDetailContent: String
+    val title: String,
+    val content: String
 )

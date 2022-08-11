@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class ProductBrand(
-    @PrimaryKey
-    val productBrandId: Int,
-    val productBrandName: String,
-    val productBrandImae: String?
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val brandName: String,
+    val brandImage: String?
 )

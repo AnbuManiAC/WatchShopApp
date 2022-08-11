@@ -4,6 +4,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_large"
+        android:id="@+id/tvTitle"
+        android:text="Business License"
+        android:textSize="32sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tilGstin"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilGstin"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -81,7 +93,7 @@
         android:layout_marginHorizontal="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
         android:hint="@string/type_of_business"
-        app:layout_constraintBottom_toTopOf="@+id/btnSubmitProof"
+        app:layout_constraintBottom_toTopOf="@+id/cbAgree"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tilEntityType"
@@ -96,28 +108,42 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <CheckBox
+        android:id="@+id/cbAgree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
+        app:layout_constraintEnd_toStartOf="@id/tvTerms"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintBottom_toTopOf="@id/btnSubmitProof"
+        app:layout_constraintTop_toBottomOf="@+id/tilBusinessType" />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvTerms"
+        android:text="@string/business_terms_conditions"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/cbAgree"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/cbAgree"/>
+
     <Button
         android:id="@+id/btnSubmitProof"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/margin_large"
+        android:layout_marginTop="@dimen/margin_large"
+        android:layout_marginBottom="@dimen/margin_large"
         android:text="@string/submit"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tilBusinessType"
+        app:layout_constraintTop_toBottomOf="@id/tvTerms"
         app:layout_constraintVertical_bias="0.5" />
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/cbAgree"
-        android:text="Hello welcome all"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginTop="@dimen/margin_small"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

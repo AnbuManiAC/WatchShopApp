@@ -13,9 +13,9 @@ import androidx.room.PrimaryKey
         onDelete = ForeignKey.CASCADE
     )]
 )
-data class SearchSuggestion(
+data class AddressGroup(
     @PrimaryKey(autoGenerate = true)
-    val Id: Int = 0,
-    val userId: Int = 0,
-    val suggestion: String
+    val id: Int = 0,
+    val userId: Int,
+    var groupName: String
 )

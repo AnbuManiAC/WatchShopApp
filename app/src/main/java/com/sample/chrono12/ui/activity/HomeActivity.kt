@@ -7,18 +7,40 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupActionBarWithNavController
+import androidx.navigation.ui.setupWithNavController
+import androidx.room.Index
 import com.sample.chrono12.R
+import com.sample.chrono12.databinding.ActivityMainBinding
 import com.sample.chrono12.viewmodels.OrderViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
-    private lateinit var orderViewModel: OrderViewModel
+    lateinit var orderViewModel: OrderViewModel
+    lateinit var binding: ActivityMainBinding
+    lateinit var navHostFragment: NavHostFragment
+    lateinit var navController: NavController
+    lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.business_registration)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        orderViewModel = ViewModelProvider(this)[OrderViewModel::class.java]
+        navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerHome) as NavHostFragment
+        navController = navHostFragment.findNavController()
+        binding.bottomNav.setupWithNavController(navController)
+
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.cartFragment, R.id.profileFragment))
+        setupActionBarWithNavController(navController, appBarConfiguration)
 
         orderViewModel = ViewModelProvider(this)[OrderViewModel::class.java]
 
@@ -91,19 +113,11 @@ class HomeActivity : AppCompatActivity() {
                 Log.d("Data","\n")
             }
         }
+
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu, menu)
-        return true
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(navController, appBarConfiguration)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.cart -> Toast.makeText(this, "Clicked Cart", Toast.LENGTH_SHORT).show()
-            R.id.fav -> Toast.makeText(this, "Clicked Favorite", Toast.LENGTH_SHORT).show()
-            R.id.search -> Toast.makeText(this, "Clicked Search", Toast.LENGTH_SHORT).show()
-        }
-        return super.onOptionsItemSelected(item)
-    }
 }

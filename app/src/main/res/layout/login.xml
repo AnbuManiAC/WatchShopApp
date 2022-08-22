@@ -45,7 +45,7 @@
             android:layout_marginHorizontal="@dimen/margin_large"
             android:hint="@string/password"
             app:startIconDrawable="@drawable/ic_lock"
-            app:endIconMode="password_toggle"
+            app:endIconMode="clear_text"
             android:textAlignment="viewStart"
             app:layout_constraintBottom_toTopOf="@id/btnLogin"
             app:layout_constraintEnd_toEndOf="parent"

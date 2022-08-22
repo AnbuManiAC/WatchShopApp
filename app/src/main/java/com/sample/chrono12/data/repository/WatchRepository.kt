@@ -3,6 +3,7 @@ package com.sample.chrono12.data.repository
 import com.sample.chrono12.data.dao.WatchDao
 import com.sample.chrono12.data.entities.Category
 import com.sample.chrono12.data.entities.Product
+import com.sample.chrono12.data.entities.SubCategory
 import com.sample.chrono12.data.entities.relations.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,6 +20,10 @@ class WatchRepository(private val watchDao: WatchDao) {
 
     suspend fun getCategory(): List<Category> = withContext(Dispatchers.IO) {
         watchDao.getCategory()
+    }
+
+    suspend fun getSubcategory(): List<SubCategory> = withContext(Dispatchers.IO) {
+        watchDao.getSubCategory()
     }
 
     suspend fun getCategoryWithSubCategory(): List<CategoryWithSubCategory> =
@@ -40,6 +45,11 @@ class WatchRepository(private val watchDao: WatchDao) {
     suspend fun getSubCategoryWithProduct(): List<SubCategoryWithProduct> =
         withContext(Dispatchers.IO){
             watchDao.getSubCategoryWithProduct()
+        }
+
+    suspend fun getProductWithImages(subCategoryId: Int): List<SubCategoryWithProduct> =
+        withContext(Dispatchers.IO){
+            watchDao.getProductWithImages(subCategoryId)
         }
 
     suspend fun getCartWithProductAndImages(): List<CartWithProductAndImages> =

@@ -25,6 +25,9 @@ interface WatchDao {
     @Query("SELECT * FROM Category")
     suspend fun getCategory(): List<Category>
 
+    @Query("SELECT * FROM SubCategory")
+    suspend fun getSubCategory(): List<SubCategory>
+
     @Transaction
     @Query("SELECT * FROM Category")
     suspend fun getCategoryWithSubCategory(): List<CategoryWithSubCategory>
@@ -40,6 +43,9 @@ interface WatchDao {
 
     @Query("SELECT * FROM SubCategory")
     suspend fun getSubCategoryWithProduct(): List<SubCategoryWithProduct>
+
+    @Query("SELECT * FROM SubCategory where id = :subCategoryIds")
+    suspend fun getProductWithImages(subCategoryIds: Int): List<SubCategoryWithProduct>
 
     @Query("SELECT * FROM Cart")
     suspend fun getCartWithProductAndImages(): List<CartWithProductAndImages>

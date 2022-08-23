@@ -8,7 +8,7 @@ import com.sample.chrono12.data.entities.SubCategory
 data class CategoryWithSubCategory(
     @Embedded val category: Category,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "categoryId",
         entityColumn = "categoryId"
     )
     val subCategory: List<SubCategory>

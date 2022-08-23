@@ -2,29 +2,31 @@ package com.sample.chrono12.data.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
     foreignKeys = [
         ForeignKey(
             entity = User::class,
-            parentColumns = ["id"],
+            parentColumns = ["userId"],
             childColumns = ["userId"],
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = Product::class,
-            parentColumns = ["id"],
+            parentColumns = ["productId"],
             childColumns = ["productId"],
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.RESTRICT
         )
-    ]
+    ],
+    indices = [Index(value = ["userId", "productId"], unique = true)]
 )
-data class Favorite(
+data class WishList(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val wishListId: Int = 0,
     val userId: Int,
     val productId: Int
 )

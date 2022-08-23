@@ -8,7 +8,7 @@ import com.sample.chrono12.data.entities.ProductImage
 data class ProductWithImages(
     @Embedded val product: Product,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "productId",
         entityColumn = "productId"
     )
     val productImage: List<ProductImage>

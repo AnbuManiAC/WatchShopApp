@@ -18,12 +18,12 @@ import androidx.room.Index
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.ActivityMainBinding
 import com.sample.chrono12.viewmodels.OrderViewModel
+import com.sample.chrono12.viewmodels.ProductCategoryViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
-    lateinit var orderViewModel: OrderViewModel
     lateinit var binding: ActivityMainBinding
     lateinit var navHostFragment: NavHostFragment
     lateinit var navController: NavController
@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        orderViewModel = ViewModelProvider(this)[OrderViewModel::class.java]
         navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerHome) as NavHostFragment
         navController = navHostFragment.findNavController()
         binding.bottomNav.setupWithNavController(navController)
@@ -42,77 +41,8 @@ class HomeActivity : AppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.cartFragment, R.id.profileFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        orderViewModel = ViewModelProvider(this)[OrderViewModel::class.java]
 
-        orderViewModel.setProduct(1)
 
-        orderViewModel.getProduct().observe(this){
-            Log.d("Data", it.toString())
-        }
-
-        orderViewModel.setCategoryWithSubCategory()
-
-        orderViewModel.getCategoryWithSubCategory().observe(this){
-            it.forEach {
-                Log.d("Data", it.toString())
-                Log.d("Data", "\n")
-            }
-        }
-
-        orderViewModel.setProductWithImages()
-
-        orderViewModel.getProductWithImages().observe(this){
-            it.forEach {
-                Log.d("Data", it.toString())
-                Log.d("Data", "\n")
-            }
-        }
-
-        orderViewModel.setProductWithSubCategory()
-
-        orderViewModel.getProductWithSubCategory().observe(this){
-            it.forEach {
-                Log.d("Data", it.toString())
-                Log.d("Data", "\n")
-            }
-        }
-
-        orderViewModel.setSubCategoryWithProduct()
-
-        orderViewModel.getSubCategoryWithProduct().observe(this){
-            it.forEach {
-                Log.d("Data", it.toString())
-                Log.d("Data", "\n")
-            }
-        }
-
-        orderViewModel.setCartWithProductAndImages()
-
-        orderViewModel.getCartWithProductAndImages().observe(this){
-            it.forEach {
-                Log.d("Data", it.toString()+"\n")
-            }
-        }
-
-        orderViewModel.setBrandWithProductAndImages()
-
-        orderViewModel.getBrandWithProductAndImages().observe(this){
-            it.forEach {
-                Log.d("Data", it.toString())
-                Log.d("Data", "\n")
-                Log.d("Data", "\n")
-            }
-        }
-
-        orderViewModel.setProductOrderedWithProductAndImages()
-
-        orderViewModel.getProductOrderedWithProductAndImages().observe(this){
-            it.forEach {
-                Log.d("Data", it.toString())
-                Log.d("Data","\n")
-                Log.d("Data","\n")
-            }
-        }
 
     }
 

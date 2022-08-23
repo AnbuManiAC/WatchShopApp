@@ -25,7 +25,7 @@ class CategoriesAdapter(
 
         fun bind(category: SubCategory){
             tvCategoryName.text = category.name
-            ivCategoryImage.load(category.image){
+            ivCategoryImage.load(category.imageUrl){
                 crossfade(true)
                 placeholder(R.mipmap.ic_app_icon_round)
             }

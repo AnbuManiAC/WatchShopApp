@@ -18,8 +18,4 @@ class ProfileFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.logout_menu, menu)
     }
-
-
-
-
 }

@@ -29,7 +29,6 @@ class ProductCategoryViewModel @Inject constructor(
     }
 
 
-
     fun setCategory() {
         viewModelScope.launch { categoryList.postValue(watchRepository.getCategory()) }
     }

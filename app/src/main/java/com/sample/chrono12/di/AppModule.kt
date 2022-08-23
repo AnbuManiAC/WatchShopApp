@@ -14,7 +14,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object  AppModule {
 
     @Singleton
     @Provides
@@ -23,7 +23,7 @@ object AppModule {
             app,
             WatchShopDatabase::class.java,
             "watch_shop"
-        ).createFromAsset("watch_shop_db").build()
+        ).createFromAsset("watch_shop_database").build()
     }
 
     @Singleton

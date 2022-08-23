@@ -2,20 +2,26 @@ package com.sample.chrono12.data.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
+import java.sql.Timestamp
 
 @Entity(
     foreignKeys = [ForeignKey(
         entity = User::class,
-        parentColumns = ["id"],
+        parentColumns = ["userId"],
         childColumns = ["userId"],
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [
+        Index(value = ["userId", "suggestion"], unique = true)
+    ]
 )
 data class SearchSuggestion(
     @PrimaryKey(autoGenerate = true)
-    val Id: Int = 0,
+    val searchSuggestionId: Int = 0,
     val userId: Int = 0,
-    val suggestion: String
+    val suggestion: String,
+    val timestamp: Long
 )

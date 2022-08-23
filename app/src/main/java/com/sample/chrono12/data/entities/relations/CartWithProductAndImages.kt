@@ -11,7 +11,7 @@ data class CartWithProductAndImages(
     @Relation(
         parentColumn = "productId",
         entity = Product::class,
-        entityColumn = "id"
+        entityColumn = "productId"
     )
     val productWithImages: ProductWithImages
 )

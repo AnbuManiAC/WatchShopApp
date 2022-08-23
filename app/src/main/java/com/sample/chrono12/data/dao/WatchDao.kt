@@ -13,7 +13,7 @@ interface WatchDao {
     @Query("SELECT * FROM Product")
     suspend fun getProducts(): List<Product>
 
-    @Query("SELECT * FROM Product WHERE id = :id")
+    @Query("SELECT * FROM Product WHERE productId = :id")
     suspend fun getProduct(id: Int): Product
 
     @Query("SELECT * FROM Product")
@@ -35,7 +35,7 @@ interface WatchDao {
     @Query("SELECT * FROM ProductBrand")
     suspend fun getBrand(): List<ProductBrand>
 
-    @Query("SELECT * FROM ProductDetail WHERE productId = :productId ORDER BY id")
+    @Query("SELECT * FROM ProductDetail WHERE productId = :productId ORDER BY productDetailId")
     suspend fun getProductDetail(productId: Int): ProductDetail
 
     @Query("SELECT * FROM Product")
@@ -44,7 +44,7 @@ interface WatchDao {
     @Query("SELECT * FROM SubCategory")
     suspend fun getSubCategoryWithProduct(): List<SubCategoryWithProduct>
 
-    @Query("SELECT * FROM SubCategory where id = :subCategoryIds")
+    @Query("SELECT * FROM SubCategory where subCategoryId = :subCategoryIds")
     suspend fun getProductWithImages(subCategoryIds: Int): List<SubCategoryWithProduct>
 
     @Query("SELECT * FROM Cart")

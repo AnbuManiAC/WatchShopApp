@@ -9,19 +9,18 @@ import com.sample.chrono12.data.entities.*
 @Database(
     entities = [
         Address::class,
+        AddressAndGroupCrossRef::class,
         AddressGroup::class,
-        BusinessDetail::class,
         Cart::class,
         Category::class,
-        Favorite::class,
+        WishList::class,
         Order::class,
         ProductOrdered::class,
         Product::class,
         ProductBrand::class,
         ProductDetail::class,
         ProductImage::class,
-        ProductReview::class,
-        ProductCategory::class,
+        ProductCategoryCrossRef::class,
         SearchSuggestion::class,
         SubCategory::class,
         User::class

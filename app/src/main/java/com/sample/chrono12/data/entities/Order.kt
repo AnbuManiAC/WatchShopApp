@@ -2,32 +2,29 @@ package com.sample.chrono12.data.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
     foreignKeys = [
         ForeignKey(
             entity = User::class,
-            parentColumns = ["id"],
+            parentColumns = ["userId"],
             childColumns = ["userId"],
             onUpdate = ForeignKey.CASCADE,
             onDelete = ForeignKey.SET_NULL
-        ),
-        ForeignKey(
-            entity = Address::class,
-            parentColumns = ["id"],
-            childColumns = ["addressId"],
-            onUpdate = ForeignKey.CASCADE,
-            onDelete = ForeignKey.RESTRICT
         )
-    ]
+    ],
+    indices = [Index(value = ["bulkOrderId", "userId", "timestamp", "addressInfo"], unique = true)]
 )
 data class Order(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val orderId: Int = 0,
+    val bulkOrderId: Int,
     val userId: Int,
-    val productCount: Int,
-    val dateTime: Long,
+    val timestamp: Long,
+    val actualTotal: Float,
     val totalPrice: Float,
-    val addressId: Int
+    val addressInfo: String,
+    val orderStatus: String
 )

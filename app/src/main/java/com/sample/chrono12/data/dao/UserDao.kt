@@ -19,7 +19,7 @@ interface UserDao {
     @Query("SELECT EXISTS(SELECT 1 FROM User WHERE email = :emailId AND password = :password)")
     suspend fun validateUser(emailId: String, password: String): Int
 
-    @Query("SELECT id FROM User WHERE email = :emailId")
+    @Query("SELECT userId FROM User WHERE email = :emailId")
     suspend fun getUserId(emailId: Int): Int
 
 

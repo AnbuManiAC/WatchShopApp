@@ -10,7 +10,7 @@ data class ProductOrderedWithProductAndImages(
     @Relation(
         parentColumn = "productId",
         entity = Product::class,
-        entityColumn = "id"
+        entityColumn = "productId"
     )
     val productWithImages: ProductWithImages
 )

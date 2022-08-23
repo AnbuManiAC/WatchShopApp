@@ -8,7 +8,7 @@ import com.sample.chrono12.data.entities.ProductBrand
 data class BrandWithProductAndImages(
     @Embedded val brand: ProductBrand,
     @Relation(
-        parentColumn = "id",
+        parentColumn = "brandId",
         entity = Product::class,
         entityColumn = "brandId"
     )

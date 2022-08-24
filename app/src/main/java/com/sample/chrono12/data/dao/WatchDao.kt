@@ -19,6 +19,17 @@ interface WatchDao {
     @Query("SELECT * FROM Product")
     suspend fun getProductWithImages(): List<ProductWithImages>
 
+    @Query("SELECT * FROM ProductBrand WHERE brandId = :brandId")
+    suspend fun getProductBrand(brandId: Int): ProductBrand
+
+    @Transaction
+    @Query("SELECT * FROM Product where productId = :productId")
+    suspend fun getProductWithBrandAndImages(productId: Int): ProductWithBrandAndImages
+
+    @Transaction
+    @Query("SELECT * FROM Product where productId = :productId")
+    suspend fun getProductWithImages(productId: Int): ProductWithImages
+
     @Query("SELECT imageUrl FROM ProductImage WHERE productId = :productId ORDER BY imageIndex")
     suspend fun getProductsImages(productId: Int): List<String>
 
@@ -36,16 +47,17 @@ interface WatchDao {
     suspend fun getBrand(): List<ProductBrand>
 
     @Query("SELECT * FROM ProductDetail WHERE productId = :productId ORDER BY productDetailId")
-    suspend fun getProductDetail(productId: Int): ProductDetail
+    suspend fun getProductDetail(productId: Int): List<ProductDetail>
 
     @Query("SELECT * FROM Product")
     suspend fun getProductWithSubCategory(): List<ProductWithSubCategory>
 
-    @Query("SELECT * FROM SubCategory")
-    suspend fun getSubCategoryWithProduct(): List<SubCategoryWithProduct>
+    @Transaction
+    @Query("SELECT * FROM SubCategory where subCategoryId = :subCategoryId")
+    suspend fun getSubCategoryWithProduct(subCategoryId: Int): SubCategoryWithProduct
 
     @Query("SELECT * FROM SubCategory where subCategoryId = :subCategoryIds")
-    suspend fun getProductWithImages(subCategoryIds: Int): List<SubCategoryWithProduct>
+    suspend fun getCategoryProductWithImages(subCategoryIds: Int): List<SubCategoryWithProduct>
 
     @Query("SELECT * FROM Cart")
     suspend fun getCartWithProductAndImages(): List<CartWithProductAndImages>
@@ -53,6 +65,6 @@ interface WatchDao {
     @Query("SELECT * FROM ProductOrdered")
     suspend fun getProductOrderedWithProductAndImages(): List<ProductOrderedWithProductAndImages>
 
-    @Query("SELECT * FROM ProductBrand")
-    suspend fun getBrandWithProductAndImages(): List<BrandWithProductAndImages>
+    @Query("SELECT * FROM Product where brandId = :brandId")
+    suspend fun getBrandwithProductAndImages(brandId: Int): List<ProductWithBrandAndImages>
 }

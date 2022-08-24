@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import hilt_aggregated_deps._com_sample_chrono12_viewmodels_ProductCategoryViewModel_HiltModules_KeyModule
 
 @Entity(
     foreignKeys = [

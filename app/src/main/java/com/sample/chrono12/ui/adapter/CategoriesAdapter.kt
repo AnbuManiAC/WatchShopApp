@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.PrimaryKey
 import coil.load
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.SubCategory
@@ -16,7 +17,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 
 class CategoriesAdapter(
-    private val categories: List<SubCategory>
+    private val categories: List<SubCategory>,
+    private val onClickListener: OnClickCategory
 ): RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>()  {
 
     inner class CategoryViewHolder(val view: View): RecyclerView.ViewHolder(view){
@@ -24,6 +26,7 @@ class CategoriesAdapter(
         val ivCategoryImage = view.findViewById<ImageView>(R.id.ivCategory)
 
         fun bind(category: SubCategory){
+            view.setOnClickListener { onClickListener.onClick(category) }
             tvCategoryName.text = category.name
             ivCategoryImage.load(category.imageUrl){
                 crossfade(true)
@@ -43,5 +46,9 @@ class CategoriesAdapter(
 
     override fun getItemCount(): Int {
         return categories.size
+    }
+
+    fun interface OnClickCategory{
+        fun onClick(category: SubCategory)
     }
 }

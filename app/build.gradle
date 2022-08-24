@@ -81,4 +81,5 @@ dependencies {
     //coil
     implementation 'io.coil-kt:coil:1.4.0'
 
+
 }

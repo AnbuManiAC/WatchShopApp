@@ -1,63 +1,116 @@
 package com.sample.chrono12.ui.fragment
 
+import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.sample.chrono12.R
+import com.sample.chrono12.data.entities.ProductDetail
+import com.sample.chrono12.data.entities.ProductImage
+import com.sample.chrono12.data.entities.relations.ProductWithBrand
+import com.sample.chrono12.databinding.FragmentProductBinding
 import com.sample.chrono12.ui.adapter.ImageSliderAdapter
+import com.sample.chrono12.ui.adapter.ProductDetailsAdapter
 import com.sample.chrono12.ui.adapter.ThumbnailAdapter
+import com.sample.chrono12.viewmodels.ProductViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProductFragment : Fragment() {
 
-    private lateinit var imageSliderAdapter: ImageSliderAdapter
-    private lateinit var thumbnailAdapter: ThumbnailAdapter
+    private val navArgs by navArgs<ProductFragmentArgs>()
+    private lateinit var binding: FragmentProductBinding
+    private lateinit var productViewModel: ProductViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product, container, false)
+        binding = FragmentProductBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val imageList = listOf(
-            "https://i.picsum.photos/id/0/5616/3744.jpg?hmac=3GAAioiQziMGEtLbfrdbcoenXoWAW-zlyEAMkfEdBzQ",
-            "https://i.picsum.photos/id/10/2500/1667.jpg?hmac=J04WWC_ebchx3WwzbM-Z4_KC_LeLBWr5LZMaAkWkF68",
-            "https://i.picsum.photos/id/1001/5616/3744.jpg?hmac=38lkvX7tHXmlNbI0HzZbtkJ6_wpWyqvkX4Ty6vYElZE",
-            "https://i.picsum.photos/id/1004/5616/3744.jpg?hmac=Or7EJnz-ky5bsKa9_frdDcDCR9VhCP8kMnbZV6-WOrY",
-            "https://i.picsum.photos/id/101/2621/1747.jpg?hmac=cu15YGotS0gIYdBbR1he5NtBLZAAY6aIY5AbORRAngs",
-            "https://i.picsum.photos/id/1010/5184/3456.jpg?hmac=7SE0MNAloXpJXDxio2nvoshUx9roGIJ_5pZej6qdxXs",
-            "https://i.picsum.photos/id/1013/4256/2832.jpg?hmac=UmYgZfqY_sNtHdug0Gd73bHFyf1VvzFWzPXSr5VTnDA",
-            "https://i.picsum.photos/id/1016/3844/2563.jpg?hmac=WEryKFRvTdeae2aUrY-DHscSmZuyYI9jd_-p94stBvc"
+        productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
 
-        )
-
-        val vpImage = view.findViewById<ViewPager2>(R.id.vp_image)
-        val rvThumbnail = view.findViewById<RecyclerView>(R.id.rv_thumbnail)
-
-        imageSliderAdapter = ImageSliderAdapter(imageList)
-        vpImage.adapter = imageSliderAdapter
-        thumbnailAdapter = ThumbnailAdapter(imageList){
-            vpImage.currentItem = imageList.indexOf(it)
+        productViewModel.setProduct(navArgs.productId)
+        Log.d("dataaa", "Check")
+        productViewModel.getProduct().observe(viewLifecycleOwner) {
+            setProductInfo(it.productWithBrand)
+            setupImageAdapters(it.images)
+            Log.d("dataaa", "Check1")
+        }
+        productViewModel.getProductDetail().observe(viewLifecycleOwner) { productDetailList ->
+            productDetailList?.let { setupProductDetailAdapter(productDetailList) }
         }
 
-        rvThumbnail.adapter = thumbnailAdapter
-        rvThumbnail.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+    }
 
-        vpImage.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+    private fun setProductInfo(productWithBrand: ProductWithBrand) {
+        binding.tvProductName.text = productWithBrand.product.name
+        binding.tvBrandName.text = productWithBrand.brand.brandName
+        binding.tvCurrentPrice.text = "₹" + productWithBrand.product.currentPrice.toInt().toString()
+        binding.rbRating.rating = productWithBrand.product.totalRating!!
+        if(productWithBrand.product.originalPrice==productWithBrand.product.currentPrice){
+            binding.tvOriginalPrice.visibility = View.GONE
+            binding.tvOffPercent.visibility = View.GONE
+        } else{
+            binding.tvOriginalPrice.apply {
+                text = "₹" + productWithBrand.product.originalPrice.toInt().toString()
+                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            }
+            binding.tvOffPercent.text =
+                "${((productWithBrand.product.originalPrice - productWithBrand.product.currentPrice) / productWithBrand.product.originalPrice * 100).toInt()}% Off"
+        }
+        if (productWithBrand.product.stockCount <= 10) {
+            binding.tvStockAlert.apply {
+                if(productWithBrand.product.stockCount==0){
+                    text = "Currently out of stock"
+                } else{
+                    text = "Only ${productWithBrand.product.stockCount} left in stock - Order soon."
+                }
+                visibility = View.VISIBLE
+            }
+        }
+
+    }
+
+    private fun setupImageAdapters(productImage: List<ProductImage>) {
+        val imageList = mutableListOf<String>()
+        productImage.forEach {
+            imageList.add(it.imageUrl)
+        }
+        binding.imageSlider.vpImage.adapter = ImageSliderAdapter(imageList)
+        val thumbnailAdapter = ThumbnailAdapter(imageList) { imageUrl ->
+            binding.imageSlider.vpImage.currentItem = imageList.indexOf(imageUrl)
+        }
+        binding.imageSlider.rvThumbnail.adapter = thumbnailAdapter
+        binding.imageSlider.rvThumbnail.layoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        binding.imageSlider.vpImage.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 thumbnailAdapter.updateSelectedPosition(position)
-                rvThumbnail.smoothScrollToPosition(position)
+                binding.imageSlider.rvThumbnail.smoothScrollToPosition(position)
             }
         })
+    }
+
+    private fun setupProductDetailAdapter(productDetailList: List<ProductDetail>) {
+        val adapter = ProductDetailsAdapter(productDetailList)
+        productDetailList.forEach {
+            Log.d("Detail", "${it.title} -> ${it.content}")
+        }
+        binding.rvProductDetails.adapter = adapter
+        binding.rvProductDetails.layoutManager = LinearLayoutManager(activity)
     }
 
 }

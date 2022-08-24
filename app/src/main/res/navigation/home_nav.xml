@@ -18,11 +18,11 @@
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_imageSlideFragment"
-            app:destination="@id/imageSlideFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_productFragment"
             app:destination="@id/productFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_productListFragment"
+            app:destination="@id/productListFragment" />
     </fragment>
 
     <fragment
@@ -63,15 +63,37 @@
 
     </fragment>
     <fragment
-        android:id="@+id/imageSlideFragment"
-        android:name="com.sample.chrono12.ui.fragment.ImageSlideFragment"
-        android:label="Image slider"
-        tools:layout="@layout/fragment_image_slide" />
-    <fragment
         android:id="@+id/productFragment"
         android:name="com.sample.chrono12.ui.fragment.ProductFragment"
         android:label="Product"
-        tools:layout="@layout/fragment_product" />
+        tools:layout="@layout/fragment_product">
+        <argument
+            android:name="productId"
+            android:defaultValue="0"
+            app:argType="integer"/>
+    </fragment>
+    <fragment
+        android:id="@+id/productListFragment"
+        android:name="com.sample.chrono12.ui.fragment.ProductListFragment"
+        android:label="Product List"
+        tools:layout="@layout/fragment_product_list" >
+        <argument
+            android:name="subCategoryId"
+            android:defaultValue="0"
+            app:argType="integer"/>
+        <argument
+            android:name="brandId"
+            android:defaultValue="0"
+            app:argType="integer"/>
+        <argument
+            android:name="title"
+            android:defaultValue="Product List"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_productListFragment_to_productFragment"
+            app:destination="@id/productFragment" />
+
+    </fragment>
 
 
 </navigation>

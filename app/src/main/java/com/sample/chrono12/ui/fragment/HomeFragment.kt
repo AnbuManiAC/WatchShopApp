@@ -1,50 +1,59 @@
 package com.sample.chrono12.ui.fragment
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.R
+import com.sample.chrono12.data.entities.ProductBrand
+import com.sample.chrono12.data.entities.SubCategory
+import com.sample.chrono12.databinding.FragmentHomeBinding
+import com.sample.chrono12.ui.adapter.BrandsAdapter
 import com.sample.chrono12.ui.adapter.CategoriesAdapter
-import com.sample.chrono12.viewmodels.ProductCategoryViewModel
-import com.sample.chrono12.viewmodels.ProductViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.sample.chrono12.viewmodels.CategoryProductListViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
+    lateinit var binding: FragmentHomeBinding
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mProductCategoryViewModel: ProductCategoryViewModel
+    private val mProductListViewModel by lazy { ViewModelProvider(requireActivity())[CategoryProductListViewModel::class.java] }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(layoutInflater)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mRecyclerView = view.findViewById(R.id.rvCategories)
-        mProductCategoryViewModel = ViewModelProvider(requireActivity())[ProductCategoryViewModel::class.java]
-
-        mProductCategoryViewModel.getSubCategory().observe(viewLifecycleOwner){
-            val categoryAdapter = CategoriesAdapter(it)
-            mRecyclerView.adapter = categoryAdapter
+        mProductListViewModel.getSubCategory().observe(viewLifecycleOwner){
+            setupCategoriesAdapter(it)
         }
-        mRecyclerView.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL,false)
+
+        mProductListViewModel.getBrand().observe(viewLifecycleOwner){
+            setupBrandsAdapter(it)
+        }
+
+
 //        mRecyclerView.layoutManager = GridLayoutManager(activity,3)
     }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.search_fav_menu, menu)
@@ -53,7 +62,7 @@ class HomeFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId){
             R.id.searchFragment -> {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToProductFragment())
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
                 true
             }
             R.id.favoriteFragment -> {
@@ -62,6 +71,28 @@ class HomeFragment : Fragment() {
             }
 
             else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setupCategoriesAdapter(subCategories: List<SubCategory>){
+        val categoryAdapter = CategoriesAdapter(subCategories){ subCategory->
+            mProductListViewModel.setProductListTitle(subCategory.name)
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(subCategoryId = subCategory.subCategoryId, title = subCategory.name))
+        }
+        binding.rvCategories.apply {
+            this.adapter = categoryAdapter
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
+    private fun setupBrandsAdapter(brands: List<ProductBrand>) {
+        val brandAdapter = BrandsAdapter(brands){ brand ->
+            mProductListViewModel.setProductListTitle(brand.brandName+"Watch")
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(brandId = brand.brandId, title = brand.brandName))
+        }
+        binding.rvBrands.apply {
+            this.adapter = brandAdapter
+            layoutManager = GridLayoutManager(activity, 3)
         }
     }
 

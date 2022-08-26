@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
 import com.sample.chrono12.data.entities.Category
+import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.SubCategory
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
@@ -17,7 +18,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CategoryProductListViewModel @Inject constructor(
+class ProductListViewModel @Inject constructor(
     private val watchRepository: WatchRepository
 ): ViewModel() {
 
@@ -27,6 +28,10 @@ class CategoryProductListViewModel @Inject constructor(
 
     private val brandList = MutableLiveData<List<ProductBrand>>()
     private val brandWithProductList = MutableLiveData<List<ProductWithBrandAndImages>>()
+
+    private val topRatedWatchesList = MutableLiveData<List<ProductWithBrandAndImages>>()
+
+    private val allWatchesList = MutableLiveData<List<ProductWithBrandAndImages>>()
 
     private var productListTitle: String? = null
 
@@ -67,10 +72,22 @@ class CategoryProductListViewModel @Inject constructor(
 
     fun getBrandWithProductList(): LiveData<List<ProductWithBrandAndImages>> = brandWithProductList
 
+    fun setTopRatedWacthes(count: Int){
+        viewModelScope.launch { topRatedWatchesList.postValue(watchRepository.getTopRatedWatches(count)) }
+    }
+
+    fun getTopRatedWatches(): LiveData<List<ProductWithBrandAndImages>> = topRatedWatchesList
+
     fun setProductListTitle(title: String){
         productListTitle = title
     }
 
     fun getProductListTitle(): String = productListTitle.toString()
+
+    fun setAllWatches(){
+        viewModelScope.launch { allWatchesList.postValue(watchRepository.getAllWatches()) }
+    }
+
+    fun getAllWatches(): LiveData<List<ProductWithBrandAndImages>> = allWatchesList
 
 }

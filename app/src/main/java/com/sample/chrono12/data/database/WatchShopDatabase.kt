@@ -1,5 +1,6 @@
 package com.sample.chrono12.data.database
 
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.sample.chrono12.data.dao.UserDao
@@ -26,7 +27,8 @@ import com.sample.chrono12.data.entities.*
         User::class
     ],
     version = 1,
-    exportSchema = true
+    exportSchema = false
+
     )
 abstract class WatchShopDatabase : RoomDatabase() {
 

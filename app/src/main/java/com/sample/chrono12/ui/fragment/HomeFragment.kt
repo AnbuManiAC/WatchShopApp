@@ -6,24 +6,23 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.SubCategory
+import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.databinding.FragmentHomeBinding
 import com.sample.chrono12.ui.adapter.BrandsAdapter
 import com.sample.chrono12.ui.adapter.CategoriesAdapter
-import com.sample.chrono12.viewmodels.CategoryProductListViewModel
+import com.sample.chrono12.ui.adapter.ProductListAdapter
+import com.sample.chrono12.viewmodels.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
-    private lateinit var mRecyclerView: RecyclerView
-    private val mProductListViewModel by lazy { ViewModelProvider(requireActivity())[CategoryProductListViewModel::class.java] }
+    private val mProductListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +34,7 @@ class HomeFragment : Fragment() {
     ): View? {
         setHasOptionsMenu(true)
         binding = FragmentHomeBinding.inflate(layoutInflater)
+        mProductListViewModel.setTopRatedWacthes(10)
         return binding.root
     }
 
@@ -49,10 +49,17 @@ class HomeFragment : Fragment() {
             setupBrandsAdapter(it)
         }
 
+        mProductListViewModel.getTopRatedWatches().observe(viewLifecycleOwner){
+            setupTopWatchesAdapter(it)
+        }
+
+        binding.tvAllWatches.setOnClickListener(View.OnClickListener {
+            mProductListViewModel.setProductListTitle("All Watches")
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment())
+        })
 
 //        mRecyclerView.layoutManager = GridLayoutManager(activity,3)
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -66,7 +73,7 @@ class HomeFragment : Fragment() {
                 true
             }
             R.id.favoriteFragment -> {
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToFavoriteFragment())
+                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToWishlistFragment())
                 true
             }
 
@@ -76,8 +83,8 @@ class HomeFragment : Fragment() {
 
     private fun setupCategoriesAdapter(subCategories: List<SubCategory>){
         val categoryAdapter = CategoriesAdapter(subCategories){ subCategory->
-            mProductListViewModel.setProductListTitle(subCategory.name)
-            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(subCategoryId = subCategory.subCategoryId, title = subCategory.name))
+            mProductListViewModel.setProductListTitle(subCategory.name+"es")
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(subCategoryId = subCategory.subCategoryId))
         }
         binding.rvCategories.apply {
             this.adapter = categoryAdapter
@@ -87,12 +94,22 @@ class HomeFragment : Fragment() {
 
     private fun setupBrandsAdapter(brands: List<ProductBrand>) {
         val brandAdapter = BrandsAdapter(brands){ brand ->
-            mProductListViewModel.setProductListTitle(brand.brandName+"Watch")
-            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(brandId = brand.brandId, title = brand.brandName))
+            mProductListViewModel.setProductListTitle(brand.brandName+" Watches")
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(brandId = brand.brandId))
         }
         binding.rvBrands.apply {
             this.adapter = brandAdapter
-            layoutManager = GridLayoutManager(activity, 3)
+            layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        }
+    }
+
+    private fun setupTopWatchesAdapter(topWacthes: List<ProductWithBrandAndImages>) {
+        val topWacthesAdapter = ProductListAdapter(topWacthes){ product ->
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductFragment(product.productId))
+        }
+        binding.rvTopWatches.apply {
+            this.adapter = topWacthesAdapter
+            layoutManager = LinearLayoutManager(activity)
         }
     }
 

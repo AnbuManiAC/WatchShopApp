@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_homeFragment_to_productListFragment"
             app:destination="@id/productListFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_wishlistFragment"
+            app:destination="@id/wishlistFragment" />
     </fragment>
 
     <fragment
@@ -37,14 +40,14 @@
         <action
             android:id="@+id/action_cartFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.sample.chrono12.ui.fragment.ProfileFragment"
-        android:label="Profile"
-        tools:layout="@layout/fragment_profile">
-
+        <action
+            android:id="@+id/action_cartFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
+        <action
+            android:id="@+id/action_cartFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 
     <fragment
@@ -56,11 +59,20 @@
     </fragment>
 
     <fragment
-        android:id="@+id/favoriteFragment"
-        android:name="com.sample.chrono12.ui.fragment.FavoriteFragment"
-        android:label="Favorite"
-        tools:layout="@layout/fragment_favorite">
+        android:id="@+id/wishlistFragment"
+        android:name="com.sample.chrono12.ui.fragment.WishListFragment"
+        android:label="Wishlist"
+        tools:layout="@layout/fragment_wishlist">
 
+        <action
+            android:id="@+id/action_wishlistFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
+        <action
+            android:id="@+id/action_wishlistFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_wishlistFragment_to_productFragment"
+            app:destination="@id/productFragment" />
     </fragment>
     <fragment
         android:id="@+id/productFragment"
@@ -71,6 +83,9 @@
             android:name="productId"
             android:defaultValue="0"
             app:argType="integer"/>
+        <action
+            android:id="@+id/action_productFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
     </fragment>
     <fragment
         android:id="@+id/productListFragment"
@@ -85,15 +100,51 @@
             android:name="brandId"
             android:defaultValue="0"
             app:argType="integer"/>
-        <argument
-            android:name="title"
-            android:defaultValue="Product List"
-            app:argType="string"/>
         <action
             android:id="@+id/action_productListFragment_to_productFragment"
             app:destination="@id/productFragment" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.sample.chrono12.ui.fragment.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_profileFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_logoutDialog"
+            app:destination="@id/logoutDialog" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/logInFragment"
+        android:name="com.sample.chrono12.ui.fragment.LogInFragment"
+        android:label="Log In"
+        tools:layout="@layout/fragment_log_in" >
+        <action
+            android:id="@+id/action_logInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_logInFragment_to_profileFragment3"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.sample.chrono12.ui.fragment.SignUpFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_logInFragment"
+            app:destination="@id/logInFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/logoutDialog"
+        android:name="com.sample.chrono12.ui.fragment.dialog.LogoutDialog"
+        android:label="LogoutDialog" />
 
 
 </navigation>

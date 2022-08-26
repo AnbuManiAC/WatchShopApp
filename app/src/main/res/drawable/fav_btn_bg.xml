@@ -5,6 +5,6 @@
         android:state_checked="true"/>
 
     <item android:drawable="@drawable/ic_fav_unselected"
-        android:state_checked="false"/>
+        android:state_checked="false" />
 
 </selector>

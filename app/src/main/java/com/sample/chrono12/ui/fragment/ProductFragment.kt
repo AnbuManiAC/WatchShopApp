@@ -8,17 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
 import com.sample.chrono12.data.entities.ProductDetail
 import com.sample.chrono12.data.entities.ProductImage
+import com.sample.chrono12.data.entities.WishList
 import com.sample.chrono12.data.entities.relations.ProductWithBrand
 import com.sample.chrono12.databinding.FragmentProductBinding
 import com.sample.chrono12.ui.adapter.ImageSliderAdapter
 import com.sample.chrono12.ui.adapter.ProductDetailsAdapter
 import com.sample.chrono12.ui.adapter.ThumbnailAdapter
+import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.ProductViewModel
+import com.sample.chrono12.viewmodels.UserViewModel
+import com.sample.chrono12.viewmodels.WishListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -27,6 +32,9 @@ class ProductFragment : Fragment() {
     private val navArgs by navArgs<ProductFragmentArgs>()
     private lateinit var binding: FragmentProductBinding
     private lateinit var productViewModel: ProductViewModel
+    private val cartViewModel by lazy { ViewModelProvider(requireActivity())[CartViewModel::class.java] }
+    private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
+    private val wishListViewModel by lazy { ViewModelProvider(requireActivity())[WishListViewModel::class.java] }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,17 +50,46 @@ class ProductFragment : Fragment() {
         productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
 
         productViewModel.setProduct(navArgs.productId)
-        Log.d("dataaa", "Check")
         productViewModel.getProduct().observe(viewLifecycleOwner) {
             setProductInfo(it.productWithBrand)
             setupImageAdapters(it.images)
-            Log.d("dataaa", "Check1")
+            wishListViewModel.checkProductInUserWishList(it.productWithBrand.product.productId, userViewModel.getLoggedInUser().toInt())
+        }
+        wishListViewModel.isProductInUserWishList().observe(viewLifecycleOwner){
+            productViewModel.setIsProductInUserWishList(it).also {
+                setupWishListToggleListener()
+            }
         }
         productViewModel.getProductDetail().observe(viewLifecycleOwner) { productDetailList ->
             productDetailList?.let { setupProductDetailAdapter(productDetailList) }
         }
 
     }
+
+    private fun setupWishListToggleListener() {
+        binding.favBtn.setOnCheckedChangeListener{ button, isChecked ->
+            if(userViewModel.getIsUserLoggedIn()){
+                editUserWishList(isChecked)
+            }
+            else{
+                button.isChecked = false
+                Navigation.findNavController(requireView()).navigate(ProductFragmentDirections.actionProductFragmentToLogInFragment())
+            }
+        }
+    }
+
+    private fun editUserWishList(isChecked: Boolean) {
+        val productId = productViewModel.getProduct().value!!.productWithBrand.product.productId
+        val userId = userViewModel.getLoggedInUser().toInt()
+        val wishList = WishList(productId = productId, userId = userId)
+        if(isChecked){
+            wishListViewModel.addProductToUserWishList(wishList)
+        }else{
+            wishListViewModel.removeProductFromUserWishList(productId , userId)
+        }
+        productViewModel.setIsProductInUserWishList(isChecked)
+    }
+
 
     private fun setProductInfo(productWithBrand: ProductWithBrand) {
         binding.tvProductName.text = productWithBrand.product.name
@@ -74,11 +111,17 @@ class ProductFragment : Fragment() {
             binding.tvStockAlert.apply {
                 if(productWithBrand.product.stockCount==0){
                     text = "Currently out of stock"
+                    binding.btnAddToCart.visibility = View.GONE
                 } else{
                     text = "Only ${productWithBrand.product.stockCount} left in stock - Order soon."
                 }
                 visibility = View.VISIBLE
             }
+        }
+
+        binding.btnAddToCart.setOnClickListener {
+            binding.btnAddToCart.text = "View Cart"
+
         }
 
     }

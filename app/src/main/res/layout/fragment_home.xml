@@ -23,14 +23,12 @@
                 android:id="@+id/tvCategories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Categories"
+                android:text="@string/categories"
                 android:textSize="24dp"
-                android:layout_marginStart="4dp"
+                android:layout_margin="@dimen/padding_small"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="@dimen/padding_small"
-                android:layout_marginBottom="@dimen/padding_small"/>
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -45,14 +43,12 @@
                 android:id="@+id/tvBrands"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Brands"
+                android:text="@string/brands"
                 android:textSize="24dp"
-                android:layout_marginStart="4dp"
+                android:layout_margin="@dimen/padding_small"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rvCategories"
-                android:layout_marginTop="@dimen/padding_small"
-                android:layout_marginBottom="@dimen/padding_small"/>
+                app:layout_constraintTop_toBottomOf="@id/rvCategories"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
@@ -63,6 +59,47 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintTop_toBottomOf="@id/tvBrands"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvTopWatches"
+                android:text="@string/top_rated_wacthes"
+                android:textSize="24dp"
+                android:layout_margin="@dimen/padding_small"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rvBrands"
+                />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvTopWatches"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTopWatches" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Browse All Watches"
+                android:id="@+id/tvAllWatches"
+                android:textColor="@color/primaryDarkColor"
+                android:layout_marginEnd="@dimen/padding_small"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:drawableTint="@color/primaryDarkColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rvTopWatches"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:drawableRight="@drawable/ic_small_right_arrow"
+                />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

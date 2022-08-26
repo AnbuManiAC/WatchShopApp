@@ -25,7 +25,6 @@ class BrandsAdapter(
             tvCategoryName.text = brand.brandName
             ivCategoryImage.load(brand.brandImageUrl){
                 crossfade(true)
-                placeholder(R.mipmap.ic_app_icon_round)
             }
         }
     }

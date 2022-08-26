@@ -31,5 +31,10 @@
     <string name="product_name">Product Name</string>
     <string name="brand_name">Brand Name</string>
     <string name="product_details">Product Details</string>
+    <string name="top_rated_wacthes">Top Rated Watches</string>
+    <string name="brands">Brands</string>
+    <string name="categories">Categories</string>
+    <string name="user_pref">User_Preference</string>
+    <string name="user_id">User_Id</string>
 
 </resources>

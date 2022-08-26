@@ -20,6 +20,12 @@ class ProductViewModel @Inject constructor(
 
     private val product = MutableLiveData<ProductWithBrandAndImages>()
     private val productDetail = MutableLiveData<List<ProductDetail>>()
+    private val isProductInUserWishList = MutableLiveData<Boolean>()
+
+    init {
+        isProductInUserWishList.value = false
+    }
+
 
     fun setProduct(productId: Int) {
         viewModelScope.launch {
@@ -34,5 +40,10 @@ class ProductViewModel @Inject constructor(
 
     fun getProductDetail(): LiveData<List<ProductDetail>> = productDetail
 
+    fun setIsProductInUserWishList(isWishlisted: Boolean){
+        isProductInUserWishList.value = isWishlisted
+    }
+
+    fun getIsProductInUserWishList():LiveData<Boolean> = isProductInUserWishList
 
 }

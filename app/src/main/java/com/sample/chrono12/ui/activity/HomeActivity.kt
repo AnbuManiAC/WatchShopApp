@@ -3,6 +3,7 @@ package com.sample.chrono12.ui.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -12,23 +13,28 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sample.chrono12.R
+import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.databinding.ActivityMainBinding
+import com.sample.chrono12.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
-    lateinit var navHostFragment: NavHostFragment
-    lateinit var navController: NavController
-    lateinit var appBarConfiguration: AppBarConfiguration
-    lateinit var bottomNav: BottomNavigationView
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var navHostFragment: NavHostFragment
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
+        setupUser()
         bottomNav = binding.bottomNav
         navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerHome) as NavHostFragment
         navController = navHostFragment.findNavController()
@@ -41,6 +47,14 @@ class HomeActivity : AppCompatActivity() {
 
 
 
+    }
+
+    private fun setupUser() {
+        val sharedPref = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE)
+        val userId = sharedPref?.getLong(getString(R.string.user_id), 0)
+        userId?.let {
+            if(it!=0L) userViewModel.setLoggedInUSer(userId)
+        }
     }
 
     private fun onNavDestinationChangedListener() =

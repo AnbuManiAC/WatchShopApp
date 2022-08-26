@@ -1,16 +1,16 @@
 package com.sample.chrono12.data.entities.relations
 
-import androidx.room.DatabaseView
 import androidx.room.Embedded
 import androidx.room.Relation
+import com.sample.chrono12.data.entities.Cart
 import com.sample.chrono12.data.entities.Product
-import com.sample.chrono12.data.entities.ProductImage
 
-data class ProductWithBrandAndImages(
-    @Embedded val productWithBrand: ProductWithBrand,
+data class CartWithProductInfo(
+    @Embedded val cart: Cart,
     @Relation(
         parentColumn = "productId",
+        entity = Product::class,
         entityColumn = "productId"
     )
-    val images: List<ProductImage>,
+    val productWithBrandAndImagesList: List<ProductWithBrandAndImages>
 )

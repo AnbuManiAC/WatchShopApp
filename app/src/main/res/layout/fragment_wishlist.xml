@@ -4,19 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.fragment.ProductListFragment">
-
+    tools:context=".ui.fragment.WishListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:padding="@dimen/padding_small"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:padding="@dimen/padding_small"
-        android:id="@+id/rvProductList"/>
-
-
+        android:id="@+id/rvWishlist"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

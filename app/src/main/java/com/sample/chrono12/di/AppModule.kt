@@ -23,7 +23,7 @@ object  AppModule {
             app,
             WatchShopDatabase::class.java,
             "watch_shop"
-        ).createFromAsset("watch_shop_database").build()
+        ).createFromAsset("watch_shop_new").build()
     }
 
     @Singleton

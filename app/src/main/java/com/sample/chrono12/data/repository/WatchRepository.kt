@@ -9,14 +9,6 @@ import kotlinx.coroutines.withContext
 
 class WatchRepository(private val watchDao: WatchDao) {
 
-    suspend fun getProducts(): List<Product> = withContext(Dispatchers.IO) {
-        watchDao.getProducts()
-    }
-
-    suspend fun getProduct(id: Int): Product = withContext(Dispatchers.IO) {
-        watchDao.getProduct(id)
-    }
-
     suspend fun getCategory(): List<Category> = withContext(Dispatchers.IO) {
         watchDao.getCategory()
     }
@@ -29,24 +21,9 @@ class WatchRepository(private val watchDao: WatchDao) {
         watchDao.getBrand()
     }
 
-    suspend fun getCategoryWithSubCategory(): List<CategoryWithSubCategory> =
-        withContext(Dispatchers.IO) {
-            watchDao.getCategoryWithSubCategory()
-        }
-
-    suspend fun getProductWithImages(): List<ProductWithImages> =
-        withContext(Dispatchers.IO) {
-            watchDao.getProductWithImages()
-        }
-
     suspend fun getProductWithImages(productId: Int): ProductWithImages =
         withContext(Dispatchers.IO) {
             watchDao.getProductWithImages(productId)
-        }
-
-    suspend fun getProductBrand(brandId: Int): ProductBrand =
-        withContext(Dispatchers.IO){
-            watchDao.getProductBrand(brandId)
         }
 
     suspend fun getProductWithBrandAndImages(productId: Int): ProductWithBrandAndImages =
@@ -54,11 +31,6 @@ class WatchRepository(private val watchDao: WatchDao) {
             watchDao.getProductWithBrandAndImages(productId)
         }
 
-
-    suspend fun getProductWithSubCategory(): List<ProductWithSubCategory> =
-        withContext(Dispatchers.IO) {
-            watchDao.getProductWithSubCategory()
-        }
 
     suspend fun getProductDetail(productId: Int): List<ProductDetail> =
         withContext(Dispatchers.IO) {
@@ -70,23 +42,18 @@ class WatchRepository(private val watchDao: WatchDao) {
             watchDao.getSubCategoryWithProduct(subCategoryId)
         }
 
-    suspend fun getCategoryProductWithImages(subCategoryId: Int): List<SubCategoryWithProduct> =
-        withContext(Dispatchers.IO){
-            watchDao.getCategoryProductWithImages(subCategoryId)
-        }
-
-    suspend fun getCartWithProductAndImages(): List<CartWithProductAndImages> =
-        withContext(Dispatchers.IO){
-            watchDao.getCartWithProductAndImages()
-        }
-
-    suspend fun getProductOrderedWithProductAndImages(): List<ProductOrderedWithProductAndImages> =
-        withContext(Dispatchers.IO){
-            watchDao.getProductOrderedWithProductAndImages()
-        }
-
     suspend fun getBrandWithProductAndImages(brandId: Int): List<ProductWithBrandAndImages> =
         withContext(Dispatchers.IO){
             watchDao.getBrandwithProductAndImages(brandId)
+        }
+
+    suspend fun getTopRatedWatches(count: Int): List<ProductWithBrandAndImages> =
+        withContext(Dispatchers.IO){
+            watchDao.getTopRatedWatches(count)
+        }
+
+    suspend fun getAllWatches(): List<ProductWithBrandAndImages> =
+        withContext(Dispatchers.IO){
+            watchDao.getAllWatches()
         }
 }

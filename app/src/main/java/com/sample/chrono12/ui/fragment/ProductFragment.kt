@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,7 @@ import com.sample.chrono12.viewmodels.ProductViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 import com.sample.chrono12.viewmodels.WishListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProductFragment : Fragment() {
@@ -53,17 +55,25 @@ class ProductFragment : Fragment() {
         productViewModel.getProduct().observe(viewLifecycleOwner) {
             setProductInfo(it.productWithBrand)
             setupImageAdapters(it.images)
-            wishListViewModel.checkProductInUserWishList(it.productWithBrand.product.productId, userViewModel.getLoggedInUser().toInt())
+            checkIsProductInUserWishList(it.productWithBrand.product.productId)
         }
-        wishListViewModel.isProductInUserWishList().observe(viewLifecycleOwner){
-            productViewModel.setIsProductInUserWishList(it).also {
-                setupWishListToggleListener()
-            }
+        productViewModel.getIsProductInUserWishList().observe(viewLifecycleOwner){ isChecked ->
+            binding.favBtn.isChecked = isChecked
+
         }
         productViewModel.getProductDetail().observe(viewLifecycleOwner) { productDetailList ->
             productDetailList?.let { setupProductDetailAdapter(productDetailList) }
         }
 
+    }
+
+    private fun checkIsProductInUserWishList(productId: Int) {
+        lifecycleScope.launch{
+            val isProductInUserWishList = wishListViewModel.isProductInUserWishList(productId, userViewModel.getLoggedInUser().toInt())
+            productViewModel.setIsProductInUserWishList(isProductInUserWishList).also {
+                setupWishListToggleListener()
+            }
+        }
     }
 
     private fun setupWishListToggleListener() {

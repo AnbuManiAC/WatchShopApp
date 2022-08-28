@@ -17,12 +17,12 @@ class WishListAdapter(
 ): RecyclerView.Adapter<WishListAdapter.WishListViewHolder>() {
 
     inner class WishListViewHolder(val binding: WishlistRvItemBinding): RecyclerView.ViewHolder(binding.root) {
-        val productName = binding.tvItemProductName
-        val brandName = binding.tvItemProductBrand
-        val rating = binding.rbItemRating
-        val currentPrice = binding.tvItemCurrentPrice
-        val originalPrice = binding.tvItemOriginalPrice
-        val offerPercent = binding.tvItemOffPercent
+        private val productName = binding.tvItemProductName
+        private val brandName = binding.tvItemProductBrand
+        private val rating = binding.rbItemRating
+        private val currentPrice = binding.tvItemCurrentPrice
+        private val originalPrice = binding.tvItemOriginalPrice
+        private val offerPercent = binding.tvItemOffPercent
         val productImage = binding.ivItemProductImage
         fun bind(productWithBrandAndImages: ProductWithBrandAndImages){
             val product = productWithBrandAndImages.productWithBrand.product
@@ -45,7 +45,7 @@ class WishListAdapter(
                 offerPercent.text =
                     "${((product.originalPrice - product.currentPrice) / product.originalPrice * 100).toInt()}% Off"
             }
-            if(product.stockCount>0){
+            if(product.stockCount<=0){
                 binding.btnAddToCart.visibility = View.GONE
             }
             else{

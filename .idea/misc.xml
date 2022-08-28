@@ -41,7 +41,7 @@
         <entry key="app/src/main/res/layout/product_details_rv_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/product_rv_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/signup.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/wishlist_rv_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/wishlist_rv_item.xml" value="0.25" />
         <entry key="app/src/main/res/menu/bottom_nav_menu.xml" value="0.21388888888888888" />
         <entry key="app/src/main/res/menu/logout_menu.xml" value="0.265625" />
         <entry key="app/src/main/res/menu/menu.xml" value="0.22" />

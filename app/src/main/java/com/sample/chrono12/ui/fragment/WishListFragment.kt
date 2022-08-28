@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.WithHint
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -29,13 +30,13 @@ class WishListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
-        if(isUserLoggedIn){
+        return if(isUserLoggedIn){
+            wishListViewModel.setWishListItems(userViewModel.getLoggedInUser().toInt())
             fragmentWishListBinding = FragmentWishlistBinding.inflate(layoutInflater)
-            return fragmentWishListBinding.root
-        }
-        else{
+            fragmentWishListBinding.root
+        } else{
             loginPromptBinding = LoginPromptBinding.inflate(layoutInflater)
-            return loginPromptBinding.root
+            loginPromptBinding.root
         }
     }
 
@@ -59,9 +60,10 @@ class WishListFragment : Fragment() {
         val rvWishList = fragmentWishListBinding.rvWishlist
         rvWishList.layoutManager = LinearLayoutManager(activity)
         wishListViewModel.getWishListItems().observe(viewLifecycleOwner){
-            val adapter = WishListAdapter(it){
-                Navigation.findNavController(requireView())
+            val adapter = WishListAdapter(it){ product ->
+                Navigation.findNavController(requireView()).navigate(WishListFragmentDirections.actionWishlistFragmentToProductFragment(product.productId))
             }
+            rvWishList.adapter =adapter
         }
     }
 

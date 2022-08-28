@@ -20,7 +20,6 @@ class WishListViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val wishListItems = MutableLiveData<List<WishListWithProductInfo>>()
-    private val isProductInUserWishList = MutableLiveData<Boolean>()
 
     fun setWishListItems(userId: Int) {
         viewModelScope.launch {
@@ -30,19 +29,11 @@ class WishListViewModel @Inject constructor(
 
     fun getWishListItems(): LiveData<List<WishListWithProductInfo>> = wishListItems
 
-    fun isProductInUserWishList(): LiveData<Boolean> = isProductInUserWishList
-
-    fun checkProductInUserWishList(productId: Int, userId: Int) {
-        viewModelScope.launch {
-            isProductInUserWishList.postValue(userRepository.isProductInUserWishList(productId,
-                userId) == 1)
-        }
-    }
+    suspend fun isProductInUserWishList(productId: Int, userId: Int): Boolean = userRepository.isProductInUserWishList(productId,userId)==1
 
     fun addProductToUserWishList(wishListItem: WishList) {
         viewModelScope.launch {
             userRepository.insertIntoWishList(wishListItem)
-            isProductInUserWishList.value = true
         }
     }
 

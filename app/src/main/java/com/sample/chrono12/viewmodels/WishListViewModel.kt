@@ -5,11 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.chrono12.data.entities.WishList
-import com.sample.chrono12.data.entities.relations.CartWithProductAndImages
-import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
 import com.sample.chrono12.data.repository.UserRepository
-import com.sample.chrono12.data.repository.WatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,15 +16,15 @@ class WishListViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val wishListItems = MutableLiveData<List<WishListWithProductInfo>>()
+    private val isProductInUserCart = MutableLiveData<Boolean>()
 
-    fun setWishListItems(userId: Int) {
-        viewModelScope.launch {
-            wishListItems.postValue(userRepository.getUserWishListItems(userId))
-        }
+    fun getIsProductInUserCart(): LiveData<Boolean> = isProductInUserCart
+
+    fun setIsProductInUserCart(isInCart: Boolean){
+        isProductInUserCart.value = isInCart
     }
 
-    fun getWishListItems(): LiveData<List<WishListWithProductInfo>> = wishListItems
+    fun getWishListItems(userId: Int): LiveData<List<WishListWithProductInfo>> = userRepository.getUserWishListItems(userId)
 
     suspend fun isProductInUserWishList(productId: Int, userId: Int): Boolean = userRepository.isProductInUserWishList(productId,userId)==1
 
@@ -38,6 +35,7 @@ class WishListViewModel @Inject constructor(
     }
 
     fun removeProductFromUserWishList(productId: Int, userId: Int) {
+
         viewModelScope.launch {
             userRepository.deleteFromWishlist(productId, userId)
         }

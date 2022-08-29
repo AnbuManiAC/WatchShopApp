@@ -72,7 +72,7 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
                 true
             }
-            R.id.favoriteFragment -> {
+            R.id.wishlistFragment -> {
                 findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToWishlistFragment())
                 true
             }

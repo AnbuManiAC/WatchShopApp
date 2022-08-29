@@ -4,16 +4,21 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
 import com.sample.chrono12.databinding.WishlistRvItemBinding
 
 class WishListAdapter(
-    val wishListWithProductInfoList: List<WishListWithProductInfo>,
-    val onProductClickListerner: ProductListAdapter.OnClickProduct
+    private val wishListWithProductInfoList: List<WishListWithProductInfo>,
+    val onProductClickListener: ProductListAdapter.OnClickProduct,
+    val onDeleteClickListener: OnClickDelete,
+    val onAddToCartClickListener: OnClickAddToCart
+
 ): RecyclerView.Adapter<WishListAdapter.WishListViewHolder>() {
 
     inner class WishListViewHolder(val binding: WishlistRvItemBinding): RecyclerView.ViewHolder(binding.root) {
@@ -28,7 +33,7 @@ class WishListAdapter(
             val product = productWithBrandAndImages.productWithBrand.product
             val brand = productWithBrandAndImages.productWithBrand.brand
             val image = productWithBrandAndImages.images[0].imageUrl
-            binding.root.setOnClickListener { onProductClickListerner.onClick(product) }
+            binding.root.setOnClickListener { onProductClickListener.onClick(product) }
             productImage.load(image)
             productName.text = product.name
             brandName.text = brand.brandName
@@ -45,18 +50,22 @@ class WishListAdapter(
                 offerPercent.text =
                     "${((product.originalPrice - product.currentPrice) / product.originalPrice * 100).toInt()}% Off"
             }
-            if(product.stockCount<=0){
-                binding.btnAddToCart.visibility = View.GONE
-            }
-            else{
-                binding.btnAddToCart.setOnClickListener {
-                    Toast.makeText(binding.root.context, "Added to Cart clicked", Toast.LENGTH_SHORT).show()
-                }
-            }
-            binding.btnDelete.setOnClickListener {
-                Toast.makeText(binding.root.context, "Delete button clicked", Toast.LENGTH_SHORT).show()
+            binding.btnDelete.setOnClickListener{
+                onDeleteClickListener.onDelete(product.productId)
+
             }
         }
+
+        fun bindAddToCartButton(productId: Int){
+
+            onAddToCartClickListener.initButton(binding.btnAddToCart, productId)
+
+            binding.btnAddToCart.setOnClickListener{
+                onAddToCartClickListener.onClickAdd(it as Button, productId)
+            }
+        }
+
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishListViewHolder {
@@ -70,11 +79,23 @@ class WishListAdapter(
 
     override fun onBindViewHolder(holder: WishListViewHolder, position: Int) {
         holder.bind(wishListWithProductInfoList[position].productWithBrandAndImagesList)
+        holder.bindAddToCartButton(wishListWithProductInfoList[position].productWithBrandAndImagesList.productWithBrand.product.productId)
     }
 
     override fun getItemCount(): Int {
         return wishListWithProductInfoList.size
     }
 
+    interface OnClickDelete {
+        fun onDelete(productId: Int)
+    }
 
+    interface OnClickAddToCart {
+
+        fun initButton(button: Button, productId: Int)
+
+        fun onClickAdd(button: Button, productId: Int)
+    }
 }
+
+

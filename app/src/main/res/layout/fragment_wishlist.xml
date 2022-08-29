@@ -16,4 +16,64 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:id="@+id/rvWishlist"/>
 
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="250dp"
+        android:id="@+id/ivEmptyCart"
+        android:src="@drawable/ic_empty_wishlist_svg"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvEmptyCart"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvEmptyCart"
+        android:textStyle="bold"
+        android:layout_margin="@dimen/margin_small"
+        android:text="Your Wishlist is Empty"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivEmptyCart"
+        app:layout_constraintBottom_toTopOf="@id/tvEmptyCartDesc"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tvEmptyCartDesc"
+        android:layout_margin="@dimen/margin_small"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/ashGrey"
+        android:text="Looks like you haven't added\n anything to your wishlist yet"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvEmptyCart"
+        app:layout_constraintBottom_toTopOf="@id/btnGoHome"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnGoHome"
+        app:cornerRadius="50dp"
+        android:layout_margin="@dimen/margin_small"
+        android:text="Go Home"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:backgroundTint="@color/primaryDarkColor"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvEmptyCartDesc"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

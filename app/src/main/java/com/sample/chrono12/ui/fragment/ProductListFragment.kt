@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.databinding.FragmentProductListBinding
 import com.sample.chrono12.ui.activity.HomeActivity
@@ -30,14 +31,13 @@ class ProductListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
+        setHasOptionsMenu(true)
 
-        if(navArgs.subCategoryId>0){
+        if (navArgs.subCategoryId > 0) {
             productListViewModel.setProductWithBrandAndImagesList(navArgs.subCategoryId)
-        }
-        else if(navArgs.brandId>0){
+        } else if (navArgs.brandId > 0) {
             productListViewModel.setBrandWithProductList(navArgs.brandId)
-        }
-        else{
+        } else {
             productListViewModel.setAllWatches()
         }
 
@@ -49,9 +49,10 @@ class ProductListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
 
-        productListViewModel.getProductWithBrandAndImagesList().observe(viewLifecycleOwner){ productInfo ->
-            productInfo?.let { setupProductListAdapter(productInfo.productWithBrandAndImagesList) }
-        }
+        productListViewModel.getProductWithBrandAndImagesList()
+            .observe(viewLifecycleOwner) { productInfo ->
+                productInfo?.let { setupProductListAdapter(productInfo.productWithBrandAndImagesList) }
+            }
         productListViewModel.getBrandWithProductList().observe(viewLifecycleOwner) { productInfo ->
             productInfo?.let { setupProductListAdapter(productInfo) }
         }
@@ -63,14 +64,37 @@ class ProductListFragment : Fragment() {
 
     }
 
-    private fun setupProductListAdapter(productWithBrandAndImagesList: List<ProductWithBrandAndImages>){
-        val adapter = ProductListAdapter(productWithBrandAndImagesList){ product ->
-            Navigation.findNavController(requireView()).navigate(ProductListFragmentDirections.actionProductListFragmentToProductFragment(product.productId))
+    private fun setupProductListAdapter(productWithBrandAndImagesList: List<ProductWithBrandAndImages>) {
+        val adapter = ProductListAdapter(productWithBrandAndImagesList) { product ->
+            Navigation.findNavController(requireView()).navigate(
+                ProductListFragmentDirections.actionProductListFragmentToProductFragment(product.productId)
+            )
         }
         binding.rvProductList.apply {
             this.adapter = adapter
             layoutManager = LinearLayoutManager(activity)
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.search_fav_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.wishlistFragment -> {
+                Navigation.findNavController(requireView())
+                    .navigate(ProductListFragmentDirections.actionProductListFragmentToWishlistFragment())
+                true
+            }
+            R.id.searchFragment -> {
+                Navigation.findNavController(requireView())
+                    .navigate(ProductListFragmentDirections.actionProductListFragmentToSearchFragment())
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
 
 }

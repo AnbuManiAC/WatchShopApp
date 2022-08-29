@@ -8,8 +8,13 @@
         app:showAsAction="always"/>
 
     <item android:id="@+id/wishlistFragment"
-        android:title="Favorite"
+        android:title="Wishlist"
         android:icon="@drawable/ic_favorite"
+        app:showAsAction="always"/>
+
+    <item android:id="@+id/cartFragment"
+        android:title="Cart"
+        android:icon="@drawable/ic_cart"
         app:showAsAction="always"/>
 
 </menu>

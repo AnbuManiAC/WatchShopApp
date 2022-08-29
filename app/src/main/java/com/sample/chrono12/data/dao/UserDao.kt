@@ -1,7 +1,9 @@
 package com.sample.chrono12.data.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.sample.chrono12.data.entities.Cart
+import com.sample.chrono12.data.entities.SearchSuggestion
 import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.data.entities.WishList
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
@@ -34,12 +36,12 @@ interface UserDao {
     @Query("DELETE FROM WishList WHERE productId = :productId AND userId = :userId")
     suspend fun deleteFromWishlist(productId: Int, userId: Int)
 
-    @Query("SELECT EXISTs(SELECT 1 FROM Wishlist WHERE userId = :userId AND productId = :productId)")
+    @Query("SELECT EXISTS(SELECT 1 FROM Wishlist WHERE userId = :userId AND productId = :productId)")
     suspend fun isProductInUserWishList(productId: Int, userId: Int): Int
 
     @Transaction
     @Query("SELECT * FROM WishList WHERE userId = :userId")
-    suspend fun getUserWishListItems(userId: Int): List<WishListWithProductInfo>
+    fun getUserWishListItems(userId: Int): LiveData<List<WishListWithProductInfo>>
 
     //User Cart
     @Insert
@@ -53,6 +55,22 @@ interface UserDao {
 
     @Transaction
     @Query("SELECT * FROM Cart WHERE userId = :userId")
-    suspend fun getUserCartItems(userId: Int): List<CartWithProductInfo>
+    fun getUserCartItems(userId: Int): LiveData<List<CartWithProductInfo>>
+
+    @Query("UPDATE Cart SET quantity = :quantity where userId = :userId AND productId = :productId")
+    suspend fun updateQuantity(productId: Int, userId: Int, quantity: Int)
+
+    //Suggestions
+    @Query("SELECT * FROM SearchSuggestion WHERE userId = 0 OR userId =:userId ORDER BY userId DESC")
+    suspend fun getSuggestions(userId: Int): List<SearchSuggestion>
+
+    @Insert
+    suspend fun insertSuggestion(suggestion: SearchSuggestion)
+
+    @Delete
+    suspend fun removeSuggestion(suggestion: SearchSuggestion)
+
+    @Query("SELECT EXISTS(SELECT 1 FROM SearchSuggestion WHERE suggestion = :suggestion )")
+    suspend fun isSuggestionPresent(suggestion: String): Int
 
 }

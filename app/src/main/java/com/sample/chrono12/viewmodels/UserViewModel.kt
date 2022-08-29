@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sample.chrono12.data.entities.SearchSuggestion
 import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserDetails
@@ -26,6 +27,7 @@ class UserViewModel @Inject constructor(
     private var loggedInUser: Long = 0
     private var userDetails = MutableLiveData<UserDetails>()
     private var userField = MutableLiveData<UserField>()
+    private val suggestions = MutableLiveData<List<SearchSuggestion>>()
 
     fun clearUserFieldInfo(){
         null.also { userField.value = it }
@@ -100,6 +102,34 @@ class UserViewModel @Inject constructor(
     fun logOutUser(){
         loggedInUser = 0
         isUserLoggedIn = false
+    }
+
+    fun setSuggestions(){
+        viewModelScope.launch {
+            suggestions.postValue(userRepository.getSuggestions(loggedInUser.toInt()))
+        }
+    }
+
+    fun getSuggestions(): LiveData<List<SearchSuggestion>> = suggestions
+
+    fun insertSuggestion(suggestion: String, timeStamp: Long){
+        viewModelScope.launch{
+            if (isUserLoggedIn && !userRepository.isSuggestionPresent(suggestion)){
+                userRepository.insertSuggestion(
+                    SearchSuggestion(
+                        userId = loggedInUser.toInt(),
+                        suggestion = suggestion,
+                        timestamp = timeStamp
+                    )
+                )
+            }
+        }
+    }
+
+    fun removeSuggestion(suggestion: SearchSuggestion){
+        viewModelScope.launch{
+            userRepository.removeSuggestion(suggestion)
+        }
     }
 
 }

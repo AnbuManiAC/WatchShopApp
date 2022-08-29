@@ -12,5 +12,5 @@ data class CartWithProductInfo(
         entity = Product::class,
         entityColumn = "productId"
     )
-    val productWithBrandAndImagesList: List<ProductWithBrandAndImages>
+    val productWithBrandAndImagesList: ProductWithBrandAndImages
 )

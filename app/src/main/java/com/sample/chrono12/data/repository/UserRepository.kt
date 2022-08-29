@@ -1,7 +1,9 @@
 package com.sample.chrono12.data.repository
 
+import androidx.lifecycle.LiveData
 import com.sample.chrono12.data.dao.UserDao
 import com.sample.chrono12.data.entities.Cart
+import com.sample.chrono12.data.entities.SearchSuggestion
 import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.data.entities.WishList
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
@@ -44,10 +46,8 @@ class UserRepository(private val userDao: UserDao) {
         userDao.isProductInUserWishList(productId, userId)
     }
 
-    suspend fun getUserWishListItems(userId: Int): List<WishListWithProductInfo> =
-        withContext(Dispatchers.IO){
+    fun getUserWishListItems(userId: Int): LiveData<List<WishListWithProductInfo>> =
             userDao.getUserWishListItems(userId)
-        }
 
     suspend fun insertIntoCart(cart: Cart): Long = withContext(Dispatchers.IO){
         userDao.insertIntoCart(cart)
@@ -62,10 +62,28 @@ class UserRepository(private val userDao: UserDao) {
             userDao.isProductInUserCart(productId, userId)
         }
 
-    suspend fun getUserCartItems(userId: Int): List<CartWithProductInfo> =
-        withContext(Dispatchers.IO){
+    fun getUserCartItems(userId: Int): LiveData<List<CartWithProductInfo>> =
             userDao.getUserCartItems(userId)
-        }
+
+    suspend fun updateQuantity(productId: Int, userId: Int, quantity: Int) =
+        userDao.updateQuantity(productId, userId, quantity)
+
+    //Suggestion
+    suspend fun getSuggestions(userId: Int): List<SearchSuggestion> = withContext(Dispatchers.IO){
+        userDao.getSuggestions(userId)
+    }
+
+    suspend fun insertSuggestion(suggestion: SearchSuggestion) = withContext(Dispatchers.IO){
+        userDao.insertSuggestion(suggestion)
+    }
+
+    suspend fun removeSuggestion(suggestion: SearchSuggestion) = withContext(Dispatchers.IO){
+        userDao.removeSuggestion(suggestion)
+    }
+
+    suspend fun isSuggestionPresent(suggestion: String): Boolean = withContext(Dispatchers.IO){
+        userDao.isSuggestionPresent(suggestion)==1
+    }
 
 
 }

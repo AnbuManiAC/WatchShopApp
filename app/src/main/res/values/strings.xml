@@ -28,6 +28,7 @@
     <string name="content">Content</string>
     <string name="detail">Detail</string>
     <string name="add_to_cart">Add to Cart</string>
+    <string name="go_to_cart">Go to Cart</string>
     <string name="product_name">Product Name</string>
     <string name="brand_name">Brand Name</string>
     <string name="product_details">Product Details</string>

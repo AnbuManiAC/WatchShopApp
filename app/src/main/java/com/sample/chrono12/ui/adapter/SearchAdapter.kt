@@ -27,10 +27,10 @@ class SuggestionAdapter(
         fun bind(suggestionHistory: SearchSuggestion){
             tvSuggestion.text = suggestionHistory.suggestion
             if (suggestionHistory.userId>0) {
-                ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_goto_cart,null))
+                ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_history,null))
                 ibRemove.visibility = View.VISIBLE
             }else{
-                ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_search,null))
+                ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_search_icon,null))
                 ibRemove.visibility = View.GONE
             }
             ibRemove.setOnClickListener {

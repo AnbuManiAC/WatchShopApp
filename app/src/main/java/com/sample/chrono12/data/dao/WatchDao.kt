@@ -1,12 +1,14 @@
 package com.sample.chrono12.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
-import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.RawQuery
 import androidx.room.Transaction
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.sample.chrono12.data.entities.*
-import com.sample.chrono12.data.entities.relations.*
+import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
+import com.sample.chrono12.data.entities.relations.ProductWithImages
+import com.sample.chrono12.data.entities.relations.SubCategoryWithProduct
 
 @Dao
 interface WatchDao {
@@ -42,7 +44,7 @@ interface WatchDao {
     suspend fun getSubCategoryWithProduct(subCategoryId: Int): SubCategoryWithProduct
 
     @Query("SELECT * FROM Product where brandId = :brandId")
-    suspend fun getBrandwithProductAndImages(brandId: Int): List<ProductWithBrandAndImages>
+    suspend fun getBrandWithProductAndImages(brandId: Int): List<ProductWithBrandAndImages>
 
     @Query("SELECT * FROM Product ORDER BY totalRating DESC LIMIT :count")
     suspend fun getTopRatedWatches(count: Int): List<ProductWithBrandAndImages>
@@ -50,7 +52,7 @@ interface WatchDao {
     @Query("SELECT * FROM Product")
     suspend fun getAllWatches(): List<ProductWithBrandAndImages>
 
-
-
+    @RawQuery
+    suspend fun getProductWithBrandAndImagesByQuery(searchQueries: SupportSQLiteQuery): List<ProductWithBrandAndImages>
 
 }

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="2dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_small">
+
+        <TextView
+            android:id="@+id/tvAddressName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Full name"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/cbSelect"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvAddressDoorAndStreet"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:text="18/54, Sundharar street"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvAddressName"
+            app:layout_constraintTop_toBottomOf="@id/tvAddressName" />
+
+
+        <TextView
+            android:id="@+id/tvAddressLandmark"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:text="Kurinjipadi"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvAddressName"
+            app:layout_constraintTop_toBottomOf="@id/tvAddressDoorAndStreet" />
+
+
+        <TextView
+            android:id="@+id/tvAddressCityStateAndPincode"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:text="Cuddalore, Tamil nadu - 607302"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvAddressName"
+            app:layout_constraintTop_toBottomOf="@id/tvAddressLandmark" />
+
+        <TextView
+            android:id="@+id/tvAddressMobile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:text="8670604332"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvAddressName"
+            app:layout_constraintTop_toBottomOf="@id/tvAddressCityStateAndPincode" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEditAddress"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:backgroundTint="@color/ashGrey"
+            android:elevation="2dp"
+            android:text="Edit"
+            android:padding="@dimen/padding_small"
+            android:textColor="@color/black"
+            android:visibility="visible"
+            app:cornerRadius="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/tvAddressName"
+            app:layout_constraintTop_toBottomOf="@id/tvAddressMobile" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRemoveAddress"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
+            app:layout_goneMarginStart="0dp"
+            android:backgroundTint="@color/ashGrey"
+            android:elevation="2dp"
+            android:text="Remove"
+            android:padding="@dimen/padding_small"
+            android:textColor="@color/black"
+            android:visibility="visible"
+            app:cornerRadius="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnEditAddress"
+            app:layout_constraintTop_toBottomOf="@id/tvAddressMobile" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cbSelect"
+            android:checked="true"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/margin_small"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvAddressName"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

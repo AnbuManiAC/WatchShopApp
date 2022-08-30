@@ -1,5 +1,6 @@
 package com.sample.chrono12.ui.fragment
 
+import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -51,11 +52,9 @@ class CartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if(isUserLoggedIn){
-            Log.d("cart","In cart")
             setupCart()
         }
         else{
-            Log.d("cart","In missing cart")
             setupCartMissing()
         }
     }
@@ -71,19 +70,35 @@ class CartFragment : Fragment() {
     }
 
     private fun setupCart() {
+        cartViewModel.getTotalCurrentPrice().observe(viewLifecycleOwner){
+            fragmentCartBinding.tvTotalCurrentPrice.text = it?.toString()
+        }
+        cartViewModel.getTotalOriginPrice().observe(viewLifecycleOwner){
+            fragmentCartBinding.tvTotalPrice.apply {
+                text = it?.toString()
+                paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            }
+
+        }
         fragmentCartBinding.rvCart.layoutManager = LinearLayoutManager(activity)
+        fragmentCartBinding.btnGoHome.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
+        }
         cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).observe(viewLifecycleOwner){
+            cartViewModel.initPriceCalculating(it)
             if(it.isNotEmpty()){
                 fragmentCartBinding.ivEmptyCart.visibility = View.GONE
                 fragmentCartBinding.tvEmptyCart.visibility = View.GONE
                 fragmentCartBinding.tvEmptyCartDesc.visibility = View.GONE
                 fragmentCartBinding.btnGoHome.visibility = View.GONE
+                fragmentCartBinding.layoutPriceOrder.visibility = View.VISIBLE
             }
             if(it.isEmpty()){
                 fragmentCartBinding.ivEmptyCart.visibility = View.VISIBLE
                 fragmentCartBinding.tvEmptyCart.visibility = View.VISIBLE
                 fragmentCartBinding.tvEmptyCartDesc.visibility = View.VISIBLE
                 fragmentCartBinding.btnGoHome.visibility = View.VISIBLE
+                fragmentCartBinding.layoutPriceOrder.visibility = View.GONE
             }
             fragmentCartBinding.rvCart.adapter = CartAdapter(
                 it,

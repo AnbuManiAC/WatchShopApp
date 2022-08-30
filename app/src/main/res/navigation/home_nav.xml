@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.sample.chrono12.ui.fragment.HomeFragment"
-        android:label="Home"
+        android:label="Chrono12"
         tools:layout="@layout/fragment_home">
 
         <action
@@ -54,6 +54,15 @@
         android:label="Search"
         tools:layout="@layout/fragment_search">
 
+        <action
+            android:id="@+id/action_searchFragment_to_cartFragment"
+            app:destination="@id/cartFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_wishlistFragment"
+            app:destination="@id/wishlistFragment" />
+        <action
+            android:id="@+id/action_searchFragment_to_productListFragment"
+            app:destination="@id/productListFragment" />
     </fragment>
 
     <fragment
@@ -75,6 +84,9 @@
         <action
             android:id="@+id/action_wishlistFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_wishlistFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/productFragment"
@@ -137,6 +149,18 @@
         <action
             android:id="@+id/action_profileFragment_to_logoutDialog"
             app:destination="@id/logoutDialog" />
+        <action
+            android:id="@+id/action_profileFragment_to_wishlistFragment"
+            app:destination="@id/wishlistFragment" />
+        <action
+            android:id="@+id/action_profileFragment_self"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_addressGroupFragment"
+            app:destination="@id/addressGroupFragment" />
     </fragment>
 
     <fragment
@@ -164,6 +188,24 @@
         android:id="@+id/logoutDialog"
         android:name="com.sample.chrono12.ui.fragment.dialog.LogoutDialog"
         android:label="LogoutDialog" />
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.sample.chrono12.ui.fragment.AddressFragment"
+        android:label="fragment_address"
+        tools:layout="@layout/fragment_address" >
+        <action
+            android:id="@+id/action_addressFragment_to_newAddressFragment"
+            app:destination="@id/newAddressFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newAddressFragment"
+        android:name="com.sample.chrono12.ui.fragment.NewAddressFragment"
+        android:label="NewAddressFragment" />
+    <fragment
+        android:id="@+id/addressGroupFragment"
+        android:name="com.sample.chrono12.ui.fragment.AddressGroupFragment"
+        android:label="fragment_address_group"
+        tools:layout="@layout/fragment_address_group" />
 
 
 </navigation>

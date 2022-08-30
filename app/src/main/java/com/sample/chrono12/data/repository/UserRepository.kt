@@ -2,10 +2,8 @@ package com.sample.chrono12.data.repository
 
 import androidx.lifecycle.LiveData
 import com.sample.chrono12.data.dao.UserDao
-import com.sample.chrono12.data.entities.Cart
-import com.sample.chrono12.data.entities.SearchSuggestion
-import com.sample.chrono12.data.entities.User
-import com.sample.chrono12.data.entities.WishList
+import com.sample.chrono12.data.entities.*
+import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
@@ -85,5 +83,23 @@ class UserRepository(private val userDao: UserDao) {
         userDao.isSuggestionPresent(suggestion)==1
     }
 
+    fun getUserAddresses(userId: Int): LiveData<AddressGroupWithAddress> =
+        userDao.getUserAddresses(userId)
+
+    fun getAddressGroupWithAddresses(userId: Int): LiveData<List<AddressGroupWithAddress>> =
+        userDao.getAddressGroupWithAddresses(userId)
+
+    suspend fun insertAddress(address: Address) = withContext(Dispatchers.IO){
+        userDao.insertIntoAddress(address)
+    }
+
+    suspend fun insertAddressGroup(addressGroup: AddressGroup) = withContext(Dispatchers.IO){
+        userDao.insertIntoAddressGroup(addressGroup)
+    }
+
+    suspend fun insertAddressAndGroupCrossRef(addressAndGroupCrossRef: AddressAndGroupCrossRef) =
+        withContext(Dispatchers.IO) {
+            userDao.insertIntoAddressAndGroupCrossRef(addressAndGroupCrossRef)
+        }
 
 }

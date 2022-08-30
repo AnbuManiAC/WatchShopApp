@@ -72,7 +72,22 @@ class WishListFragment : Fragment() {
     private fun setupWishList() {
         val rvWishList = fragmentWishListBinding.rvWishlist
         rvWishList.layoutManager = LinearLayoutManager(activity)
-        wishListViewModel.getWishListItems(userViewModel.getLoggedInUser().toInt()).observe(viewLifecycleOwner){ it ->
+        fragmentWishListBinding.btnGoHome.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
+        }
+        wishListViewModel.getWishListItems(userViewModel.getLoggedInUser().toInt()).observe(viewLifecycleOwner){
+            if(it.isEmpty()){
+                fragmentWishListBinding.ivEmptyCart.visibility = View.VISIBLE
+                fragmentWishListBinding.tvEmptyCart.visibility = View.VISIBLE
+                fragmentWishListBinding.tvEmptyCartDesc.visibility = View.VISIBLE
+                fragmentWishListBinding.btnGoHome.visibility = View.VISIBLE
+            }
+            if(it.isNotEmpty()){
+                fragmentWishListBinding.ivEmptyCart.visibility = View.GONE
+                fragmentWishListBinding.tvEmptyCart.visibility = View.GONE
+                fragmentWishListBinding.tvEmptyCartDesc.visibility = View.GONE
+                fragmentWishListBinding.btnGoHome.visibility = View.GONE
+            }
             val adapter = WishListAdapter(
                 it,
                 {

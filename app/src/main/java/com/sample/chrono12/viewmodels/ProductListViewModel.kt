@@ -4,13 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.ViewModelFactoryDsl
 import com.sample.chrono12.data.entities.Category
-import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.SubCategory
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
-import com.sample.chrono12.data.entities.relations.ProductWithImages
 import com.sample.chrono12.data.entities.relations.SubCategoryWithProduct
 import com.sample.chrono12.data.repository.WatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,12 +32,22 @@ class ProductListViewModel @Inject constructor(
 
     private var productListTitle: String? = null
 
+    private val searchResult = MutableLiveData<List<ProductWithBrandAndImages>>()
+
+    private val searchStatus = MutableLiveData<Int>()
+
     init {
         setCategory()
         setSubCategory()
         setBrand()
+        searchStatus.value = SEARCH_NOT_INITIATED
     }
 
+    fun setSearchStatus(status: Int){
+        searchStatus.value = status
+    }
+
+    fun getSearchStatus():LiveData<Int> = searchStatus
 
     fun setCategory() {
         viewModelScope.launch { categoryList.postValue(watchRepository.getCategory()) }
@@ -89,5 +96,36 @@ class ProductListViewModel @Inject constructor(
     }
 
     fun getAllWatches(): LiveData<List<ProductWithBrandAndImages>> = allWatchesList
+
+    fun setSearchResult(list: List<ProductWithBrandAndImages>){
+        searchResult.value = list
+        searchStatus.value= SEARCH_COMPLETED
+    }
+
+    fun getSearchResult(): LiveData<List<ProductWithBrandAndImages>> = searchResult
+
+    fun setProductsWithBrandAndImagesByQuery(searchQuery: String) = viewModelScope.launch {
+        productListTitle = searchQuery
+        setSearchStatus(SEARCH_INITIATED)
+        val searchList = getQueryAsList(searchQuery)
+        watchRepository.getProductWithBrandAndImagesByQuery(searchList).also{
+            setSearchResult(it)
+        }
+    }
+
+    private fun getQueryAsList(query: String): List<String>{
+        val list = query.split(" ",",",", "," ,")
+        val searchQuery = ArrayList<String>()
+        list.forEach { it.apply {
+            searchQuery.add("%$it%")
+        } }
+        return searchQuery
+    }
+
+    companion object{
+        const val SEARCH_COMPLETED = 1
+        const val SEARCH_INITIATED = 0
+        const val SEARCH_NOT_INITIATED = -1
+    }
 
 }

@@ -24,13 +24,12 @@ class ProfileFragment : Fragment() {
     ): View? {
         setHasOptionsMenu(true)
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
-        if(isUserLoggedIn){
+        return if(isUserLoggedIn){
             bindingProfile = FragmentProfileBinding.inflate(layoutInflater)
-            return bindingProfile.root
-        }
-        else{
+            bindingProfile.root
+        } else{
             bindingLoginPrompt = LoginPromptBinding.inflate(layoutInflater)
-            return bindingLoginPrompt.root
+            bindingLoginPrompt.root
         }
     }
 
@@ -48,7 +47,19 @@ class ProfileFragment : Fragment() {
         userViewModel.getUserDetails().observe(viewLifecycleOwner){ user ->
             bindingProfile.tvUserName.text = user.name
             bindingProfile.tvEmailId.text = user.email
-            bindingProfile.tvMobileNum.text = user.mobile.toString()
+            bindingProfile.tvMobileNum.text = user.mobile
+        }
+        bindingProfile.tvMyWishlist.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToWishlistFragment())
+        }
+        bindingProfile.tvMyOrder.setOnClickListener {
+
+        }
+        bindingProfile.tvMyAddress.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToAddressFragment())
+        }
+        bindingProfile.tvMyAddressGroup.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToAddressGroupFragment())
         }
     }
 
@@ -59,7 +70,7 @@ class ProfileFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.logout_menu, menu)
+        if(isUserLoggedIn) inflater.inflate(R.menu.logout_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

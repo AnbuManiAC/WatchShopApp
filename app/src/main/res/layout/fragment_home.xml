@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.HomeFragment">
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/svHome"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/svHome"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -23,82 +23,92 @@
                 android:id="@+id/tvCategories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
                 android:text="@string/categories"
-                android:textSize="24dp"
-                android:layout_margin="@dimen/padding_small"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintBottom_toTopOf="@id/rvCategories"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/rvCategories"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintTop_toBottomOf="@id/tvCategories"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvCategories" />
 
             <TextView
                 android:id="@+id/tvBrands"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
                 android:text="@string/brands"
-                android:textSize="24dp"
-                android:layout_margin="@dimen/padding_small"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintBottom_toTopOf="@id/rvBrands"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rvCategories"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rvCategories" />
 
             <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBrands"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:id="@+id/rvBrands"
-                android:nestedScrollingEnabled="true"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintTop_toBottomOf="@id/tvBrands"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvBrands" />
 
             <TextView
+                android:id="@+id/tvTopWatches"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvTopWatches"
+                android:layout_margin="@dimen/margin_small"
                 android:text="@string/top_rated_wacthes"
-                android:textSize="24dp"
-                android:layout_margin="@dimen/padding_small"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintBottom_toTopOf="@id/rvTopWatches"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rvBrands"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rvBrands" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTopWatches"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                android:layout_marginStart="@dimen/margin_small"
+                android:layout_marginEnd="@dimen/margin_small"
                 android:nestedScrollingEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTopWatches" />
 
-            <TextView
+
+            <Button
+                android:id="@+id/tvAllWatches"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Browse All Watches"
-                android:id="@+id/tvAllWatches"
-                android:textColor="@color/primaryDarkColor"
                 android:layout_marginEnd="@dimen/padding_small"
                 android:layout_marginBottom="@dimen/padding_small"
-                android:textStyle="bold"
                 android:clickable="true"
-                android:focusable="true"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:drawableTint="@color/primaryDarkColor"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/rvTopWatches"
-                app:layout_constraintBottom_toBottomOf="parent"
                 android:drawableRight="@drawable/ic_small_right_arrow"
-                />
+                android:drawableTint="@color/primaryColor"
+                android:focusable="true"
+                android:gravity="center"
+                android:minHeight="48dp"
+                android:text="Browse All Watches"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/primaryColor"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rvTopWatches" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

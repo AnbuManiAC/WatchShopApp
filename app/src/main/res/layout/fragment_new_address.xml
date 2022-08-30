@@ -5,11 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    tools:context=".ui.fragment.SignUpFragment">
+    tools:context=".ui.fragment.NewAddressFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCountry"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:hint="Country"
+            app:layout_constraintBottom_toTopOf="@id/tilAddressName"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/tilEtCountry"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tilAddressName"
@@ -18,19 +40,17 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_large"
             android:hint="@string/name"
-            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@+id/tilDoorNum"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5"
-            app:startIconDrawable="@drawable/ic_person">
+            app:layout_constraintTop_toBottomOf="@id/tilCountry"
+            app:layout_constraintVertical_bias="0.5">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtAddressName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="text" />
+                android:inputType="textPersonName" />
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -41,19 +61,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
-            android:hint="@string/email"
+            android:hint="Door / Apartment No."
             app:layout_constraintBottom_toTopOf="@+id/tilStreet"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilAddressName"
-            app:layout_constraintVertical_bias="0.5"
-            app:startIconDrawable="@drawable/ic_mail">
+            app:layout_constraintVertical_bias="0.5">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtDoorNum"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textEmailAddress" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,20 +83,18 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:hint="@string/mobile_number"
+            android:hint="Street Name"
             app:layout_constraintBottom_toTopOf="@+id/tilLandmark"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilDoorNum"
-            app:layout_constraintVertical_bias="0.5"
-            app:startIconDrawable="@drawable/ic_mobile">
+            app:layout_constraintVertical_bias="0.5">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtStreet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="number"
-                android:maxLength="10" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,89 +105,110 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:hint="@string/password"
-            app:endIconMode="password_toggle"
-            app:layout_constraintBottom_toTopOf="@+id/tilState"
+            android:hint="Landmark"
+            app:layout_constraintBottom_toTopOf="@+id/tilCity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilStreet"
-            app:layout_constraintVertical_bias="0.5"
-            app:startIconDrawable="@drawable/ic_lock">
+            app:layout_constraintVertical_bias="0.5">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtLandmark"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPassword"
-                android:maxLength="15" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilState"
+            android:id="@+id/tilCity"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
-            android:hint="@string/confirm_password"
-            app:layout_constraintBottom_toTopOf="@id/btnSignup"
+            android:hint="City"
+            app:layout_constraintBottom_toTopOf="@id/tilState"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilLandmark"
-            app:layout_constraintVertical_bias="0.5"
-            app:startIconDrawable="@drawable/ic_lock">
+            app:layout_constraintVertical_bias="0.5">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/tilEtState"
+                android:id="@+id/tilEtCity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textPassword"
-                android:maxLength="15" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnSignup"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilState"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_large"
-            android:text="@string/sign_up"
-            android:textColor="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:hint="State"
+            app:layout_constraintBottom_toTopOf="@id/tilPincode"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilCity"
+            app:layout_constraintVertical_bias="0.5">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/tilEtState"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPincode"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:hint="Pin-code"
+            app:layout_constraintBottom_toTopOf="@id/tilMobile"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilState"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintVertical_bias="0.5">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tilEtPincode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text" />
 
-        <TextView
-            android:id="@+id/tv2"
-            android:layout_width="wrap_content"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilMobile"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"
-            android:text="@string/already_have_an_account"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@+id/btnSignup"
+            android:hint="Mobile Number"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/toLogIn"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/toLogIn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/log_in"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textColor="@color/primaryDarkColor"
-            app:layout_constraintBottom_toBottomOf="@id/tv2"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@id/tv2"
-            app:layout_constraintTop_toTopOf="@id/tv2" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tilPincode"
+            app:layout_constraintVertical_bias="0.5">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tilEtMobile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

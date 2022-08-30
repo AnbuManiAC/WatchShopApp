@@ -3,6 +3,7 @@ package com.sample.chrono12.ui.activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -81,5 +82,9 @@ class HomeActivity : AppCompatActivity() {
 
     fun setActionBarTitle(title: String){
         supportActionBar?.title = title
+    }
+
+    fun setBackButtonAs(@DrawableRes drawableIcon: Int){
+        supportActionBar?.setHomeAsUpIndicator(drawableIcon)
     }
 }

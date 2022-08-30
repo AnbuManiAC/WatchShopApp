@@ -2,13 +2,11 @@ package com.sample.chrono12.data.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.sample.chrono12.data.entities.Cart
-import com.sample.chrono12.data.entities.SearchSuggestion
-import com.sample.chrono12.data.entities.User
-import com.sample.chrono12.data.entities.WishList
+import com.sample.chrono12.data.entities.*
+import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
-import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
+import com.sample.chrono12.ui.adapter.AddressAdapter
 
 @Dao
 interface UserDao {
@@ -70,7 +68,22 @@ interface UserDao {
     @Delete
     suspend fun removeSuggestion(suggestion: SearchSuggestion)
 
-    @Query("SELECT EXISTS(SELECT 1 FROM SearchSuggestion WHERE suggestion = :suggestion )")
+    @Query("SELECT EXISTS(SELECT 1 FROM SearchSuggestion WHERE suggestion = :suggestion)")
     suspend fun isSuggestionPresent(suggestion: String): Int
+
+    @Query("SELECT * FROM AddressGroup WHERE userId =:userId AND groupName =:def")
+    fun getUserAddresses(userId: Int, def: String = "default"): LiveData<AddressGroupWithAddress>
+
+    @Query("SELECT * FROM AddressGroup WHERE userId =:userId")
+    fun getAddressGroupWithAddresses(userId: Int): LiveData<List<AddressGroupWithAddress>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertIntoAddress(address: Address)
+
+    @Insert
+    suspend fun insertIntoAddressGroup(addressGroup: AddressGroup)
+
+    @Insert
+    suspend fun insertIntoAddressAndGroupCrossRef(addressAndGroupCrossRef: AddressAndGroupCrossRef)
 
 }

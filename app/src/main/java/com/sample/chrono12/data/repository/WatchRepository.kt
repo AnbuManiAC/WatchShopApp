@@ -1,6 +1,8 @@
 package com.sample.chrono12.data.repository
 
-import androidx.lifecycle.LiveData
+import android.util.Log
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.sample.chrono12.data.dao.WatchDao
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.*
@@ -44,7 +46,7 @@ class WatchRepository(private val watchDao: WatchDao) {
 
     suspend fun getBrandWithProductAndImages(brandId: Int): List<ProductWithBrandAndImages> =
         withContext(Dispatchers.IO){
-            watchDao.getBrandwithProductAndImages(brandId)
+            watchDao.getBrandWithProductAndImages(brandId)
         }
 
     suspend fun getTopRatedWatches(count: Int): List<ProductWithBrandAndImages> =
@@ -56,4 +58,23 @@ class WatchRepository(private val watchDao: WatchDao) {
         withContext(Dispatchers.IO){
             watchDao.getAllWatches()
         }
+
+    suspend fun getProductWithBrandAndImagesByQuery(searchQuery: List<String>): List<ProductWithBrandAndImages> = withContext(Dispatchers.IO){
+        watchDao.getProductWithBrandAndImagesByQuery(generateSearchQuery(searchQuery))
+    }
+
+    private fun generateSearchQuery(query: List<String>): SupportSQLiteQuery {
+        var queryText = "SELECT * FROM Product WHERE (name LIKE \'${query[0]}\')"
+        val args = arrayListOf<String>()
+        query.drop(1).forEach { searchStringPart ->
+            args.add(searchStringPart)
+            args.add(searchStringPart)
+            queryText += " AND (name LIKE ?)"
+        }
+        Log.i("Search","args - $args")
+        Log.i("Search","args - $queryText")
+        val simpleSQLiteQuery = SimpleSQLiteQuery(queryText,args.toArray())
+        Log.i("Search","query as SimpleSQLiteQuery - ${simpleSQLiteQuery.sql}")
+        return simpleSQLiteQuery
+    }
 }

@@ -1,6 +1,7 @@
 package com.sample.chrono12.viewmodels
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.chrono12.data.entities.Cart
@@ -15,8 +16,22 @@ class CartViewModel @Inject constructor(
     private val userRepository: UserRepository
 ): ViewModel() {
 
-    fun getCartItems(userId: Int): LiveData<List<CartWithProductInfo>> =
-        userRepository.getUserCartItems(userId)
+    private val totalOriginalPrice = MutableLiveData<Int>()
+    private val totalCurrentPrice = MutableLiveData<Int>()
+
+    fun getTotalOriginPrice(): LiveData<Int> = totalOriginalPrice
+    fun getTotalCurrentPrice(): LiveData<Int> = totalCurrentPrice
+
+    private fun setTotalOriginalPrice(price: Int){
+        totalOriginalPrice.value = price
+    }
+
+    private fun setTotalCurrentPrice(price: Int){
+        totalCurrentPrice.value = price
+    }
+
+    fun getCartItems(userId: Int): LiveData<List<CartWithProductInfo>> = userRepository.getUserCartItems(userId)
+
 
     fun addProductToUserCart(cartItem: Cart){
         viewModelScope.launch {
@@ -38,5 +53,17 @@ class CartViewModel @Inject constructor(
             userRepository.updateQuantity(productId, userId, quantity)
 
         }
+    }
+
+    fun initPriceCalculating(list: List<CartWithProductInfo>) {
+        var originalPrice = 0
+        var currentPrice = 0
+        list.forEach {
+
+            originalPrice += it.productWithBrandAndImagesList.productWithBrand.product.originalPrice.toInt()*it.cart.quantity
+            currentPrice += it.productWithBrandAndImagesList.productWithBrand.product.currentPrice.toInt()*it.cart.quantity
+        }
+        setTotalCurrentPrice(currentPrice)
+        setTotalOriginalPrice(originalPrice)
     }
 }

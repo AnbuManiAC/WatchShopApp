@@ -23,9 +23,7 @@
                 android:id="@+id/image_slider"
                 layout="@layout/fragment_image_slide"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="-365dp" />
+                android:layout_height="wrap_content" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:layout_width="match_parent"
@@ -206,13 +204,15 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnAddToCart"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/padding_small"
         android:minHeight="48dp"
         android:text="@string/add_to_cart"
+        android:layout_marginStart="@dimen/margin_large"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginVertical="@dimen/padding_small"
         android:textColor="@color/white"
-        app:cornerRadius="10dp"
+        app:cornerRadius="50dp"
         app:icon="@drawable/ic_add_to_cart"
         app:iconGravity="textStart"
         app:iconTint="@color/white"

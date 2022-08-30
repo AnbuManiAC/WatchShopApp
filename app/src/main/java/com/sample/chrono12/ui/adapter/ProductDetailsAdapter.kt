@@ -26,9 +26,6 @@ class ProductDetailsAdapter(
             parent,
             false
         )
-        productDetail.forEach {
-            Log.d("Adapter","${it.title}")
-        }
         return DetailViewHolder(binding)
     }
 

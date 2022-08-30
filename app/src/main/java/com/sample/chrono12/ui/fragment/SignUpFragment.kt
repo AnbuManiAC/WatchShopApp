@@ -40,7 +40,6 @@ class SignUpFragment : Fragment() {
                     editor?.let {
                         editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
                         editor.apply()
-                        Log.d("hjkl","hjk2")
                     }
                     Navigation.findNavController(view).popBackStack(R.id.logInFragment, true)
                 }

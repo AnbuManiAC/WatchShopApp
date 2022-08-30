@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.chrono12.data.entities.SearchSuggestion
 import com.sample.chrono12.data.entities.User
+import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserDetails
 import com.sample.chrono12.data.models.UserField
@@ -62,8 +63,8 @@ class UserViewModel @Inject constructor(
                 }
             }
             else{
-                userField.value =UserField.ALL.also {
-                    it.response = Response.FAILURE.also { it.message = "Invalid credentials" }
+                userField.value =UserField.PASSWORD.also {
+                    it.response = Response.FAILURE.also { it.message = "Incorrect password" }
                 }
             }
         }
@@ -131,5 +132,11 @@ class UserViewModel @Inject constructor(
             userRepository.removeSuggestion(suggestion)
         }
     }
+
+    fun getUserAddresses(userId: Int): LiveData<AddressGroupWithAddress> =
+        userRepository.getUserAddresses(userId)
+
+    fun getAddressGroupWithAddresses(userId: Int): LiveData<List<AddressGroupWithAddress>> =
+        userRepository.getAddressGroupWithAddresses(userId)
 
 }

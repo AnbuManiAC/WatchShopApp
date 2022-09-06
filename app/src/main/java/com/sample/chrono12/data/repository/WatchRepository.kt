@@ -60,19 +60,24 @@ class WatchRepository(private val watchDao: WatchDao) {
         }
 
     suspend fun getProductWithBrandAndImagesByQuery(searchQuery: List<String>): List<ProductWithBrandAndImages> = withContext(Dispatchers.IO){
-        watchDao.getProductWithBrandAndImagesByQuery(generateSearchQuery(searchQuery))
+        val products:List<ProductWithBrandAndImages> = watchDao.getProductWithBrandAndImagesByQuery(generateSearchQuery(searchQuery))
+        products.forEach {
+            Log.d("SEARCH", "${it.productWithBrand.product.productId}")
+        }
+        Log.d("SEARCH", "Product count ${products.size}")
+        return@withContext products
     }
 
     private fun generateSearchQuery(query: List<String>): SupportSQLiteQuery {
-        var queryText = "SELECT * FROM Product WHERE (name LIKE \'${query[0]}\')"
+        var queryText = "SELECT * FROM PRODUCT WHERE productId IN (SELECT productId FROM Product WHERE (name LIKE \'${query[0]}\')"
         val args = arrayListOf<String>()
         query.drop(1).forEach { searchStringPart ->
             args.add(searchStringPart)
-            args.add(searchStringPart)
             queryText += " AND (name LIKE ?)"
         }
-        Log.i("Search","args - $args")
-        Log.i("Search","args - $queryText")
+        queryText+=")"
+        Log.d("Search","args - $args")
+        Log.d("Search","args - $queryText")
         val simpleSQLiteQuery = SimpleSQLiteQuery(queryText,args.toArray())
         Log.i("Search","query as SimpleSQLiteQuery - ${simpleSQLiteQuery.sql}")
         return simpleSQLiteQuery

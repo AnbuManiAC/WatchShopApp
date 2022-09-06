@@ -1,5 +1,6 @@
 package com.sample.chrono12.ui.fragment
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -133,18 +134,23 @@ class WishListFragment : Fragment() {
     = object : WishListAdapter.OnClickDelete{
         override fun onDelete(productId: Int) {
             val userId = userViewModel.getLoggedInUser().toInt()
-            wishListViewModel.removeProductFromUserWishList(productId, userId)
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Are you sure you want to delete this product from Wishlist?")
+                .setMessage("This can't be reversed")
+                .setPositiveButton("Delete") { _, _ ->
+                    wishListViewModel.removeProductFromUserWishList(productId, userId)
+                }
+                .setNegativeButton("Cancel") { _, _ ->
 
-            Snackbar.make(requireView(), "Removed Item from WishList", Snackbar.LENGTH_SHORT)
-                .setAction("Undo",
-                View.OnClickListener {
-                    wishListViewModel.addProductToUserWishList(WishList(userId = userId, productId = productId) )
-                }).show()
+                }
+                .setCancelable(false)
+            builder.create().show()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_cart_menu, menu)
+        inflater.inflate(R.menu.search_wishlist_cart_menu, menu)
+        menu.removeItem(R.id.wishlistFragment)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

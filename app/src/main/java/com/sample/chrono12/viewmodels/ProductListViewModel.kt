@@ -1,5 +1,6 @@
 package com.sample.chrono12.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -110,15 +111,20 @@ class ProductListViewModel @Inject constructor(
         val searchList = getQueryAsList(searchQuery)
         watchRepository.getProductWithBrandAndImagesByQuery(searchList).also{
             setSearchResult(it)
+            it.forEach {
+                Log.d("SEARCH", "${it.productWithBrand.product.productId}")
+            }
+            Log.d("SEARCH", "${it.size}")
         }
     }
 
     private fun getQueryAsList(query: String): List<String>{
         val list = query.split(" ",",",", "," ,")
+        Log.d("SEARCH", list.toString())
         val searchQuery = ArrayList<String>()
-        list.forEach { it.apply {
+        list.forEach {
             searchQuery.add("%$it%")
-        } }
+        }
         return searchQuery
     }
 

@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_cartFragment_to_productFragment"
             app:destination="@id/productFragment" />
+        <action
+            android:id="@+id/action_cartFragment_to_chooseAddressTypeFragment"
+            app:destination="@id/chooseAddressTypeFragment" />
     </fragment>
 
     <fragment
@@ -125,6 +128,10 @@
             android:name="brandId"
             android:defaultValue="0"
             app:argType="integer"/>
+        <argument
+            android:name="fromAllWatches"
+            android:defaultValue="false"
+            app:argType="boolean"/>
         <action
             android:id="@+id/action_productListFragment_to_productFragment"
             app:destination="@id/productFragment" />
@@ -191,8 +198,20 @@
     <fragment
         android:id="@+id/addressFragment"
         android:name="com.sample.chrono12.ui.fragment.AddressFragment"
-        android:label="fragment_address"
+        android:label="Address"
         tools:layout="@layout/fragment_address" >
+        <argument
+            android:name="addressGroupName"
+            android:defaultValue="default"
+            app:argType="string"/>
+        <argument
+            android:name="addFromExisting"
+            android:defaultValue="false"
+            app:argType="boolean"/>
+        <argument
+            android:name="addressGroupId"
+            android:defaultValue="0"
+            app:argType="integer"/>
         <action
             android:id="@+id/action_addressFragment_to_newAddressFragment"
             app:destination="@id/newAddressFragment" />
@@ -200,12 +219,53 @@
     <fragment
         android:id="@+id/newAddressFragment"
         android:name="com.sample.chrono12.ui.fragment.NewAddressFragment"
-        android:label="NewAddressFragment" />
+        android:label="New Address">
+        <argument
+            android:name="addressId"
+            android:defaultValue="0"
+            app:argType="integer"/>
+        <argument
+            android:name="addressGroupName"
+            android:defaultValue="default"
+            app:argType="string"/>
+    </fragment>
     <fragment
         android:id="@+id/addressGroupFragment"
         android:name="com.sample.chrono12.ui.fragment.AddressGroupFragment"
-        android:label="fragment_address_group"
-        tools:layout="@layout/fragment_address_group" />
+        android:label="Address Group"
+        tools:layout="@layout/fragment_address_group" >
+        <action
+            android:id="@+id/action_addressGroupFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
+        <action
+            android:id="@+id/action_addressGroupFragment_to_addressGroupDetailFragment"
+            app:destination="@id/addressGroupDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addressGroupDetailFragment"
+        android:name="com.sample.chrono12.ui.fragment.AddressGroupDetailFragment"
+        android:label="New Address Group"
+        tools:layout="@layout/fragment_address_group_detail">
+        <argument
+            android:name="addressGroupId"
+            android:defaultValue="0"
+            app:argType="integer"/>
+        <argument
+            android:name="addressGroupName"
+            android:defaultValue="0"
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_addressGroupDetailFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
+        <action
+            android:id="@+id/action_addressGroupDetailFragment_to_newAddressFragment"
+            app:destination="@id/newAddressFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/chooseAddressTypeFragment"
+        android:name="com.sample.chrono12.ui.fragment.dialog.ChooseAddressTypeDialog"
+        android:label="fragment_choose_address_type"
+        tools:layout="@layout/fragment_choose_address_type" />
 
 
 </navigation>

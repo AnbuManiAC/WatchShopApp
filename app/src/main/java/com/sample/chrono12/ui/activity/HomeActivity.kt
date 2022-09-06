@@ -14,7 +14,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sample.chrono12.R
-import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.databinding.ActivityMainBinding
 import com.sample.chrono12.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,7 +53,7 @@ class HomeActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE)
         val userId = sharedPref?.getLong(getString(R.string.user_id), 0)
         userId?.let {
-            if(it!=0L) userViewModel.setLoggedInUSer(userId)
+            if(it!=0L) userViewModel.setLoggedInUser(userId)
         }
     }
 

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/padding_large"
+    tools:context=".ui.fragment.AddressGroupDetailFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/svGroupAddresses"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/etGroupName"
+                android:hint="Group name"
+                android:background="@android:color/transparent"
+                android:layout_marginEnd="@dimen/margin_small"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnSaveEditGroupName"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <ToggleButton
+                android:id="@+id/btnSaveEditGroupName"
+                android:layout_width="24dp"
+                android:layout_height="0dp"
+                android:checked="false"
+                android:clickable="true"
+                android:focusable="true"
+                android:textOn=""
+                android:textOff=""
+                android:background="@drawable/save_edit_bg"
+                app:layout_constraintStart_toEndOf="@id/etGroupName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/etGroupName"
+                android:visibility="visible"/>
+
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:id="@+id/divider13"
+                android:layout_marginTop="@dimen/margin_small"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etGroupName"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:text="+ Add new address"
+                android:id="@+id/btnAddNewAddress"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="start"
+                android:allowClickWhenDisabled="false"
+                android:layout_marginTop="@dimen/margin_small"
+                android:drawableStart="@drawable/ic_add"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/btnAddFromExisting"
+                app:layout_constraintTop_toBottomOf="@id/divider13"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:text="+ Add from existing"
+                android:id="@+id/btnAddFromExisting"
+                android:textCursorDrawable="@color/primaryDarkColor"
+                android:textStyle="bold"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="end"
+                android:allowClickWhenDisabled="false"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@id/btnAddNewAddress"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/btnAddNewAddress"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvAddresses"
+                android:text="Addresses(10)"
+                android:visibility="gone"
+                android:layout_marginTop="@dimen/margin_small"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnAddNewAddress"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/margin_small"
+                android:id="@+id/rvGroupAddresses"
+                android:visibility="gone"
+                android:nestedScrollingEnabled="false"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvAddresses"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

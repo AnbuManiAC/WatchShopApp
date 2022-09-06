@@ -123,6 +123,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:text="Place Order"
+            android:id="@+id/btnPlaceOrder"
             android:textColor="@color/white"
             android:backgroundTint="@color/orangeRed"
             android:layout_margin="4dp"

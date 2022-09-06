@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import com.sample.chrono12.R
+import com.sample.chrono12.data.entities.AddressGroup
 import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.databinding.FragmentLogInBinding
@@ -41,6 +42,7 @@ class SignUpFragment : Fragment() {
                         editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
                         editor.apply()
                     }
+                    userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))
                     Navigation.findNavController(view).popBackStack(R.id.logInFragment, true)
                 }
             }

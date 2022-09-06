@@ -55,7 +55,7 @@ class HomeFragment : Fragment() {
 
         binding.tvAllWatches.setOnClickListener(View.OnClickListener {
             mProductListViewModel.setProductListTitle("All Watches")
-            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment())
+            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(fromAllWatches = true))
         })
 
 //        mRecyclerView.layoutManager = GridLayoutManager(activity,3)
@@ -63,7 +63,8 @@ class HomeFragment : Fragment() {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_fav_menu, menu)
+        inflater.inflate(R.menu.search_wishlist_cart_menu, menu)
+        menu.removeItem(R.id.cartFragment)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

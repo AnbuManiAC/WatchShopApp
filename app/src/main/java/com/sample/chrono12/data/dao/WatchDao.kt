@@ -52,6 +52,7 @@ interface WatchDao {
     @Query("SELECT * FROM Product")
     suspend fun getAllWatches(): List<ProductWithBrandAndImages>
 
+    @Transaction
     @RawQuery
     suspend fun getProductWithBrandAndImagesByQuery(searchQueries: SupportSQLiteQuery): List<ProductWithBrandAndImages>
 

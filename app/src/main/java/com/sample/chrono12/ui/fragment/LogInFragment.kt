@@ -1,22 +1,15 @@
 package com.sample.chrono12.ui.fragment
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
-import com.google.android.material.textfield.TextInputLayout
 import com.sample.chrono12.R
-import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.databinding.FragmentLogInBinding
@@ -67,7 +60,7 @@ class LogInFragment : Fragment() {
             clearFormFocus()
             val email = binding.tiEtEmail.text.toString()
             val password = binding.tiEtPassword.text.toString()
-            if (inputNonNullCheck(email, password)) {
+            if (isInputNonNull(email, password)) {
                 userViewModel.authenticateUser(email, password)
             }else{
                 if(email.isEmpty()) binding.tilLoginName.error = "This field can't be empty"
@@ -89,7 +82,7 @@ class LogInFragment : Fragment() {
         binding.tilLoginPassword.error = null
     }
 
-    private fun inputNonNullCheck(email: String, password: String): Boolean =
+    private fun isInputNonNull(email: String, password: String): Boolean =
         email.isNotEmpty() && password.isNotEmpty()
 
     private fun clearFormFocus() {

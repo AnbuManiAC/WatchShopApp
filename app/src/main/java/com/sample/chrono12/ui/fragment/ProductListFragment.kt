@@ -23,10 +23,6 @@ class ProductListFragment : Fragment() {
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -37,7 +33,7 @@ class ProductListFragment : Fragment() {
             productListViewModel.setProductWithBrandAndImagesList(navArgs.subCategoryId)
         } else if (navArgs.brandId > 0) {
             productListViewModel.setBrandWithProductList(navArgs.brandId)
-        } else {
+        } else if(navArgs.fromAllWatches){
             productListViewModel.setAllWatches()
         }
 
@@ -49,6 +45,7 @@ class ProductListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
 
+
         productListViewModel.getProductWithBrandAndImagesList()
             .observe(viewLifecycleOwner) { productInfo ->
                 productInfo?.let { setupProductListAdapter(productInfo.productWithBrandAndImagesList) }
@@ -59,6 +56,10 @@ class ProductListFragment : Fragment() {
 
         productListViewModel.getAllWatches().observe(viewLifecycleOwner) { productsList ->
             productsList?.let { setupProductListAdapter(productsList) }
+        }
+
+        productListViewModel.getSearchResult().observe(viewLifecycleOwner){ productList ->
+            productList?.let { setupProductListAdapter(productList) }
         }
 
 
@@ -77,7 +78,7 @@ class ProductListFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_fav_menu, menu)
+        inflater.inflate(R.menu.search_wishlist_cart_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

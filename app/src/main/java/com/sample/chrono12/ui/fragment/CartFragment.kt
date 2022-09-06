@@ -1,5 +1,6 @@
 package com.sample.chrono12.ui.fragment
 
+import android.app.AlertDialog
 import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
@@ -46,7 +47,8 @@ class CartFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_fav_menu, menu)
+        inflater.inflate(R.menu.search_wishlist_cart_menu, menu)
+        menu.removeItem(R.id.cartFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,6 +58,11 @@ class CartFragment : Fragment() {
         }
         else{
             setupCartMissing()
+        }
+        fragmentCartBinding.btnPlaceOrder.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(
+                CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment()
+            )
         }
     }
 
@@ -115,12 +122,17 @@ class CartFragment : Fragment() {
             = object : CartAdapter.OnClickDelete{
         override fun onDelete(productId: Int, quantity: Int) {
             val userId = userViewModel.getLoggedInUser().toInt()
-            cartViewModel.removeProductFromUserCart(productId, userId)
-            Snackbar.make(requireView(), "Removed Item from Cart", Snackbar.LENGTH_SHORT)
-                .setAction("Undo"
-                ) {
-                    cartViewModel.addProductToUserCart(Cart(userId = userId, productId = productId, quantity = quantity))
-                }.show()
+            val builder = AlertDialog.Builder(requireContext())
+            builder.setTitle("Are you sure you want to delete this product from Cart?")
+                .setMessage("This will not be reversed")
+                .setPositiveButton("Delete") { _, _ ->
+                    cartViewModel.removeProductFromUserCart(productId, userId)
+                }
+                .setNegativeButton("Cancel") { _, _ ->
+
+                }
+                .setCancelable(false)
+            builder.create().show()
         }
     }
 
@@ -131,7 +143,12 @@ class CartFragment : Fragment() {
                 cartViewModel.updateQuantity(product.productId, userViewModel.getLoggedInUser().toInt(), quantity+1)
                 true
             } else{
-                Snackbar.make(requireView(), "5 Units per Product Only", Snackbar.LENGTH_SHORT).show()
+                if(product.stockCount<=quantity){
+                    Snackbar.make(requireView(), "Only $quantity units left", Snackbar.LENGTH_SHORT).show()
+                }
+                else{
+                    Snackbar.make(requireView(), "Max 5 units only", Snackbar.LENGTH_SHORT).show()
+                }
                 false
             }
         }
@@ -141,7 +158,6 @@ class CartFragment : Fragment() {
                 cartViewModel.updateQuantity(product.productId, userViewModel.getLoggedInUser().toInt(), quantity-1)
                 true
             } else{
-                Snackbar.make(requireView(), "Reached lower limit", Snackbar.LENGTH_SHORT).show()
                 false
             }
         }

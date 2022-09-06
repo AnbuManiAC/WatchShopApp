@@ -1,6 +1,7 @@
 package com.sample.chrono12.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.sample.chrono12.data.dao.UserDao
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
@@ -9,6 +10,7 @@ import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.util.*
 
 class UserRepository(private val userDao: UserDao) {
 
@@ -84,22 +86,64 @@ class UserRepository(private val userDao: UserDao) {
     }
 
     fun getUserAddresses(userId: Int): LiveData<AddressGroupWithAddress> =
-        userDao.getUserAddresses(userId)
+        userDao.getUserAddresses(userId, )
+
+//    fun getUserAddressesWithException(userId: Int, addressIds: List<Int>) =
+//        userDao.getAddressesWithException(userId, addressIds)
+
+//    fun getUserAddressesWithException(userId: Int, addressIds: List<Int>):LiveData<AddressGroupWithAddress> {
+//        val def = "default"
+//        val args = arrayListOf<String>("default")
+//        val query = "select * from AddressGroup inner join AddressAndGroupCrossRef ON AddressGroup.addressGroupId = AddressAndGroupCrossRef.addressGroupId " +
+//            "inner join Address on Address.addressId = AddressAndGroupCrossRef.addressId where Address.addressId != 64 and AddressGroup.groupName = \"default\" " +
+//            "and AddressGroup.userId = 3"
+//        return userDao.getAddressesWithException(SimpleSQLiteQuery(query))
+//    }
+
+    suspend fun getAddressById(addressId: Int): Address
+        = userDao.getAddressById(addressId)
+
 
     fun getAddressGroupWithAddresses(userId: Int): LiveData<List<AddressGroupWithAddress>> =
         userDao.getAddressGroupWithAddresses(userId)
 
-    suspend fun insertAddress(address: Address) = withContext(Dispatchers.IO){
+    fun getAddressGroupWithAddresses(userId: Int, addressGroupId: Int): LiveData<AddressGroupWithAddress> =
+        userDao.getAddressGroupWithAddresses(userId, addressGroupId)
+
+    suspend fun getAddressGroupId(userId: Int, groupName: String) =
+        userDao.getAddressGroupId(userId, groupName)
+
+
+    suspend fun insertAddress(address: Address):Long = withContext(Dispatchers.IO){
         userDao.insertIntoAddress(address)
     }
 
-    suspend fun insertAddressGroup(addressGroup: AddressGroup) = withContext(Dispatchers.IO){
+    suspend fun insertAddressGroup(addressGroup: AddressGroup):Long = withContext(Dispatchers.IO){
         userDao.insertIntoAddressGroup(addressGroup)
     }
 
-    suspend fun insertAddressAndGroupCrossRef(addressAndGroupCrossRef: AddressAndGroupCrossRef) =
-        withContext(Dispatchers.IO) {
-            userDao.insertIntoAddressAndGroupCrossRef(addressAndGroupCrossRef)
+    suspend fun updateAddressGroupName(addressGroupId: Int, groupName: String) =
+        withContext(Dispatchers.IO){
+            userDao.updateAddressGroupName(addressGroupId, groupName)
         }
 
+    suspend fun deleteAddressGroup(addressGroupId: Int) =
+        withContext(Dispatchers.IO){
+            userDao.deleteAddressGroup(addressGroupId)
+        }
+
+    suspend fun insertAddressAndGroupCrossRef(userId: Int, addressId: Int, addressGroupName: String) =
+        withContext(Dispatchers.IO) {
+            userDao.insertIntoAddressAndGroupCrossRef(userId, addressId, addressGroupName)
+        }
+
+    suspend fun deleteAddressFromGroup(addressId: Int, addressGroupId: Int) =
+        withContext(Dispatchers.IO) {
+            userDao.deleteAddressFromGroup(addressId, addressGroupId)
+        }
+
+    suspend fun deleteAddress(addressId: Int) =
+        withContext(Dispatchers.IO) {
+            userDao.deleteAddress(addressId)
+        }
 }

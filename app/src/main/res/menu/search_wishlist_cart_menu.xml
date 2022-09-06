@@ -5,7 +5,8 @@
     <item android:id="@+id/searchFragment"
         android:title="Search"
         android:icon="@drawable/ic_search"
-        app:showAsAction="always"/>
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="always|collapseActionView"/>
 
     <item android:id="@+id/wishlistFragment"
         android:title="Wishlist"

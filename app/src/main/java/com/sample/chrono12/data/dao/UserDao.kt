@@ -2,6 +2,7 @@ package com.sample.chrono12.data.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
@@ -71,19 +72,57 @@ interface UserDao {
     @Query("SELECT EXISTS(SELECT 1 FROM SearchSuggestion WHERE suggestion = :suggestion)")
     suspend fun isSuggestionPresent(suggestion: String): Int
 
+
+    //Addresss
     @Query("SELECT * FROM AddressGroup WHERE userId =:userId AND groupName =:def")
     fun getUserAddresses(userId: Int, def: String = "default"): LiveData<AddressGroupWithAddress>
 
-    @Query("SELECT * FROM AddressGroup WHERE userId =:userId")
-    fun getAddressGroupWithAddresses(userId: Int): LiveData<List<AddressGroupWithAddress>>
+//    @Query("SELECT * FROM Address, AddressGroup WHERE AddressGroup.userId =:userId AND AddressGroup.groupName =:def")
+//    fun getAddressesWithException(userId: Int, addressIds: List<Int>, def: String = "default"): LiveData<AddressGroupWithAddress>
+
+//    @Transaction
+//    @Query("select * from AddressGroup inner join AddressAndGroupCrossRef ON AddressGroup.addressGroupId = AddressAndGroupCrossRef.addressGroupId " +
+//            "inner join Address on Address.addressId = AddressAndGroupCrossRef.addressId where Address.addressId not in (:addressIds) and AddressGroup.groupName = :def " +
+//            "and AddressGroup.userId = :userId")
+//    fun getAddressesWithException(userId: Int, addressIds: List<Int>, def: String = "default"): LiveData<AddressGroupWithAddress>
+
+//    @RawQuery
+//    fun getAddressesWithException(query: SupportSQLiteQuery): LiveData<AddressGroupWithAddress>
+
+    @Query("SELECT * FROM Address WHERE addressId = :addressId")
+    suspend fun getAddressById(addressId: Int): Address
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertIntoAddress(address: Address)
+    suspend fun insertIntoAddress(address: Address):Long
 
-    @Insert
-    suspend fun insertIntoAddressGroup(addressGroup: AddressGroup)
+    @Query("DELETE FROM Address WHERE addressId = :addressId")
+    fun deleteAddress(addressId: Int)
 
-    @Insert
-    suspend fun insertIntoAddressAndGroupCrossRef(addressAndGroupCrossRef: AddressAndGroupCrossRef)
+    //Address group
+    @Query("SELECT * FROM AddressGroup WHERE userId =:userId AND groupName!=:def")
+    fun getAddressGroupWithAddresses(userId: Int, def: String = "default"): LiveData<List<AddressGroupWithAddress>>
+
+    @Query("SELECT * FROM AddressGroup WHERE userId =:userId And addressGroupId = :addressGroupId")
+    fun getAddressGroupWithAddresses(userId: Int, addressGroupId: Int): LiveData<AddressGroupWithAddress>
+
+    @Query("SELECT addressGroupId FROM AddressGroup where userId =:userId AND groupName =:groupName")
+    suspend fun getAddressGroupId(userId: Int, groupName: String): Int
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insertIntoAddressGroup(addressGroup: AddressGroup):Long
+
+    @Query("UPDATE AddressGroup SET groupName = :groupName WHERE addressGroupId = :addressGroupId")
+    suspend fun updateAddressGroupName(addressGroupId: Int, groupName: String)
+
+    @Query("DELETE FROM AddressGroup WHERE addressGroupId = :addressGroupId")
+    fun deleteAddressGroup(addressGroupId: Int)
+
+    //Address and group CrossRef
+    @Query("INSERT OR IGNORE INTO AddressAndGroupCrossRef(addressId, addressGroupId) values(:addressId, (SELECT addressGroupId FROM AddressGroup WHERE userId =:userId AND groupName =:addressGroupName))")
+    suspend fun insertIntoAddressAndGroupCrossRef(userId: Int, addressId: Int, addressGroupName: String)
+
+    @Query("DELETE FROM AddressAndGroupCrossRef WHERE addressId = :addressId AND addressGroupId = :addressGroupId")
+    suspend fun deleteAddressFromGroup(addressId: Int, addressGroupId: Int)
+
 
 }

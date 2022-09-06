@@ -5,24 +5,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.AddressGroupRvItemBinding
+import java.util.*
 
 class AddressGroupAdapter(
     private val addressGroupList: List<AddressGroupWithAddress>,
-    private val onAddressGroupButtonClickListener: OnClickAddressGroupButton
+    private val onGroupClick: OnClickAddressGroup,
+    private val onDeleteClickListener: OnClickDelete
 ): RecyclerView.Adapter<AddressGroupAdapter.AddressGroupViewHolder>() {
 
     inner class AddressGroupViewHolder(val binding: AddressGroupRvItemBinding): RecyclerView.ViewHolder(binding.root){
         private val groupName = binding.tvAddressGroupName
         private val addressCount = binding.tvAddressCount
-        fun bind(addressGroup: AddressGroupWithAddress){
-            groupName.text = "Group name : "+addressGroup.addressGroup.groupName
-            addressCount.text = "Number of Addresses = "+addressGroup.addressList.size.toString()
-            binding.btnDeleteAddressGroup.setOnClickListener{
-                onAddressGroupButtonClickListener.onClickRemove(addressGroup)
-            }
-            binding.btnEditAddressGroup.setOnClickListener{
-                onAddressGroupButtonClickListener.onClickEdit(addressGroup)
-            }
+        fun bind(addressGroupWithAddress: AddressGroupWithAddress){
+                groupName.text = addressGroupWithAddress.addressGroup.groupName
+                addressCount.text = "Addresses("+addressGroupWithAddress.addressList.size.toString()+")"
+                binding.root.setOnClickListener { onGroupClick.onClick(addressGroupWithAddress) }
+                binding.btnDelete.setOnClickListener { onDeleteClickListener.onClick(addressGroupWithAddress.addressGroup.addressGroupId) }
         }
     }
 
@@ -43,9 +41,12 @@ class AddressGroupAdapter(
         return addressGroupList.size
     }
 
-    interface OnClickAddressGroupButton {
-        fun onClickEdit(addressGroup: AddressGroupWithAddress)
-        fun onClickRemove(addressGroup: AddressGroupWithAddress)
+    interface OnClickAddressGroup {
+        fun onClick(addressGroupWithAddress: AddressGroupWithAddress)
+    }
+
+    interface OnClickDelete {
+        fun onClick(addressGroupId: Int)
     }
 
 }

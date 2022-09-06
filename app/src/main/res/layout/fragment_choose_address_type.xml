@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_margin="@dimen/margin_small"
+    android:background="@color/background"
+    android:padding="@dimen/padding_large"
+    tools:context=".ui.fragment.dialog.ChooseAddressTypeDialog">
+
+    <TextView
+        android:id="@+id/tvChooseAddressType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Shipping Addresss"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/rgChooseAddressType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checkedButton="@id/rbFromAddresses"
+        android:layout_margin="@dimen/margin_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvChooseAddressType">
+
+        <RadioButton
+            android:id="@+id/rbFromAddresses"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="From Addresses"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+        <RadioButton
+            android:id="@+id/rbFromAddressGroups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:text="From Address Groups"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btnSelect"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:text="SELECT"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rgChooseAddressType" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:text="CANCEL"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rgChooseAddressType" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

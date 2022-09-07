@@ -50,7 +50,7 @@ class ProductListFragment : Fragment() {
 
 
         if(navArgs.subCategoryId>0){
-            productListViewModel.setSubcategoryWithProductList()
+            productListViewModel.getSubcategoryWithProductList()
                 .observe(viewLifecycleOwner) { productList ->
                     productList?.let {
                         setProductCountTv(it.size)
@@ -87,7 +87,15 @@ class ProductListFragment : Fragment() {
         }
 
         setupSortButtonListener()
+        setupFilterButtonListener()
 
+    }
+
+    private fun setupFilterButtonListener() {
+        binding.btnFilter.setOnClickListener {
+            Navigation.findNavController(requireView())
+                .navigate(ProductListFragmentDirections.actionProductListFragmentToFilterFragment())
+        }
     }
 
     private fun setupSortButtonListener() {

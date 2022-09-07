@@ -33,18 +33,21 @@
         <entry key="app/src/main/res/layout/business_registration.xml" value="0.33" />
         <entry key="app/src/main/res/layout/cart_rv_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/categories_rv_item.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/filter_rv_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/filter_value_rv_item.xml" value="0.22857142857142856" />
         <entry key="app/src/main/res/layout/fragment_address.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_address_group.xml" value="0.17274569402228976" />
         <entry key="app/src/main/res/layout/fragment_address_group_detail.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/fragment_choose_address_type.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_choose_address_type.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_image_slide.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_log_in.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/fragment_new_address.xml" value="0.20614035087719298" />
         <entry key="app/src/main/res/layout/fragment_product.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_product_list.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_product_list.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.17274569402228976" />

@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
+import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
 import com.sample.chrono12.ui.adapter.AddressAdapter
 
@@ -123,6 +124,5 @@ interface UserDao {
 
     @Query("DELETE FROM AddressAndGroupCrossRef WHERE addressId = :addressId AND addressGroupId = :addressGroupId")
     suspend fun deleteAddressFromGroup(addressId: Int, addressGroupId: Int)
-
 
 }

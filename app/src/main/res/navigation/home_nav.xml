@@ -147,6 +147,9 @@
         <action
             android:id="@+id/action_productListFragment_to_sortDialog"
             app:destination="@id/sortDialog" />
+        <action
+            android:id="@+id/action_productListFragment_to_filterFragment"
+            app:destination="@id/filterFragment" />
 
     </fragment>
 
@@ -275,8 +278,19 @@
     <dialog
         android:id="@+id/sortDialog"
         android:name="com.sample.chrono12.ui.fragment.dialog.SortDialog"
-        android:label="fragment_sort_dialog"
+        android:label="Sort By"
         tools:layout="@layout/fragment_sort_dialog" />
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="com.sample.chrono12.ui.fragment.FilterFragment"
+        android:label="Filter"
+        tools:layout="@layout/fragment_filter" >
+        <action
+            android:id="@+id/action_filterFragment_to_productListFragment"
+            app:destination="@id/productListFragment"
+            app:popUpTo="@id/productListFragment"
+            app:popUpToInclusive="true"/>
+    </fragment>
 
 
 </navigation>

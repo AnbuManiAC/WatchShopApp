@@ -43,6 +43,10 @@ interface WatchDao {
     @Query("SELECT * FROM SubCategory where subCategoryId = :subCategoryId")
     suspend fun getSubCategoryWithProduct(subCategoryId: Int): SubCategoryWithProduct
 
+    @Transaction
+    @Query("SELECT * FROM SubCategory")
+    suspend fun getSubCategoryWithProduct(): SubCategoryWithProduct
+
     @Query("SELECT * FROM Product where brandId = :brandId")
     suspend fun getBrandWithProductAndImages(brandId: Int): List<ProductWithBrandAndImages>
 
@@ -55,5 +59,18 @@ interface WatchDao {
     @Transaction
     @RawQuery
     suspend fun getProductWithBrandAndImagesByQuery(searchQueries: SupportSQLiteQuery): List<ProductWithBrandAndImages>
+
+    @Transaction
+    @Query("Select * from Product inner join ProductBrand on Product.brandId = ProductBrand.brandId where productId in " +
+            "(select productId from ProductCategoryCrossRef where subCategoryId in (:args1) And productId in " +
+            "(select productId from ProductCategoryCrossRef where subCategoryId in (:args2)) And productId in" +
+            "(select productId from ProductCategoryCrossRef where subCategoryId in (:args3))) "+
+            "and brandName in (:args4)")
+    suspend fun getFilterResult(
+        args1: List<Int> = listOf(1,2,3),
+        args2: List<Int> = listOf(4,5,6),
+        args3: List<Int> = listOf(7,8,9,10,11),
+        args4: List<String> = listOf("Fastrack", "Titan", "Sonata", "Timex", "Maxima", "Helix", "Fossil")
+        ): List<ProductWithBrandAndImages>
 
 }

@@ -44,6 +44,11 @@ class WatchRepository(private val watchDao: WatchDao) {
             watchDao.getSubCategoryWithProduct(subCategoryId)
         }
 
+    suspend fun getSubCategoryWithProduct(): SubCategoryWithProduct =
+        withContext(Dispatchers.IO){
+            watchDao.getSubCategoryWithProduct()
+        }
+
     suspend fun getBrandWithProductAndImages(brandId: Int): List<ProductWithBrandAndImages> =
         withContext(Dispatchers.IO){
             watchDao.getBrandWithProductAndImages(brandId)
@@ -82,4 +87,9 @@ class WatchRepository(private val watchDao: WatchDao) {
         Log.i("Search","query as SimpleSQLiteQuery - ${simpleSQLiteQuery.sql}")
         return simpleSQLiteQuery
     }
+
+    suspend fun getFilterResult(args1:List<Int>, args2:List<Int>, args3:List<Int>, args4:List<String>): List<ProductWithBrandAndImages> =
+        withContext(Dispatchers.IO){
+            watchDao.getFilterResult(args1, args2, args3, args4)
+        }
 }

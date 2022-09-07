@@ -9,7 +9,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
@@ -22,12 +21,12 @@ import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_INIT
 import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_NOT_INITIATED
 import com.sample.chrono12.viewmodels.UserViewModel
 
+
 class SearchFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
-    private var hasFirstFocus: Boolean = false
     private lateinit var searchView: SearchView
 
 
@@ -43,55 +42,78 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        productListViewModel.searchStatus.observe(viewLifecycleOwner) { status ->
+            Log.d("PSearch", "In observe - $status")
+            when (status) {
+                SEARCH_COMPLETED -> {
+                    val list = productListViewModel.getSearchResult().value
+                    if (list.isNullOrEmpty()) {
+                        binding.ivSearch.visibility = View.VISIBLE
+                        binding.tvSearchInfo.visibility = View.VISIBLE
+                        productListViewModel.setSearchStatus()
+                    } else if (list.isNotEmpty()) {
+                        binding.ivSearch.visibility = View.GONE
+                        binding.tvSearchInfo.visibility = View.GONE
+                        Log.d("PSearch", "In else")
+                        productListViewModel.setSearchStatus()
+//                                productListViewModel.searchStatus.removeObservers(viewLifecycleOwner)
+                        findNavController()
+                            .navigate(SearchFragmentDirections.actionSearchFragmentToProductListFragment())
+                    }
+                }
+                SEARCH_INITIATED -> {
+                    Log.i("PSearchFragment", "status - SEARCH_INITIALISED")
+                }
+                SEARCH_NOT_INITIATED -> {
+                    Log.i("PSearchFragment", "status - SEARCH_NOT_INITIALISED")
+                }
+            }
+        }
+
+        setupSuggestionAdapter()
+        initSuggestions()
     }
+
+    private fun setupSuggestionAdapter() {
+
+        binding.rvSearchSuggestions.layoutManager = LinearLayoutManager(requireContext())
+        userViewModel.getSuggestions().observe(viewLifecycleOwner) { suggestions ->
+            val distinctSuggestions = suggestions.distinctBy {
+                it.suggestion
+            }
+            if (suggestions.isEmpty()) return@observe
+            val mutableSuggestions = ArrayList<SearchSuggestion>(distinctSuggestions)
+            binding.rvSearchSuggestions.adapter = SuggestionAdapter(
+                mutableSuggestions.toMutableList(),
+                getOnClickSuggestionListener()
+            )
+        }
+    }
+
 
     private fun initSuggestions() {
-        if (hasFirstFocus) {
-            userViewModel.setSuggestions()
-            hasFirstFocus = false
-        }
-        binding.ivSearch.visibility = View.GONE
-        binding.rvSearchSuggestions.visibility = View.VISIBLE
+        userViewModel.setSuggestions()
     }
 
-    private fun getSearchQueryListener(view: View) =
+    private val getSearchQueryListener =
         object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                Log.d("SEARCH","$query")
+                Log.d("SEARCH1", "$query")
                 binding.rvSearchSuggestions.visibility = View.GONE
-                hideInput()
                 searchView.clearFocus()
-                hasFirstFocus = true
+                hideInput()
                 if (query == null) return false
                 productListViewModel.setProductsWithBrandAndImagesByQuery(query).also {
                     userViewModel.insertSuggestion(query, 0)
-                }
-                productListViewModel.getSearchStatus().observe(viewLifecycleOwner) { status ->
-                    when (status) {
-                        SEARCH_COMPLETED -> {
-                            val list = productListViewModel.getSearchResult().value
-                            if (list.isNullOrEmpty()) {
-                                binding.ivSearch.setImageResource(R.drawable.ic_no_result_found)
-                                binding.tvSearchInfo.text = "No result found!"
-                            } else if (list.isNotEmpty()) {
-                                Navigation.findNavController(requireView())
-                                    .navigate(SearchFragmentDirections.actionSearchFragmentToProductListFragment())
-                            }
-                        }
-                        SEARCH_INITIATED -> {
-                            Log.i("PSearchFragment", "status - SEARCH_INITIALISED")
-                        }
-                        SEARCH_NOT_INITIATED -> {
-                            Log.i("PSearchFragment", "status - SEARCH_NOT_INITIALISED")
-                        }
-                    }
                 }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                initSuggestions()
+                binding.ivSearch.visibility = View.GONE
+                binding.tvSearchInfo.visibility = View.GONE
                 binding.rvSearchSuggestions.visibility = View.VISIBLE
-                if (newText.isNullOrEmpty()) userViewModel.setSuggestions()
                 return true
             }
 
@@ -128,54 +150,26 @@ class SearchFragment : Fragment() {
 
         }
 
-    override fun onResume() {
-        super.onResume()
-        binding.rvSearchSuggestions.visibility = View.GONE
-    }
-
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_wishlist_cart_menu, menu)
-        menu.removeItem(R.id.wishlistFragment)
-        menu.removeItem(R.id.cartFragment)
+        inflater.inflate(R.menu.search_menu, menu)
 
         val searchItem = menu.findItem(R.id.searchFragment)
         searchView = searchItem.actionView as SearchView
+        searchItem.expandActionView()
+        searchView.setOnQueryTextListener(getSearchQueryListener)
 
-        searchView.setOnQueryTextListener(getSearchQueryListener(requireView()))
+        searchItem.setOnActionExpandListener(
+            object : MenuItem.OnActionExpandListener {
+                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                    return true
+                }
 
-        searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                initSuggestions()
-                binding.ivSearch.setImageResource(R.drawable.ic_search_svg)
-
-            } else {
-                binding.ivSearch.visibility = View.VISIBLE
-                binding.rvSearchSuggestions.visibility = View.GONE
-            }
-        }
-
-        binding.rvSearchSuggestions.layoutManager = LinearLayoutManager(requireContext())
-        userViewModel.getSuggestions().observe(viewLifecycleOwner) { suggestions ->
-            val distinctSuggestions = suggestions.distinctBy {
-                it.suggestion
-            }
-            if (suggestions.isEmpty()) return@observe
-            val mutableSuggestions = ArrayList<SearchSuggestion>(distinctSuggestions)
-            binding.rvSearchSuggestions.adapter = SuggestionAdapter(
-                mutableSuggestions.toMutableList(),
-                getOnClickSuggestionListener()
-            )
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.searchFragment -> {
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-
+                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                    hideInput()
+                    requireActivity().onBackPressed()
+                    return true
+                }
+            })
     }
 
     override fun onDestroyView() {

@@ -9,7 +9,8 @@ import com.sample.chrono12.data.entities.Category
 import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.SubCategory
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
-import com.sample.chrono12.data.entities.relations.SubCategoryWithProduct
+import com.sample.chrono12.data.models.SortType
+import com.sample.chrono12.data.models.SortType.*
 import com.sample.chrono12.data.repository.WatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -20,35 +21,70 @@ class ProductListViewModel @Inject constructor(
     private val watchRepository: WatchRepository
 ): ViewModel() {
 
-    private val productWithBrandAndImagesList = MutableLiveData<SubCategoryWithProduct>()
     private val categoryList = MutableLiveData<List<Category>>()
     private val subCategoryList = MutableLiveData<List<SubCategory>>()
-
     private val brandList = MutableLiveData<List<ProductBrand>>()
-    private val brandWithProductList = MutableLiveData<List<ProductWithBrandAndImages>>()
-
-    private val topRatedWatchesList = MutableLiveData<List<ProductWithBrandAndImages>>()
-
     private val allWatchesList = MutableLiveData<List<ProductWithBrandAndImages>>()
 
     private var productListTitle: String? = null
 
-    private val searchResult = MutableLiveData<List<ProductWithBrandAndImages>>()
+//    private val productWithBrandAndImagesList = MutableLiveData<SubCategoryWithProduct>()
+//    private val brandWithProductList = MutableLiveData<List<ProductWithBrandAndImages>>()
+//    private val topRatedWatchesList = MutableLiveData<List<ProductWithBrandAndImages>>()
+//    private val searchResult = MutableLiveData<List<ProductWithBrandAndImages>>()
 
-    private val searchStatus = MutableLiveData<Int>()
+    private var sortType: SortType? = null
+
+    private val _searchStatus = MutableLiveData<Int>()
+    val searchStatus: LiveData<Int>
+    get() = _searchStatus
 
     init {
         setCategory()
         setSubCategory()
         setBrand()
-        searchStatus.value = SEARCH_NOT_INITIATED
+        _searchStatus.value = SEARCH_NOT_INITIATED
+        Log.d("SEARCH2","In search not initiated")
     }
 
-    fun setSearchStatus(status: Int){
-        searchStatus.value = status
+    fun clearSortType(){
+        sortType = null
     }
 
-    fun getSearchStatus():LiveData<Int> = searchStatus
+    fun getSortType(): SortType?  =  sortType
+
+    fun sortProductList(sortType: SortType){
+        when(sortType){
+            PRICE_LOW_TO_HIGH -> {
+                allWatchesList.value = allWatchesList.value?.sortedBy {
+                    it.productWithBrand.product.currentPrice
+                }
+                this.sortType = PRICE_LOW_TO_HIGH
+            }
+            PRICE_HIGH_TO_LOW -> {
+                allWatchesList.value = allWatchesList.value?.sortedByDescending {
+                    it.productWithBrand.product.currentPrice
+                }
+                this.sortType = PRICE_HIGH_TO_LOW
+            }
+            RATING_LOW_TO_HIGH -> {
+                allWatchesList.value = allWatchesList.value?.sortedBy {
+                    it.productWithBrand.product.totalRating
+                }
+                this.sortType = RATING_LOW_TO_HIGH
+            }
+            RATING_HIGH_TO_LOW -> {
+                allWatchesList.value = allWatchesList.value?.sortedByDescending {
+                    it.productWithBrand.product.totalRating
+                }
+                this.sortType = RATING_HIGH_TO_LOW
+            }
+        }
+    }
+
+    fun setSearchStatus(){
+        _searchStatus.value = SEARCH_NOT_INITIATED
+    }
 
     fun setCategory() {
         viewModelScope.launch { categoryList.postValue(watchRepository.getCategory()) }
@@ -68,23 +104,23 @@ class ProductListViewModel @Inject constructor(
 
     fun getBrand(): LiveData<List<ProductBrand>> = brandList
 
-    fun setProductWithBrandAndImagesList(subCategoryId: Int){
-        viewModelScope.launch { productWithBrandAndImagesList.postValue(watchRepository.getSubCategoryWithProduct(subCategoryId)) }
+    fun setSubcategoryWithProductList(subCategoryId: Int){
+        viewModelScope.launch { allWatchesList.postValue(watchRepository.getSubCategoryWithProduct(subCategoryId).productWithBrandAndImagesList) }
     }
 
     fun setBrandWithProductList(brandId: Int){
-        viewModelScope.launch { brandWithProductList.postValue(watchRepository.getBrandWithProductAndImages(brandId)) }
+        viewModelScope.launch { allWatchesList.postValue(watchRepository.getBrandWithProductAndImages(brandId)) }
     }
 
-    fun getProductWithBrandAndImagesList(): LiveData<SubCategoryWithProduct> = productWithBrandAndImagesList
+    fun setSubcategoryWithProductList(): LiveData<List<ProductWithBrandAndImages>> = allWatchesList
 
-    fun getBrandWithProductList(): LiveData<List<ProductWithBrandAndImages>> = brandWithProductList
+    fun getBrandWithProductList(): LiveData<List<ProductWithBrandAndImages>> = allWatchesList
 
     fun setTopRatedWacthes(count: Int){
-        viewModelScope.launch { topRatedWatchesList.postValue(watchRepository.getTopRatedWatches(count)) }
+        viewModelScope.launch { allWatchesList.postValue(watchRepository.getTopRatedWatches(count)) }
     }
 
-    fun getTopRatedWatches(): LiveData<List<ProductWithBrandAndImages>> = topRatedWatchesList
+    fun getTopRatedWatches(): LiveData<List<ProductWithBrandAndImages>> = allWatchesList
 
     fun setProductListTitle(title: String){
         productListTitle = title
@@ -99,15 +135,18 @@ class ProductListViewModel @Inject constructor(
     fun getAllWatches(): LiveData<List<ProductWithBrandAndImages>> = allWatchesList
 
     fun setSearchResult(list: List<ProductWithBrandAndImages>){
-        searchResult.value = list
-        searchStatus.value= SEARCH_COMPLETED
+//        searchResult.value = list
+        allWatchesList.value = list
+        _searchStatus.value= SEARCH_COMPLETED
+        Log.d("SEARCH2","In search completed")
     }
 
-    fun getSearchResult(): LiveData<List<ProductWithBrandAndImages>> = searchResult
+    fun getSearchResult(): LiveData<List<ProductWithBrandAndImages>> = allWatchesList
 
     fun setProductsWithBrandAndImagesByQuery(searchQuery: String) = viewModelScope.launch {
         productListTitle = searchQuery
-        setSearchStatus(SEARCH_INITIATED)
+        _searchStatus.value = SEARCH_INITIATED
+        Log.d("SEARCH2","In search initiated")
         val searchList = getQueryAsList(searchQuery)
         watchRepository.getProductWithBrandAndImagesByQuery(searchList).also{
             setSearchResult(it)

@@ -20,5 +20,5 @@ data class SubCategoryWithProduct(
             entityColumn = "productId"
         )
     )
-    val productWithBrandAndImagesList: List<ProductWithBrandAndImages>
+    var productWithBrandAndImagesList: List<ProductWithBrandAndImages>
 )

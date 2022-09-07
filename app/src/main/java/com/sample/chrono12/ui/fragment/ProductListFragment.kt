@@ -22,6 +22,9 @@ class ProductListFragment : Fragment() {
     private lateinit var binding: FragmentProductListBinding
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,7 +33,7 @@ class ProductListFragment : Fragment() {
         setHasOptionsMenu(true)
 
         if (navArgs.subCategoryId > 0) {
-            productListViewModel.setProductWithBrandAndImagesList(navArgs.subCategoryId)
+            productListViewModel.setSubcategoryWithProductList(navArgs.subCategoryId)
         } else if (navArgs.brandId > 0) {
             productListViewModel.setBrandWithProductList(navArgs.brandId)
         } else if(navArgs.fromAllWatches){
@@ -46,26 +49,60 @@ class ProductListFragment : Fragment() {
         (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
 
 
-        productListViewModel.getProductWithBrandAndImagesList()
-            .observe(viewLifecycleOwner) { productInfo ->
-                productInfo?.let { setupProductListAdapter(productInfo.productWithBrandAndImagesList) }
+        if(navArgs.subCategoryId>0){
+            productListViewModel.setSubcategoryWithProductList()
+                .observe(viewLifecycleOwner) { productList ->
+                    productList?.let {
+                        setProductCountTv(it.size)
+                        setupProductListAdapter(productList)
+                    }
+                }
+        }
+        else if(navArgs.brandId>0){
+            productListViewModel.getBrandWithProductList()
+                .observe(viewLifecycleOwner) { productList ->
+                    productList?.let {
+                        setProductCountTv(it.size)
+                        setupProductListAdapter(productList)
+                    }
+                }
+        }
+
+        else if(navArgs.fromAllWatches){
+            productListViewModel.getAllWatches().observe(viewLifecycleOwner) { productsList ->
+                productsList?.let {
+                    setProductCountTv(it.size)
+                    setupProductListAdapter(productsList)
+                }
             }
-        productListViewModel.getBrandWithProductList().observe(viewLifecycleOwner) { productInfo ->
-            productInfo?.let { setupProductListAdapter(productInfo) }
         }
 
-        productListViewModel.getAllWatches().observe(viewLifecycleOwner) { productsList ->
-            productsList?.let { setupProductListAdapter(productsList) }
+        else{
+            productListViewModel.getSearchResult().observe(viewLifecycleOwner) { productList ->
+                productList?.let {
+                    setProductCountTv(it.size)
+                    setupProductListAdapter(productList)
+                }
+            }
         }
 
-        productListViewModel.getSearchResult().observe(viewLifecycleOwner){ productList ->
-            productList?.let { setupProductListAdapter(productList) }
-        }
-
+        setupSortButtonListener()
 
     }
 
+    private fun setupSortButtonListener() {
+        binding.btnSort.setOnClickListener {
+            Navigation.findNavController(requireView())
+                .navigate(ProductListFragmentDirections.actionProductListFragmentToSortDialog())
+        }
+    }
+
+    private fun setProductCountTv(count: Int){
+        binding.tvProductDetail.text = "Products($count)"
+    }
+
     private fun setupProductListAdapter(productWithBrandAndImagesList: List<ProductWithBrandAndImages>) {
+
         val adapter = ProductListAdapter(productWithBrandAndImagesList) { product ->
             Navigation.findNavController(requireView()).navigate(
                 ProductListFragmentDirections.actionProductListFragmentToProductFragment(product.productId)
@@ -78,7 +115,11 @@ class ProductListFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_wishlist_cart_menu, menu)
+        inflater.inflate(R.menu.search_wishlist_menu, menu)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -97,5 +138,9 @@ class ProductListFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        productListViewModel.clearSortType()
+    }
 
 }

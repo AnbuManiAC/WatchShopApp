@@ -47,8 +47,7 @@ class CartFragment : Fragment() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_wishlist_cart_menu, menu)
-        menu.removeItem(R.id.cartFragment)
+        inflater.inflate(R.menu.search_wishlist_menu, menu)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,11 +58,7 @@ class CartFragment : Fragment() {
         else{
             setupCartMissing()
         }
-        fragmentCartBinding.btnPlaceOrder.setOnClickListener {
-            Navigation.findNavController(requireView()).navigate(
-                CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment()
-            )
-        }
+
     }
 
     private fun setupCartMissing() {
@@ -77,6 +72,11 @@ class CartFragment : Fragment() {
     }
 
     private fun setupCart() {
+        fragmentCartBinding.btnPlaceOrder.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(
+                CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment()
+            )
+        }
         cartViewModel.getTotalCurrentPrice().observe(viewLifecycleOwner){
             fragmentCartBinding.tvTotalCurrentPrice.text = it?.toString()
         }

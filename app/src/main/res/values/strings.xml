@@ -37,5 +37,10 @@
     <string name="categories">Categories</string>
     <string name="user_pref">User_Preference</string>
     <string name="user_id">User_Id</string>
+    <string name="sort_by">Sort By</string>
+    <string name="price_high_to_low">Price - High to Low</string>
+    <string name="price_low_to_high">Price - Low to High</string>
+    <string name="rating_high_to_low">Rating - High to Low</string>
+    <string name="rating_low_to_high">Rating - Low to High</string>
 
 </resources>

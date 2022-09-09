@@ -35,7 +35,7 @@ class LogInFragment : Fragment() {
             field?.let {
                 deliverFieldMessage(it)
                 if (field.response == Response.SUCCESS) {
-                    val sharedPref = activity?.getSharedPreferences(
+                    val sharedPref = requireActivity().getSharedPreferences(
                         getString(R.string.user_pref),
                         Context.MODE_PRIVATE
                     )

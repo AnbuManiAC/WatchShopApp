@@ -218,12 +218,16 @@
             android:defaultValue="false"
             app:argType="boolean"/>
         <argument
-            android:name="addressGroupId"
-            android:defaultValue="0"
-            app:argType="integer"/>
+            android:name="chooseAddress"
+            android:defaultValue="false"
+            app:argType="boolean"/>
         <action
             android:id="@+id/action_addressFragment_to_newAddressFragment"
             app:destination="@id/newAddressFragment" />
+        <action
+            android:id="@+id/action_addressFragment_to_orderConfirmationFragment"
+            app:destination="@id/orderConfirmationFragment"
+            app:popUpTo="@id/cartFragment"/>
     </fragment>
     <fragment
         android:id="@+id/newAddressFragment"
@@ -243,12 +247,20 @@
         android:name="com.sample.chrono12.ui.fragment.AddressGroupFragment"
         android:label="Address Group"
         tools:layout="@layout/fragment_address_group" >
+        <argument
+            android:name="chooseGroup"
+            android:defaultValue="false"
+            app:argType="boolean"/>
         <action
             android:id="@+id/action_addressGroupFragment_to_addressFragment"
             app:destination="@id/addressFragment" />
         <action
             android:id="@+id/action_addressGroupFragment_to_addressGroupDetailFragment"
             app:destination="@id/addressGroupDetailFragment" />
+        <action
+            android:id="@+id/action_addressGroupFragment_to_orderConfirmationFragment"
+            app:destination="@id/orderConfirmationFragment"
+            app:popUpTo="@id/cartFragment"/>
     </fragment>
     <fragment
         android:id="@+id/addressGroupDetailFragment"
@@ -274,7 +286,14 @@
         android:id="@+id/chooseAddressTypeFragment"
         android:name="com.sample.chrono12.ui.fragment.dialog.ChooseAddressTypeDialog"
         android:label="fragment_choose_address_type"
-        tools:layout="@layout/fragment_choose_address_type" />
+        tools:layout="@layout/fragment_choose_address_type" >
+        <action
+            android:id="@+id/action_chooseAddressTypeFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
+        <action
+            android:id="@+id/action_chooseAddressTypeFragment_to_addressGroupFragment"
+            app:destination="@id/addressGroupFragment" />
+    </dialog>
     <dialog
         android:id="@+id/sortDialog"
         android:name="com.sample.chrono12.ui.fragment.dialog.SortDialog"
@@ -291,6 +310,33 @@
             app:popUpTo="@id/productListFragment"
             app:popUpToInclusive="true"/>
     </fragment>
+    <fragment
+        android:id="@+id/orderConfirmationFragment"
+        android:name="com.sample.chrono12.ui.fragment.OrderConfirmationFragment"
+        android:label="Order Confirmation">
+        <argument
+            android:name="addressGroupId"
+            android:defaultValue="0"
+            app:argType="integer"/>
+        <argument
+            android:name="addressId"
+            android:defaultValue="0"
+            app:argType="integer"/>
+        <action
+            android:id="@+id/action_orderConfirmationFragment_to_productFragment"
+            app:destination="@id/productFragment" />
+        <action
+            android:id="@+id/action_orderConfirmationFragment_to_newAddressFragment"
+            app:destination="@id/newAddressFragment" />
+        <action
+            android:id="@+id/action_orderConfirmationFragment_to_orderConfirmedDialog"
+            app:destination="@id/orderConfirmedDialog" />
+    </fragment>
+    <dialog
+        android:id="@+id/orderConfirmedDialog"
+        android:name="com.sample.chrono12.ui.fragment.dialog.OrderConfirmedDialog"
+        android:label="fragment_order_confirmed_dialog"
+        tools:layout="@layout/fragment_order_confirmed_dialog" />
 
 
 </navigation>

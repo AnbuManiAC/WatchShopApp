@@ -1,23 +1,35 @@
 package com.sample.chrono12.ui.adapter
 
-import android.util.Log
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import com.sample.chrono12.data.entities.Address
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.AddressRvItemBinding
 
 
 class AddressAdapter(
-    private val addressGroupWithAddress: AddressGroupWithAddress,
     private val onAddressButtonClickListener: OnClickAddressButton,
-    private val addFromExisting: Boolean
+    private val addFromExisting: Boolean,
+    private val chooseAddress: Boolean
 ) : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() {
 
+    private lateinit var addressGroupWithAddress: AddressGroupWithAddress
     private val selectedIds = mutableSetOf<Int>()
+    private var selectedAddressAndGroupId = Pair(0,0)
+    private var hideEditAndDeleteButton = false
 
+    fun setData(addressGroupWithAddress: AddressGroupWithAddress){
+        this.addressGroupWithAddress = addressGroupWithAddress
+    }
+
+    fun setHideEditAndDeleteButton(status: Boolean){
+        hideEditAndDeleteButton = status
+    }
+
+    fun getSelectedAddressId() = selectedAddressAndGroupId
     fun getSelectedIds() = selectedIds
 
     inner class AddressViewHolder(val binding: AddressRvItemBinding) :
@@ -55,12 +67,26 @@ class AddressAdapter(
                 binding.cbSelect.setOnCheckedChangeListener { compoundButton, isChecked ->
                     if (isChecked) {
                         selectedIds.add(addressGroupWithAddress.addressList[position].addressId)
-                        Log.d("SELECTED", selectedIds.toString())
                     } else {
                         selectedIds.remove(addressGroupWithAddress.addressList[position].addressId)
-                        Log.d("SELECTED", selectedIds.toString())
                     }
                 }
+            }
+            if (chooseAddress) {
+                binding.btnRemoveAddress.visibility = View.GONE
+                binding.btnEditAddress.visibility = View.GONE
+                val rbSelectAddress = binding.rbChoose
+                val addressId = address.addressId
+                val groupId =addressGroupWithAddress.addressGroup.addressGroupId
+                rbSelectAddress.setOnClickListener {
+                    selectedAddressAndGroupId = Pair(groupId, addressId)
+                    notifyDataSetChanged()
+                }
+                rbSelectAddress.isChecked = selectedAddressAndGroupId.second == addressId
+            }
+            if(hideEditAndDeleteButton){
+                binding.btnRemoveAddress.visibility = View.GONE
+                binding.btnEditAddress.visibility = View.GONE
             }
         }
 
@@ -75,12 +101,18 @@ class AddressAdapter(
         if (addFromExisting) {
             binding.btnEditAddress.visibility = View.GONE
             binding.btnRemoveAddress.visibility = View.GONE
+            binding.rbChoose.visibility = View.GONE
             binding.cbSelect.visibility = View.VISIBLE
             binding.cbSelect.isChecked = false
+        } else if (chooseAddress) {
+            binding.rbChoose.visibility = View.VISIBLE
+            binding.rbChoose.isChecked = false
+            binding.cbSelect.visibility = View.GONE
         } else {
             binding.btnEditAddress.visibility = View.VISIBLE
             binding.btnRemoveAddress.visibility = View.VISIBLE
             binding.cbSelect.visibility = View.GONE
+            binding.rbChoose.visibility = View.GONE
         }
         return AddressViewHolder(binding)
     }

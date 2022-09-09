@@ -1,6 +1,7 @@
 package com.sample.chrono12.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
@@ -8,19 +9,47 @@ import com.sample.chrono12.databinding.AddressGroupRvItemBinding
 import java.util.*
 
 class AddressGroupAdapter(
-    private val addressGroupList: List<AddressGroupWithAddress>,
     private val onGroupClick: OnClickAddressGroup,
-    private val onDeleteClickListener: OnClickDelete
-): RecyclerView.Adapter<AddressGroupAdapter.AddressGroupViewHolder>() {
+    private val onDeleteClickListener: OnClickDelete,
+    private val chooseGroup: Boolean
+) : RecyclerView.Adapter<AddressGroupAdapter.AddressGroupViewHolder>() {
 
-    inner class AddressGroupViewHolder(val binding: AddressGroupRvItemBinding): RecyclerView.ViewHolder(binding.root){
+    private lateinit var addressGroupList: List<AddressGroupWithAddress>
+    private var selectedGroupId: Int = 0
+
+    fun setData(addressGroupList: List<AddressGroupWithAddress>){
+        this.addressGroupList = addressGroupList
+    }
+    fun getSelectedGroupId() = selectedGroupId
+
+    inner class AddressGroupViewHolder(val binding: AddressGroupRvItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private val groupName = binding.tvAddressGroupName
         private val addressCount = binding.tvAddressCount
-        fun bind(addressGroupWithAddress: AddressGroupWithAddress){
-                groupName.text = addressGroupWithAddress.addressGroup.groupName
-                addressCount.text = "Addresses("+addressGroupWithAddress.addressList.size.toString()+")"
-                binding.root.setOnClickListener { onGroupClick.onClick(addressGroupWithAddress) }
-                binding.btnDelete.setOnClickListener { onDeleteClickListener.onClick(addressGroupWithAddress.addressGroup.addressGroupId) }
+        fun bind(addressGroupWithAddress: AddressGroupWithAddress) {
+            groupName.text = addressGroupWithAddress.addressGroup.groupName
+            addressCount.text =
+                "Addresses(" + addressGroupWithAddress.addressList.size.toString() + ")"
+            binding.root.setOnClickListener { onGroupClick.onClick(addressGroupWithAddress) }
+            if (chooseGroup) {
+                binding.btnDelete.visibility = View.GONE
+                binding.rbSelect.visibility = View.VISIBLE
+                val groupId = addressGroupWithAddress.addressGroup.addressGroupId
+                binding.rbSelect.setOnClickListener {
+                    selectedGroupId = groupId
+                    notifyDataSetChanged()
+                }
+                binding.rbSelect.isChecked = selectedGroupId == groupId
+            } else {
+                binding.rbSelect.visibility = View.GONE
+                binding.btnDelete.visibility = View.VISIBLE
+                binding.btnDelete.setOnClickListener {
+                    onDeleteClickListener.onClick(
+                        addressGroupWithAddress.addressGroup.addressGroupId
+                    )
+                }
+            }
+
         }
     }
 

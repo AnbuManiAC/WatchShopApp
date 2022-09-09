@@ -27,5 +27,6 @@
     <color name="unselected">#929595</color>
     <color name="lightBlue">#FFB5E4F6</color>
     <color name="background">#f2f0f4</color>
+    <color name="backgroundBlueShade">#f2f3f6</color>
 
 </resources>

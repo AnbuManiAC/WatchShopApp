@@ -62,6 +62,23 @@ class FilterFragment : Fragment() {
         28 to "0 - 1⭐"
     )
 
+    val priceList = hashMapOf<Int, Pair<Int, Int>>(
+        19 to Pair(0,1000),
+        20 to Pair(1001,2000),
+        21 to Pair(2001,3000),
+        22 to Pair(3001,5000),
+        23 to Pair(5000,1000000)
+    )
+
+
+    val ratingList = hashMapOf<Int, Pair<Int, Int>>(
+        24 to Pair(4,5),
+        25 to Pair(3,4),
+        26 to Pair(2,3),
+        27 to Pair(1,2),
+        28 to Pair(0,1)
+    )
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -87,30 +104,10 @@ class FilterFragment : Fragment() {
             val dialShapeInput = filterInput.filter { it in 4..6 }
             val displayTypeInput = filterInput.filter { it in 7..11 }
             val brandInput = brands.filter { (key: Int) -> key in filterInput }.values.toList()
+            val ratingInput = ratingList.filter { (key: Int) -> key in filterInput }.values.toList()
+            val priceInput = priceList.filter { (key: Int) -> key in filterInput }.values.toList()
 
-//            if(genderInput.isNotEmpty() && dialShapeInput.isNotEmpty() && displayTypeInput.isNotEmpty()){
-//                productListViewModel.setFilterResult(genderInput, dialShapeInput, displayTypeInput, brandInput)
-//            }
-//            else if(genderInput.isNotEmpty() && dialShapeInput.isNotEmpty()){
-//                productListViewModel.setFilterResult(args1 = genderInput, args2 =  dialShapeInput, args4 =  brandInput)
-//            }
-//            else if(dialShapeInput.isNotEmpty() && displayTypeInput.isNotEmpty()){
-//                productListViewModel.setFilterResult(args2 =  dialShapeInput, args3 =  displayTypeInput, args4 =  brandInput)
-//            }
-//            else if(genderInput.isNotEmpty() && displayTypeInput.isNotEmpty()){
-//                productListViewModel.setFilterResult(args1 = genderInput, args3 =  displayTypeInput, args4 =  brandInput)
-//            }
-//            else if(genderInput.isNotEmpty()){
-//                productListViewModel.setFilterResult(args1 = genderInput, args4 =  brandInput)
-//            }
-//            else if(dialShapeInput.isNotEmpty()){
-//                productListViewModel.setFilterResult(args2 = dialShapeInput, args4 =  brandInput)
-//            }
-//            else if(displayTypeInput.isNotEmpty()){
-//                productListViewModel.setFilterResult(args3 = displayTypeInput, args4 =  brandInput)
-//            }
-
-            productListViewModel.setFilterResult(genderInput, dialShapeInput, displayTypeInput, brandInput)
+            productListViewModel.setFilterResult(genderInput, dialShapeInput, displayTypeInput, brandInput, priceInput, ratingInput)
 
             findNavController().navigate(FilterFragmentDirections.actionFilterFragmentToProductListFragment())
         }

@@ -11,6 +11,7 @@ import com.sample.chrono12.data.models.UserDetails
 import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,24 +31,26 @@ class UserViewModel @Inject constructor(
     private var addressGroupId = MutableLiveData<Int>()
     private val addressIds = MutableLiveData<List<Int>>()
 
-    fun clearAddressIds(){
+
+    fun clearAddressIds() {
         null.also { addressIds.value = it }
     }
 
-    fun setAddressIds(addressIdList: List<Int>){
+    fun setAddressIds(addressIdList: List<Int>) {
         addressIds.value = addressIdList
     }
 
-    fun getAddressIds(): List<Int> = addressIds.value!!
+    fun getAddressIds(): List<Int>? = addressIds.value
 
     fun clearUserFieldInfo() {
         null.also { userField.value = it }
     }
 
-    fun clearAddressId(){
+    fun clearAddressId() {
         null.also { addressId.value = it }
     }
-    fun clearAddressGroupId(){
+
+    fun clearAddressGroupId() {
         null.also { addressGroupId.value = it }
     }
 
@@ -171,15 +174,22 @@ class UserViewModel @Inject constructor(
     ): LiveData<AddressGroupWithAddress> =
         userRepository.getAddressGroupWithAddresses(userId, addressGroupId)
 
-    fun getAddressGroupId():LiveData<Int> = addressGroupId
+    fun getAddressGroupWithAddressByAddressId(
+        userId: Int,
+        addressGroupId: Int,
+        addressId: Int
+    ): LiveData<AddressGroupWithAddress> =
+        userRepository.getAddressGroupWithAddressByAddressId(userId, addressGroupId, addressId)
 
-    fun getAddressId():LiveData<Int> = addressId
+    fun getAddressGroupId(): LiveData<Int> = addressGroupId
+
+    fun getAddressId(): LiveData<Int> = addressId
 
     fun insertAddress(address: Address, addressGroupName: String) {
         viewModelScope.launch {
             val id = userRepository.insertAddress(address)
 //            addressId.postValue(id.toInt())
-            if(addressGroupName!="default"){
+            if (addressGroupName != "default") {
                 insertIntoAddressAndGroupCrossRef(id.toInt(), addressGroupName)
             }
             insertIntoAddressAndGroupCrossRef(id.toInt(), "default")
@@ -193,13 +203,13 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun updateAddressGroupName(addressGroupId: Int, groupName: String){
+    fun updateAddressGroupName(addressGroupId: Int, groupName: String) {
         viewModelScope.launch {
             userRepository.updateAddressGroupName(addressGroupId, groupName)
         }
     }
 
-    fun deleteAddressGroup(addressGroupId: Int){
+    fun deleteAddressGroup(addressGroupId: Int) {
         viewModelScope.launch {
             userRepository.deleteAddressGroup(addressGroupId)
         }
@@ -207,7 +217,11 @@ class UserViewModel @Inject constructor(
 
     fun insertIntoAddressAndGroupCrossRef(addressId: Int, addressGroupName: String) =
         viewModelScope.launch {
-            userRepository.insertAddressAndGroupCrossRef(getLoggedInUser().toInt(), addressId, addressGroupName)
+            userRepository.insertAddressAndGroupCrossRef(
+                getLoggedInUser().toInt(),
+                addressId,
+                addressGroupName
+            )
         }
 
     fun deleteAddressFromGroup(addressId: Int, addressGroupId: Int) {
@@ -219,4 +233,16 @@ class UserViewModel @Inject constructor(
     fun deleteAddress(addressId: Int) {
         viewModelScope.launch { userRepository.deleteAddress(addressId) }
     }
+
+    suspend fun insertOrder(order: Order):Int {
+        val orderId = viewModelScope.async(Dispatchers.IO) {
+            return@async userRepository.insertOrder(order)
+        }
+        return orderId.await().toInt()
+    }
+
+    fun insertProductOrdered(productOrdered: ProductOrdered) {
+        viewModelScope.launch { userRepository.insertProductOrdered(productOrdered) }
+    }
+
 }

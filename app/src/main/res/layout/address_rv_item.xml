@@ -4,11 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="@dimen/margin_small"
-    android:layout_margin="@dimen/padding_small"
-    app:cardElevation="4dp"
-    android:checkable="true"
-    android:focusable="true"
-    android:clickable="true"
+    android:layout_marginBottom="@dimen/padding_small"
+
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
@@ -17,6 +14,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/backgroundBlueShade"
         android:padding="@dimen/margin_small">
 
         <TextView
@@ -27,7 +25,7 @@
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cbSelect"
+            app:layout_constraintStart_toEndOf="@id/barrier2"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -78,14 +76,13 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEditAddress"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
-            android:elevation="1dp"
             android:text="Edit"
+            android:textStyle="bold"
             android:padding="@dimen/padding_small"
-            android:textColor="@color/black"
             android:visibility="visible"
             app:cornerRadius="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -94,26 +91,45 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRemoveAddress"
-            style="@style/Widget.MaterialComponents.Button.TextButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_small"
             android:layout_marginStart="@dimen/margin_small"
+            android:textStyle="bold"
             app:layout_goneMarginStart="0dp"
-            android:elevation="1dp"
             android:text="Remove"
             android:padding="@dimen/padding_small"
-            android:textColor="@color/black"
             android:visibility="visible"
             app:cornerRadius="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/btnEditAddress"
             app:layout_constraintTop_toBottomOf="@id/tvAddressMobile" />
 
+        <androidx.constraintlayout.widget.Barrier
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/barrier2"
+            app:barrierDirection="end"
+            app:constraint_referenced_ids="rbChoose,cbSelect"/>
+
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/cbSelect"
+            android:checked="false"
+            android:visibility="gone"
+            android:layout_marginEnd="@dimen/margin_small"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tvAddressName"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rbChoose"
             android:checked="false"
             android:visibility="gone"
             android:layout_marginEnd="@dimen/margin_small"

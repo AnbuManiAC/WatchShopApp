@@ -14,7 +14,7 @@
         android:id="@+id/tvChooseAddressType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Shipping Addresss"
+        android:text="Shipping Address"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
             android:id="@+id/rbFromAddresses"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="From Addresses"
+            android:text="Choose From Addresses"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
         <RadioButton
@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small"
-            android:text="From Address Groups"
+            android:text="Choose From Address Groups"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1" />
 
     </RadioGroup>

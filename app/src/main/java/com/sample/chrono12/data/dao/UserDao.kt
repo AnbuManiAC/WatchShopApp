@@ -106,6 +106,9 @@ interface UserDao {
     @Query("SELECT * FROM AddressGroup WHERE userId =:userId And addressGroupId = :addressGroupId")
     fun getAddressGroupWithAddresses(userId: Int, addressGroupId: Int): LiveData<AddressGroupWithAddress>
 
+    @Query("SELECT * FROM AddressGroup, Address WHERE userId =:userId And addressId = :addressId And addressGroupId = :addressGroupId")
+    fun getAddressGroupWithAddressByAddressId(userId: Int, addressGroupId: Int, addressId:Int): LiveData<AddressGroupWithAddress>
+
     @Query("SELECT addressGroupId FROM AddressGroup where userId =:userId AND groupName =:groupName")
     suspend fun getAddressGroupId(userId: Int, groupName: String): Int
 
@@ -124,5 +127,12 @@ interface UserDao {
 
     @Query("DELETE FROM AddressAndGroupCrossRef WHERE addressId = :addressId AND addressGroupId = :addressGroupId")
     suspend fun deleteAddressFromGroup(addressId: Int, addressGroupId: Int)
+
+    //Order
+    @Insert
+    suspend fun insertOrder(order: Order): Long
+
+    @Insert
+    suspend fun insertProductOrdered(productOrdered: ProductOrdered): Long
 
 }

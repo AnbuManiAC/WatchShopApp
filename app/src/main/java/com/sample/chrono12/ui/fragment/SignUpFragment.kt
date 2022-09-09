@@ -40,6 +40,7 @@ class SignUpFragment : Fragment() {
                     val editor = sharedPref?.edit()
                     editor?.let {
                         editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
+                        editor.putInt(getString(R.string.bulk_order_id), 0)
                         editor.apply()
                     }
                     userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))

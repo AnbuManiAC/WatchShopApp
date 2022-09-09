@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.FragmentAddressGroupBinding
@@ -20,7 +22,8 @@ class AddressGroupFragment : Fragment() {
 
     private lateinit var binding: FragmentAddressGroupBinding
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
-
+    private val navArgs by navArgs<AddressGroupFragmentArgs>()
+    private lateinit var addressGroupAdapter: AddressGroupAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,18 +39,35 @@ class AddressGroupFragment : Fragment() {
             Navigation.findNavController(requireView()).navigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToAddressGroupDetailFragment())
         }
         setupAddressGroupAdapter()
+        if(navArgs.chooseGroup) setupChooseGroupButton()
+    }
+
+    private fun setupChooseGroupButton() {
+        binding.btnSelectGroup.visibility = View.VISIBLE
+        binding.btnSelectGroup.setOnClickListener {
+            val groupId = addressGroupAdapter.getSelectedGroupId()
+            if(groupId>0){
+                findNavController().navigate(
+                    AddressGroupFragmentDirections.actionAddressGroupFragmentToOrderConfirmationFragment(addressGroupId = groupId)
+                )
+            }
+        }
     }
 
     private fun setupAddressGroupAdapter() {
+        addressGroupAdapter = AddressGroupAdapter(
+            getOnGroupClickListener(),
+            getOnDeleteClickListener(),
+            navArgs.chooseGroup
+        )
         binding.rvAddressGroup.layoutManager = LinearLayoutManager(requireContext())
         userViewModel.getAddressGroupWithAddresses(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
-                val adapter = AddressGroupAdapter(
-                    it,
-                    getOnGroupClickListener(),
-                    getOnDeleteClickListener()
-                )
-                binding.rvAddressGroup.adapter = adapter
+                with(addressGroupAdapter){
+                    setData(it)
+                    notifyDataSetChanged()
+                }
+                binding.rvAddressGroup.adapter = addressGroupAdapter
             }
     }
 

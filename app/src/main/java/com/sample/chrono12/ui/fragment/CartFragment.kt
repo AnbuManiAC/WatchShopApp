@@ -78,11 +78,11 @@ class CartFragment : Fragment() {
             )
         }
         cartViewModel.getTotalCurrentPrice().observe(viewLifecycleOwner){
-            fragmentCartBinding.tvTotalCurrentPrice.text = it?.toString()
+            fragmentCartBinding.tvTotalCurrentPrice.text = getString(R.string.price,it)
         }
         cartViewModel.getTotalOriginPrice().observe(viewLifecycleOwner){
             fragmentCartBinding.tvTotalPrice.apply {
-                text = it?.toString()
+                text = getString(R.string.price, it)
                 paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
 

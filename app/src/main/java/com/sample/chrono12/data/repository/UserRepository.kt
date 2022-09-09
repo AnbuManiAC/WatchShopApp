@@ -110,6 +110,9 @@ class UserRepository(private val userDao: UserDao) {
     fun getAddressGroupWithAddresses(userId: Int, addressGroupId: Int): LiveData<AddressGroupWithAddress> =
         userDao.getAddressGroupWithAddresses(userId, addressGroupId)
 
+    fun getAddressGroupWithAddressByAddressId(userId: Int, addressGroupId: Int , addressId: Int): LiveData<AddressGroupWithAddress> =
+        userDao.getAddressGroupWithAddressByAddressId(userId, addressGroupId, addressId)
+
     suspend fun getAddressGroupId(userId: Int, groupName: String) =
         userDao.getAddressGroupId(userId, groupName)
 
@@ -145,5 +148,15 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun deleteAddress(addressId: Int) =
         withContext(Dispatchers.IO) {
             userDao.deleteAddress(addressId)
+        }
+
+    suspend fun insertOrder(order: Order):Long =
+        withContext(Dispatchers.IO){
+            userDao.insertOrder(order)
+        }
+
+    suspend fun insertProductOrdered(productOrdered: ProductOrdered) =
+        withContext(Dispatchers.IO){
+            userDao.insertProductOrdered(productOrdered)
         }
 }

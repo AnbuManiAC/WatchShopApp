@@ -69,7 +69,6 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        android:backgroundTint="@color/primaryDarkColor"
         app:layout_constraintVertical_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -34,7 +34,7 @@ class HomeFragment : Fragment() {
     ): View? {
         setHasOptionsMenu(true)
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        mProductListViewModel.setTopRatedWacthes(10)
+        mProductListViewModel.setTopRatedWatches(10)
         return binding.root
     }
 

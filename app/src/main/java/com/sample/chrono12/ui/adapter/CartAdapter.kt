@@ -19,6 +19,11 @@ class CartAdapter(
 
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
+    private var hideDeleteButton = false
+    fun setHideDeleteButton(status: Boolean){
+        hideDeleteButton = status
+    }
+
     inner class CartViewHolder(val binding: CartRvItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val productName = binding.tvItemProductName
@@ -53,6 +58,8 @@ class CartAdapter(
                 offerPercent.text =
                     "${((product.originalPrice - product.currentPrice) / product.originalPrice * 100).toInt()}% Off"
             }
+
+            if(hideDeleteButton) binding.btnDelete.visibility = View.GONE
 
         }
 

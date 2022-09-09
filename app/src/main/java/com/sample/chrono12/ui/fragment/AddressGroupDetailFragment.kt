@@ -155,6 +155,11 @@ class AddressGroupDetailFragment : Fragment() {
     }
 
     private fun setupAdapter(addressGroupId: Int) {
+        val adapter = AddressAdapter(
+            getOnAddressButtonClickListener(),
+            addFromExisting = false,
+            chooseAddress = false
+        )
         userViewModel.getAddressGroupWithAddresses(
             userViewModel.getLoggedInUser().toInt(),
             addressGroupId
@@ -168,11 +173,10 @@ class AddressGroupDetailFragment : Fragment() {
                 val addressIds = mutableListOf<Int>()
                 it.addressList.forEach { addressIds.add(it.addressId) }
                 userViewModel.setAddressIds(addressIds)
-                val adapter = AddressAdapter(
-                    it,
-                    getOnAddressButtonClickListener(),
-                    addFromExisting = false
-                )
+                with(adapter){
+                    setData(it)
+                    notifyDataSetChanged()
+                }
                 with(binding.rvGroupAddresses) {
                     this.adapter = adapter
                     visibility = View.VISIBLE

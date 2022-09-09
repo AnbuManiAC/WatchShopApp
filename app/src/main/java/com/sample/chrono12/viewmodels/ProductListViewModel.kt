@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sample.chrono12.data.dao.WatchDao
 import com.sample.chrono12.data.entities.Category
 import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.SubCategory
@@ -13,7 +14,10 @@ import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.data.models.SortType.*
 import com.sample.chrono12.data.repository.WatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -57,12 +61,6 @@ class ProductListViewModel @Inject constructor(
         when (sortType) {
             PRICE_LOW_TO_HIGH -> {
                 watchList.value = watchList.value?.sortedBy {
-                    it.productWithBrand.product.currentPrice
-                }
-                watchList.value = watchList.value?.filter {
-                    it.productWithBrand.brand.brandName == "Fastrack" &&
-                            it.productWithBrand.product.currentPrice in 1000.0..5000.0
-                }?.sortedBy {
                     it.productWithBrand.product.currentPrice
                 }
                 this.sortType = PRICE_LOW_TO_HIGH
@@ -138,7 +136,7 @@ class ProductListViewModel @Inject constructor(
 
     fun getBrandWithProductList(): LiveData<List<ProductWithBrandAndImages>> = watchList
 
-    fun setTopRatedWacthes(count: Int) {
+    fun setTopRatedWatches(count: Int) {
         viewModelScope.launch { watchList.postValue(watchRepository.getTopRatedWatches(count)) }
     }
 
@@ -163,7 +161,10 @@ class ProductListViewModel @Inject constructor(
         Log.d("SEARCH2", "In search completed")
     }
 
-    fun getSearchResult(): LiveData<List<ProductWithBrandAndImages>> = watchList
+    fun getSearchResult(): LiveData<List<ProductWithBrandAndImages>> {
+        Log.d("WatchList", watchList.value?.size.toString())
+        return watchList
+    }
 
     fun setProductsWithBrandAndImagesByQuery(searchQuery: String) = viewModelScope.launch {
         productListTitle = searchQuery
@@ -201,16 +202,72 @@ class ProductListViewModel @Inject constructor(
             "Maxima",
             "Helix",
             "Fossil"
-        )
+        ),
+        args5: List<Pair<Int, Int>>,
+        args6: List<Pair<Int, Int>>
     ) {
-
         viewModelScope.launch {
-            watchList.postValue(watchRepository.getFilterResult(
-                if(args1.isEmpty()) listOf(1, 2, 3) else args1,
-                if(args2.isEmpty()) listOf(4, 5, 6) else args2,
-                if(args3.isEmpty()) listOf(7, 8, 9, 10, 11) else args3,
-                if(args4.isEmpty()) listOf("Fastrack", "Titan", "Sonata", "Timex", "Maxima", "Helix", "Fossil") else args4
-            ))
+//                watchList.postValue(
+            var filterResult = watchRepository.getFilterResult(
+                if (args1.isEmpty()) listOf(1, 2, 3) else args1,
+                if (args2.isEmpty()) listOf(4, 5, 6) else args2,
+                if (args3.isEmpty()) listOf(7, 8, 9, 10, 11) else args3,
+                if (args4.isEmpty()) listOf(
+                    "Fastrack",
+                    "Titan",
+                    "Sonata",
+                    "Timex",
+                    "Maxima",
+                    "Helix",
+                    "Fossil"
+                ) else args4
+            )
+//                )
+
+            if (args5.isNotEmpty()) {
+                val filterResultSet = mutableSetOf<ProductWithBrandAndImages>()
+                args5.forEach { (priceAbove, priceBelow) ->
+                    filterResultSet.addAll(
+                        filterResult.filter {
+                            it.productWithBrand.product.currentPrice >= priceAbove &&
+                                    it.productWithBrand.product.currentPrice <= priceBelow
+                        }
+                    )
+                }
+                filterResult = filterResultSet.toList()
+            }
+            if (args6.isNotEmpty()) {
+                val filterResultSet = mutableSetOf<ProductWithBrandAndImages>()
+                args6.forEach { (ratingAbove, ratingBelow) ->
+                    filterResultSet.addAll(
+                        filterResult.filter {
+                            it.productWithBrand.product.totalRating!! >= ratingAbove.toFloat() &&
+                                    it.productWithBrand.product.totalRating!! <= ratingBelow.toFloat()
+                        }
+                    )
+                }
+                filterResult = filterResultSet.toList()
+            }
+            watchList.postValue(filterResult)
+        }
+
+    }
+
+    fun setPriceFilter(priceFilter: List<Pair<Int, Int>>) {
+        priceFilter.forEach { (priceAbove, priceBelow) ->
+            watchList.value = watchList.value?.filter {
+                it.productWithBrand.product.currentPrice >= priceAbove &&
+                        it.productWithBrand.product.currentPrice <= priceBelow
+            }
+        }
+    }
+
+    fun setRatingFilter(ratingFilter: List<Pair<Int, Int>>) {
+        ratingFilter.forEach { (ratingAbove, ratingBelow) ->
+            watchList.value = watchList.value?.filter {
+                it.productWithBrand.product.totalRating!! >= ratingAbove &&
+                        it.productWithBrand.product.totalRating!! <= ratingBelow
+            }
         }
     }
 

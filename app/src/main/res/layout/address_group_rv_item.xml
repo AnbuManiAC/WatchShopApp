@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/padding_small"
+    android:layout_marginBottom="@dimen/padding_small"
     android:checkable="true"
     android:clickable="true"
     android:focusable="true"
@@ -17,19 +17,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/backgroundBlueShade"
         android:padding="@dimen/padding_large">
 
         <TextView
             android:id="@+id/tvAddressGroupName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_small"
             android:maxLines="1"
             android:text="Group name"
-            android:layout_marginEnd="@dimen/margin_small"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/tvAddressCount"
-            app:layout_constraintEnd_toStartOf="@id/btnDelete"
+            app:layout_constraintEnd_toStartOf="@id/barrier"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -38,12 +39,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small"
-            android:layout_marginEnd="@dimen/margin_small"
             android:maxLines="1"
             android:text="Number of Address: 10"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btnDelete"
+            app:layout_constraintEnd_toEndOf="@id/tvAddressGroupName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvAddressGroupName" />
 
@@ -51,23 +51,34 @@
             android:id="@+id/btnDelete"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/backgroundBlueShade"
             android:src="@drawable/ic_delete"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/rbSelect"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <CheckBox
+        <RadioButton
+            android:id="@+id/rbSelect"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
-            android:id="@+id/cbSelect"
             android:checked="false"
-            android:visibility="gone"
-            app:layout_constraintVertical_bias="0.5"
+            android:text=""
+            android:visibility="visible"
+            android:clickable="true"
+            android:focusable="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="btnDelete,rbSelect" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

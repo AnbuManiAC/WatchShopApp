@@ -15,13 +15,15 @@ class OrderConfirmedDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return requireActivity().let {
-            val builder = AlertDialog.Builder(it)
+            val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.fragment_order_confirmed_dialog)
                 .setPositiveButton("Okay") { _, _ ->
                     findNavController().popBackStack(R.id.homeFragment, false)
                 }
-                .setCancelable(false)
-            builder.create()
+            val alertDialog = builder.create()
+            alertDialog.setCancelable(false)
+            alertDialog.setCanceledOnTouchOutside(false)
+            alertDialog
         }
     }
 

@@ -108,7 +108,7 @@ class WishListFragment : Fragment() {
             lifecycleScope.launch{
                 val isInCart = cartViewModel.isProductInUserCart(productId, userViewModel.getLoggedInUser().toInt())
                 if(isInCart){
-                    button.text = "View Cart"
+                    button.text = "Go To Cart"
                 }else{
                     button.text = "Add to Cart"
                 }
@@ -122,7 +122,7 @@ class WishListFragment : Fragment() {
                     Navigation.findNavController(requireView()).navigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
                 }else{
                     cartViewModel.addProductToUserCart(Cart(productId = productId, userId = userViewModel.getLoggedInUser().toInt()))
-                    button.text = "View Cart"
+                    button.text = "Go To Cart"
                 }
             }
         }
@@ -136,7 +136,6 @@ class WishListFragment : Fragment() {
             val userId = userViewModel.getLoggedInUser().toInt()
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Are you sure you want to delete this product from Wishlist?")
-                .setMessage("This can't be reversed")
                 .setPositiveButton("Delete") { _, _ ->
                     wishListViewModel.removeProductFromUserWishList(productId, userId)
                 }

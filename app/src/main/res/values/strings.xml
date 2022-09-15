@@ -45,5 +45,10 @@
     <string name="rating_low_to_high">Rating - Low to High</string>
     <string name="price">₹%d</string>
     <string name="discount_price">-₹%d</string>
+    <string name="total_price">Total Price : ₹%d</string>
+    <string name="no_of_products">No. of Products : %d</string>
+    <string name="date_time">Date Time : %s</string>
+    <string name="order_id">Order Id : %d</string>
+    <string name="bulk_ord_id">Bulk Order Id : %d</string>
 
 </resources>

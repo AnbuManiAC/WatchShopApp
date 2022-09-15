@@ -1,20 +1,15 @@
 package com.sample.chrono12.ui.adapter
 
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.PrimaryKey
 import coil.load
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.SubCategory
-import com.sample.chrono12.utils.ImageLoader
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.runBlocking
+import com.sample.chrono12.utils.ImageUtil
 
 class CategoriesAdapter(
     private val categories: List<SubCategory>,
@@ -30,7 +25,6 @@ class CategoriesAdapter(
             tvCategoryName.text = category.name
             ivCategoryImage.load(category.imageUrl){
                 crossfade(true)
-
             }
         }
     }

@@ -4,11 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sample.chrono12.data.entities.*
-import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
-import com.sample.chrono12.data.entities.relations.CartWithProductInfo
-import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
-import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
+import com.sample.chrono12.data.entities.relations.*
+import com.sample.chrono12.data.models.OrderInfo
 import com.sample.chrono12.ui.adapter.AddressAdapter
+import java.io.Flushable
 
 @Dao
 interface UserDao {
@@ -59,6 +58,9 @@ interface UserDao {
 
     @Query("UPDATE Cart SET quantity = :quantity where userId = :userId AND productId = :productId")
     suspend fun updateQuantity(productId: Int, userId: Int, quantity: Int)
+
+    @Query("DELETE FROM Cart WHERE userId = :userId")
+    suspend fun deleteCartItems(userId: Int)
 
     //Suggestions
     @Query("SELECT * FROM SearchSuggestion WHERE userId = 0 OR userId =:userId ORDER BY userId DESC")
@@ -134,5 +136,17 @@ interface UserDao {
 
     @Insert
     suspend fun insertProductOrdered(productOrdered: ProductOrdered): Long
+
+    @Query("select distinct bulkOrderId,orderId,timestamp, sum(actualTotal) as totalPrice, sum(totalPrice) as currentPrice,count() as orderCount,(select count() from ProductOrdered where ProductOrdered.orderId = `Order`.orderId) as productCount from `Order` where userId = :userId group by bulkOrderId")
+    suspend fun getOrderHistory(userId: Int): List<OrderInfo>
+
+    @Query("select distinct bulkOrderId,orderId,timestamp, sum(actualTotal) as totalPrice, sum(totalPrice) as currentPrice,count() as orderCount,(select count() from ProductOrdered where ProductOrdered.orderId = `Order`.orderId) as productCount from `Order` where userId = :userId and bulkOrderId = :bulkOrderId group by bulkOrderId")
+    suspend fun getOrderInfo(bulkOrderId: Int, userId: Int): OrderInfo
+
+    @Query("Select * FROM `Order` where bulkOrderId = :bulkOrderId and userId = :userId")
+    suspend fun getOrderDetail(bulkOrderId: Int, userId: Int): List<Order>
+
+    @Query("SELECT * FROM ProductOrdered where orderId = :orderId")
+    suspend fun getOrderedProductInfo(orderId: Int): List<OrderedProductInfo>
 
 }

@@ -186,7 +186,7 @@ class ProductFragment : Fragment() {
         productImage.forEach {
             imageList.add(it.imageUrl)
         }
-        binding.imageSlider.vpImage.adapter = ImageSliderAdapter(imageList)
+        binding.imageSlider.vpImage.adapter = ImageSliderAdapter(imageList, lifecycleScope)
         val thumbnailAdapter = ThumbnailAdapter(imageList) { imageUrl ->
             binding.imageSlider.vpImage.currentItem = imageList.indexOf(imageUrl)
         }

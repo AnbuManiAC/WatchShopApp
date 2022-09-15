@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     app:cardCornerRadius="@dimen/margin_small"
     android:layout_marginBottom="@dimen/padding_small"
-
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"

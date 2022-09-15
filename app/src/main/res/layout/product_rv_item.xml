@@ -110,6 +110,20 @@
             app:layout_constraintBaseline_toBaselineOf="@id/tvItemOriginalPrice" />
 
 
+        <TextView
+            android:id="@+id/tvItemQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_small"
+            android:text="Quantity : 1"
+            android:visibility="gone"
+            android:textColor="@color/ashBlack"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@id/rbItemRating"
+            app:layout_constraintTop_toBottomOf="@id/tvItemCurrentPrice" />
+
+
         <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

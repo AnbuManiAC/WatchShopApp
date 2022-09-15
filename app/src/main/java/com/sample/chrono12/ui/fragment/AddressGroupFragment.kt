@@ -76,7 +76,6 @@ class AddressGroupFragment : Fragment() {
             override fun onClick(addressGroupId: Int) {
                 val builder = AlertDialog.Builder(requireContext())
                 builder.setTitle("Are you sure you want to delete this Address group?")
-                    .setMessage("This will not be reversed")
                     .setPositiveButton("Delete") { _, _ ->
                         userViewModel.deleteAddressGroup(addressGroupId)
                     }

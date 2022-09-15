@@ -124,7 +124,6 @@ class CartFragment : Fragment() {
             val userId = userViewModel.getLoggedInUser().toInt()
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Are you sure you want to delete this product from Cart?")
-                .setMessage("This will not be reversed")
                 .setPositiveButton("Delete") { _, _ ->
                     cartViewModel.removeProductFromUserCart(productId, userId)
                 }

@@ -1,11 +1,13 @@
 package com.sample.chrono12.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
+import com.sample.chrono12.data.models.OrderInfo
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserDetails
 import com.sample.chrono12.data.models.UserField
@@ -30,7 +32,6 @@ class UserViewModel @Inject constructor(
     private var addressId = MutableLiveData<Int>()
     private var addressGroupId = MutableLiveData<Int>()
     private val addressIds = MutableLiveData<List<Int>>()
-
 
     fun clearAddressIds() {
         null.also { addressIds.value = it }
@@ -232,17 +233,6 @@ class UserViewModel @Inject constructor(
 
     fun deleteAddress(addressId: Int) {
         viewModelScope.launch { userRepository.deleteAddress(addressId) }
-    }
-
-    suspend fun insertOrder(order: Order):Int {
-        val orderId = viewModelScope.async(Dispatchers.IO) {
-            return@async userRepository.insertOrder(order)
-        }
-        return orderId.await().toInt()
-    }
-
-    fun insertProductOrdered(productOrdered: ProductOrdered) {
-        viewModelScope.launch { userRepository.insertProductOrdered(productOrdered) }
     }
 
 }

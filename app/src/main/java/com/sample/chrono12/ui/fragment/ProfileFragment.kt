@@ -53,7 +53,7 @@ class ProfileFragment : Fragment() {
             Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToWishlistFragment())
         }
         bindingProfile.tvMyOrder.setOnClickListener {
-
+            Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToOrderHistoryFragment())
         }
         bindingProfile.tvMyAddress.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToAddressFragment())

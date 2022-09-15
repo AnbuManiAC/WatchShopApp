@@ -76,6 +76,12 @@ class CartViewModel @Inject constructor(
 
         setTotalCurrentPrice(currentPrice)
         setTotalOriginalPrice(originalPrice)
-        setTotalDiscount(originalPrice-currentPrice)
+        setTotalDiscount(originalPrice - currentPrice)
+    }
+
+    fun clearCart(userId: Int) {
+        viewModelScope.launch {
+            userRepository.deleteCartItems(userId)
+        }
     }
 }

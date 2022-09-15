@@ -33,7 +33,7 @@
         android:id="@+id/btnSelectGroup"
         android:text="Choose Address"
         android:textAllCaps="true"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@color/primaryColor"
         android:elevation="4dp"
         android:textColor="@color/white"

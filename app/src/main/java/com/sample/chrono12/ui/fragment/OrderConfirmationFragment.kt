@@ -3,6 +3,8 @@ package com.sample.chrono12.ui.fragment
 import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
+import android.os.SystemClock
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,10 +28,14 @@ import com.sample.chrono12.databinding.FragmentOrderConfirmationBinding
 import com.sample.chrono12.ui.adapter.AddressAdapter
 import com.sample.chrono12.ui.adapter.CartAdapter
 import com.sample.chrono12.viewmodels.CartViewModel
+import com.sample.chrono12.viewmodels.OrderViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.util.*
 
 class OrderConfirmationFragment : Fragment() {
 
@@ -37,6 +43,7 @@ class OrderConfirmationFragment : Fragment() {
     private val navArgs by navArgs<OrderConfirmationFragmentArgs>()
     private val cartViewModel by lazy { ViewModelProvider(requireActivity())[CartViewModel::class.java] }
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
+    private val orderViewModel by lazy { ViewModelProvider(requireActivity())[OrderViewModel::class.java] }
     private lateinit var addressAdapter: AddressAdapter
     private lateinit var addressGroupWithAddress: AddressGroupWithAddress
     private lateinit var cartWithProductInfo: List<CartWithProductInfo>
@@ -72,29 +79,29 @@ class OrderConfirmationFragment : Fragment() {
                 editor.putInt(getString(R.string.bulk_order_id), bulkOrderId+1)
                 editor.apply()
             }
-            val orderIds = mutableListOf<Long>()
             lifecycleScope.launch {
                 addressGroupWithAddress.addressList.forEach {
                     val order = Order(
                         bulkOrderId = bulkOrderId + 1,
                         userId = userViewModel.getLoggedInUser().toInt(),
-                        timestamp = System.currentTimeMillis(),
+                        timestamp = Calendar.getInstance().timeInMillis,
                         actualTotal = originalPrice.toFloat(),
                         totalPrice = currentPrice.toFloat(),
-                        addressInfo = getAddressString(addressGroupWithAddress.addressList[0]),
+                        addressInfo = getAddressString(it),
                         orderStatus = OrderStatus.ORDERED.toString()
                     )
-                    val orderId = userViewModel.insertOrder(order)
+                    val orderId = orderViewModel.insertOrder(order)
                     cartWithProductInfo.forEach {
                         val productOrdered = ProductOrdered(
                             orderId = orderId,
                             productId = it.cart.productId,
                             quantity = it.cart.quantity
                         )
-                        userViewModel.insertProductOrdered(productOrdered)
+                        orderViewModel.insertProductOrdered(productOrdered)
                     }
                 }
             }
+            cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
             findNavController().navigate(
                 OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog()
             )

@@ -7,9 +7,9 @@
     <string name="mobile_number">Mobile Number</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
-    <string name="already_have_an_account">Already have an account? </string>
+    <string name="already_have_an_account">"Already have an account? "</string>
     <string name="log_in">Log In</string>
-    <string name="don_t_have_an_account">Don\'t have an account? </string>
+    <string name="don_t_have_an_account">"Don\'t have an account? "</string>
     <string name="sign_up">Sign Up</string>
     <string name="legal_name_of_business">Legal Name of Business</string>
     <string name="gstin">GSTIN</string>
@@ -50,5 +50,10 @@
     <string name="date_time">Date Time : %s</string>
     <string name="order_id">Order Id : %d</string>
     <string name="bulk_ord_id">Bulk Order Id : %d</string>
+    <string name="password_doesnt_match">Password doesn\'t match</string>
+    <string name="password_min_character">Password must cotains atleast 8 characters</string>
+    <string name="not_a_mobile">Invalid mobile number</string>
+    <string name="not_an_email">Invalid email address</string>
+    <string name="field_cant_be_empty">This field can\'t be empty</string>
 
 </resources>

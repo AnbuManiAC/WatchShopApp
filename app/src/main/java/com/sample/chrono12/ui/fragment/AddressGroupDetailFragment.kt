@@ -104,9 +104,9 @@ class AddressGroupDetailFragment : Fragment() {
                     binding.btnAddNewAddress.isEnabled = false
                     binding.btnAddFromExisting.isEnabled = false
                 } else{
-                    binding.btnSaveEditGroupName.isEnabled = true
-                    binding.btnAddNewAddress.isEnabled = true
-                    binding.btnAddFromExisting.isEnabled = true
+                        binding.btnSaveEditGroupName.isEnabled = true
+                        binding.btnAddNewAddress.isEnabled = true
+                        binding.btnAddFromExisting.isEnabled = true
                 }
             }
 

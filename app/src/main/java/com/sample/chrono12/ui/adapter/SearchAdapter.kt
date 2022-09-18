@@ -26,7 +26,7 @@ class SuggestionAdapter(
 
         fun bind(suggestionHistory: SearchSuggestion){
             tvSuggestion.text = suggestionHistory.suggestion
-            if (suggestionHistory.userId>0) {
+            if (suggestionHistory.userId!=null) {
                 ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_history,null))
                 ibRemove.visibility = View.VISIBLE
             }else{

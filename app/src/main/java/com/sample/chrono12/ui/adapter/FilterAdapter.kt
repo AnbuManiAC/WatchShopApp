@@ -5,13 +5,20 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.databinding.FilterRvItemBinding
+import java.util.*
 
 class FilterAdapter(
     private val filters: List<String>,
-    private val onFilterClickListener: OnClickFilter
+    private val onFilterClickListener: OnClickFilter,
+    private val onFilterChangeListener: OnFilterChangeListener
 ): RecyclerView.Adapter<FilterAdapter.FilterViewHolder>() {
 
     private var selectedPosition = 0
+
+    fun setSelectedPosition(position: Int){
+        selectedPosition = position
+        onFilterClickListener.onClick(filters[position])
+    }
 
     inner class FilterViewHolder(val binding: FilterRvItemBinding): RecyclerView.ViewHolder(binding.root){
         private val tvFilterTitle = binding.tvFilterTitle
@@ -20,16 +27,22 @@ class FilterAdapter(
             tvFilterTitle.setBackgroundColor(Color.TRANSPARENT)
             tvFilterTitle.setOnClickListener {
                 onFilterClickListener.onClick(filters[position])
-                selectedPosition = position
+                onFilterChangeListener.onChanged(position)
                 notifyDataSetChanged()
             }
-            if(selectedPosition == position) binding.root.setBackgroundColor(Color.WHITE)
+            if(selectedPosition == position){
+                binding.root.setBackgroundColor(Color.WHITE)
+            }
             else binding.root.setBackgroundColor(Color.TRANSPARENT)
         }
     }
 
     interface OnClickFilter {
         fun onClick(filter: String)
+    }
+
+    fun interface OnFilterChangeListener {
+        fun onChanged(position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder {

@@ -25,6 +25,6 @@ data class Product(
     val brandId: Int,
     val originalPrice: Float,
     val currentPrice: Float,
-    val totalRating: Float?,
+    val totalRating: Float,
     val stockCount: Int = 0
 )

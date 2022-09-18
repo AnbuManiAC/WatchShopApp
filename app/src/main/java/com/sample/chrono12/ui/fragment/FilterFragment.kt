@@ -11,13 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.databinding.FragmentFilterBinding
 import com.sample.chrono12.ui.adapter.FilterAdapter
 import com.sample.chrono12.ui.adapter.FilterValuesAdapter
+import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 
 class FilterFragment : Fragment() {
 
+    private lateinit var filterAdapter: FilterAdapter
     private lateinit var binding: FragmentFilterBinding
-    private lateinit var adapter: FilterValuesAdapter
+    private lateinit var filterValuesAdapter: FilterValuesAdapter
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
+    private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
 
     private val filterList =
         listOf("Gender", "Dial Shape", "Display type", "Brand", "Price Range", "Rating")
@@ -90,47 +93,62 @@ class FilterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupFilterAdapter()
         setupFilterValueAdapter()
-        setDataToFilterValueAdapter(genders)
+        setupFilterAdapter()
         setupClearButton()
         setupApplyButton()
     }
 
     private fun setupApplyButton() {
         binding.btnApply.setOnClickListener {
-            val filterInput = adapter.getSelectedCheckBoxIds()
-            val genderInput = filterInput.filter { it in 1..3 }
-            val dialShapeInput = filterInput.filter { it in 4..6 }
-            val displayTypeInput = filterInput.filter { it in 7..11 }
-            val brandInput = brands.filter { (key: Int) -> key in filterInput }.values.toList()
-            val ratingInput = ratingList.filter { (key: Int) -> key in filterInput }.values.toList()
-            val priceInput = priceList.filter { (key: Int) -> key in filterInput }.values.toList()
-
-            productListViewModel.setFilterResult(genderInput, dialShapeInput, displayTypeInput, brandInput, priceInput, ratingInput)
-
+            if(filterViewModel.isClearClicked) filterViewModel.clearSelectedFilterIds()
+            setFilter()
             findNavController().navigate(FilterFragmentDirections.actionFilterFragmentToProductListFragment())
         }
     }
 
+    fun setFilter(){
+        val filterInput = filterViewModel.selectedFilterIds
+        val genderInput = filterInput.filter { it in 1..3 }
+        val dialShapeInput = filterInput.filter { it in 4..6 }
+        val displayTypeInput = filterInput.filter { it in 7..11 }
+        val brandInput = brands.filter { (key: Int) -> key in filterInput }.values.toList()
+        val ratingInput = ratingList.filter { (key: Int) -> key in filterInput }.values.toList()
+        val priceInput = priceList.filter { (key: Int) -> key in filterInput }.values.toList()
+
+        productListViewModel.setFilterResult(genderInput, dialShapeInput, displayTypeInput, brandInput, priceInput, ratingInput)
+    }
+
     private fun setupClearButton() {
+
         binding.btnClear.setOnClickListener {
-            adapter.clearCheckBox()
-            adapter.notifyDataSetChanged()
+            filterViewModel.isClearClicked = true
+            filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
+            filterValuesAdapter.notifyDataSetChanged()
         }
     }
 
     private fun setDataToFilterValueAdapter(filterValues: HashMap<Int, String>) {
-        adapter.setData(filterValues)
-        adapter.notifyDataSetChanged()
+        filterValuesAdapter.setData(filterValues)
+        filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
+        filterValuesAdapter.notifyDataSetChanged()
     }
 
     private fun setupFilterAdapter() {
         binding.rvFilter.layoutManager = LinearLayoutManager(requireActivity())
-        binding.rvFilter.adapter = FilterAdapter(
+        filterAdapter = FilterAdapter(
             filterList,
             getOnFilterClickListener
-        )
+        ){ position ->
+            filterViewModel.setSelectedFilterPosition(position)
+            setSelectedPosition(position)
+        }
+        filterAdapter.setSelectedPosition(filterViewModel.selectedFilterPosition)
+        binding.rvFilter.adapter = filterAdapter
+    }
+
+    fun setSelectedPosition(selectedId: Int){
+        filterAdapter.setSelectedPosition(selectedId)
     }
 
     private val getOnFilterClickListener = object : FilterAdapter.OnClickFilter {
@@ -148,8 +166,16 @@ class FilterFragment : Fragment() {
 
     private fun setupFilterValueAdapter() {
         binding.rvFilterValues.layoutManager = LinearLayoutManager(requireContext())
-        adapter = FilterValuesAdapter()
-        binding.rvFilterValues.adapter = adapter
+        filterValuesAdapter = FilterValuesAdapter{ filterId, isChecked ->
+            filterViewModel.addDeleteSelectedFilter(filterId, isChecked)
+        }
+        filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
+        binding.rvFilterValues.adapter = filterValuesAdapter
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        filterViewModel.isClearClicked = false
     }
 
 }

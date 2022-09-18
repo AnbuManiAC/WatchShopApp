@@ -12,21 +12,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
-import com.sample.chrono12.data.entities.Cart
 import com.sample.chrono12.data.entities.Product
-import com.sample.chrono12.data.entities.WishList
 import com.sample.chrono12.databinding.FragmentCartBinding
-import com.sample.chrono12.databinding.LoginCartDialogBinding
+import com.sample.chrono12.databinding.LoginPromptCartWishlistDialogBinding
 import com.sample.chrono12.ui.adapter.CartAdapter
-import com.sample.chrono12.ui.adapter.WishListAdapter
 import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
-import java.io.LineNumberReader
 
 class CartFragment : Fragment() {
 
     private lateinit var fragmentCartBinding: FragmentCartBinding
-    private lateinit var cartDialogBinding: LoginCartDialogBinding
+    private lateinit var loginPromptBinding: LoginPromptCartWishlistDialogBinding
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private val cartViewModel by lazy { ViewModelProvider(requireActivity())[CartViewModel::class.java] }
     private var isUserLoggedIn = false
@@ -41,8 +37,8 @@ class CartFragment : Fragment() {
             fragmentCartBinding = FragmentCartBinding.inflate(layoutInflater)
             fragmentCartBinding.root
         } else{
-            cartDialogBinding = LoginCartDialogBinding.inflate(layoutInflater)
-            cartDialogBinding.root
+            loginPromptBinding = LoginPromptCartWishlistDialogBinding.inflate(layoutInflater)
+            loginPromptBinding.root
         }
     }
 
@@ -62,16 +58,18 @@ class CartFragment : Fragment() {
     }
 
     private fun setupCartMissing() {
-        cartDialogBinding.btnLogIn.setOnClickListener {
+
+        loginPromptBinding.btnLogIn.setOnClickListener {
             Log.d("cart","In missing cart nav")
             Navigation.findNavController(requireView()).navigate(CartFragmentDirections.actionCartFragmentToLogInFragment())
         }
-        cartDialogBinding.tvContinueShopping.setOnClickListener {
+        loginPromptBinding.tvContinueShopping.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
         }
     }
 
     private fun setupCart() {
+
         fragmentCartBinding.btnPlaceOrder.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(
                 CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment()
@@ -101,6 +99,7 @@ class CartFragment : Fragment() {
                 fragmentCartBinding.layoutPriceOrder.visibility = View.VISIBLE
             }
             if(it.isEmpty()){
+                fragmentCartBinding.ivEmptyCart.setImageResource(R.drawable.ic_empty_cart_svg)
                 fragmentCartBinding.ivEmptyCart.visibility = View.VISIBLE
                 fragmentCartBinding.tvEmptyCart.visibility = View.VISIBLE
                 fragmentCartBinding.tvEmptyCartDesc.visibility = View.VISIBLE

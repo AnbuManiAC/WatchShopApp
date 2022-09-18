@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.SubCategory
+import com.sample.chrono12.databinding.AddressOrderInfoRvItemBinding
+import com.sample.chrono12.databinding.CartRvItemBinding
+import com.sample.chrono12.databinding.CategoriesRvItemBinding
 import com.sample.chrono12.utils.ImageUtil
 
 class CategoriesAdapter(
@@ -16,12 +19,12 @@ class CategoriesAdapter(
     private val onClickListener: OnClickCategory
 ): RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>()  {
 
-    inner class CategoryViewHolder(val view: View): RecyclerView.ViewHolder(view){
-        val tvCategoryName = view.findViewById<TextView>(R.id.tvCategoryName)
-        val ivCategoryImage = view.findViewById<ImageView>(R.id.ivCategory)
+    inner class CategoryViewHolder(val binding: CategoriesRvItemBinding): RecyclerView.ViewHolder(binding.root){
+        private val tvCategoryName = binding.tvCategoryName
+        private val ivCategoryImage = binding.ivCategory
 
         fun bind(category: SubCategory){
-            view.setOnClickListener { onClickListener.onClick(category) }
+            binding.root.setOnClickListener { onClickListener.onClick(category) }
             tvCategoryName.text = category.name
             ivCategoryImage.load(category.imageUrl){
                 crossfade(true)
@@ -30,11 +33,16 @@ class CategoriesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.categories_rv_item, parent, false)
-        return CategoryViewHolder(view)
+        val binding = CategoriesRvItemBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return CategoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
+
         holder.bind(categories[position])
     }
 

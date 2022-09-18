@@ -12,6 +12,7 @@ import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.databinding.FragmentProductListBinding
 import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.ProductListAdapter
+import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,6 +22,7 @@ class ProductListFragment : Fragment() {
     private val navArgs by navArgs<ProductListFragmentArgs>()
     private lateinit var binding: FragmentProductListBinding
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
+    private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,7 @@ class ProductListFragment : Fragment() {
         } else if(navArgs.fromAllWatches){
             productListViewModel.setAllWatches()
         }
+
 
         binding = FragmentProductListBinding.inflate(layoutInflater)
         return binding.root

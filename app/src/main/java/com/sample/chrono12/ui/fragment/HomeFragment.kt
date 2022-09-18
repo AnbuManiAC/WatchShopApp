@@ -15,6 +15,7 @@ import com.sample.chrono12.databinding.FragmentHomeBinding
 import com.sample.chrono12.ui.adapter.BrandsAdapter
 import com.sample.chrono12.ui.adapter.CategoriesAdapter
 import com.sample.chrono12.ui.adapter.ProductListAdapter
+import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -23,6 +24,7 @@ class HomeFragment : Fragment() {
 
     lateinit var binding: FragmentHomeBinding
     private val mProductListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
+    private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +86,9 @@ class HomeFragment : Fragment() {
     private fun setupCategoriesAdapter(subCategories: List<SubCategory>){
         val categoryAdapter = CategoriesAdapter(subCategories){ subCategory->
             mProductListViewModel.setProductListTitle(subCategory.name+"es")
+            filterViewModel.clearSelectedFilterPosition()
+            filterViewModel.clearSelectedFilterIds()
+            filterViewModel.addSelectedFilter(subCategory.subCategoryId)
             Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(subCategoryId = subCategory.subCategoryId))
         }
         binding.rvCategories.apply {
@@ -91,14 +96,21 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         }
     }
+    fun <K, V> getKey(hashMap: Map<K, V>, target: V): K {
+        return hashMap.filter { target == it.value }.keys.first()
+    }
 
     private fun setupBrandsAdapter(brands: List<ProductBrand>) {
         val brandAdapter = BrandsAdapter(brands){ brand ->
             mProductListViewModel.setProductListTitle(brand.brandName+" Watches")
+            filterViewModel.clearSelectedFilterPosition()
+            filterViewModel.clearSelectedFilterIds()
+            filterViewModel.addSelectedFilter(getKey(this.brands,brand.brandName))
             Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(brandId = brand.brandId))
         }
         binding.rvBrands.apply {
             this.adapter = brandAdapter
+
             layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         }
     }
@@ -113,4 +125,13 @@ class HomeFragment : Fragment() {
         }
     }
 
+    val brands = hashMapOf(
+        12 to "Fastrack",
+        13 to "Titan",
+        14 to "Sonata",
+        15 to "Timex",
+        16 to "Maxima",
+        17 to "Helix",
+        18 to "Fossil"
+    )
 }

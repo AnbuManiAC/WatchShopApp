@@ -63,11 +63,19 @@ class AddressGroupFragment : Fragment() {
         binding.rvAddressGroup.layoutManager = LinearLayoutManager(requireContext())
         userViewModel.getAddressGroupWithAddresses(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
-                with(addressGroupAdapter){
+                it?.let { with(addressGroupAdapter){
                     setData(it)
                     notifyDataSetChanged()
                 }
-                binding.rvAddressGroup.adapter = addressGroupAdapter
+                    binding.rvAddressGroup.adapter = addressGroupAdapter
+                }
+                if(it.isEmpty()){
+                    binding.clNoDataFound.visibility = View.VISIBLE
+                    binding.btnSelectGroup.visibility = View.GONE
+                }else{
+                    binding.clNoDataFound.visibility = View.GONE
+                }
+
             }
     }
 

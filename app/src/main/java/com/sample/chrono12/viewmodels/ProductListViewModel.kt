@@ -181,7 +181,7 @@ class ProductListViewModel @Inject constructor(
     }
 
     private fun getQueryAsList(query: String): List<String> {
-        val list = query.split(" ", ",", ", ", " ,")
+        val list = query.split(" ", ",", ", ", " ,","'")
         Log.d("SEARCH", list.toString())
         val searchQuery = ArrayList<String>()
         list.forEach {

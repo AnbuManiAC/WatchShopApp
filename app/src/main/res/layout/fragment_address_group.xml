@@ -22,6 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_small"
+        app:tint="@color/white"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnSelectGroup"
         android:src="@drawable/ic_add"
@@ -31,18 +33,69 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnSelectGroup"
-        android:text="Choose Address"
+        android:text="Select Address"
         android:textAllCaps="true"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@color/primaryColor"
         android:elevation="4dp"
         android:textColor="@color/white"
-        app:cornerRadius="0dp"
         android:textStyle="bold"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:padding="@dimen/padding_small"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/clNoDataFound"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:id="@+id/ivEmptyAddressGroup"
+            android:src="@drawable/ic_no_data_svg"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tvEmptyCart"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvEmptyCart"
+            android:layout_margin="@dimen/margin_small"
+            android:text="No Address Group Found"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivEmptyAddressGroup"
+            app:layout_constraintBottom_toTopOf="@id/tvEmptyCartDesc"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvEmptyCartDesc"
+            android:layout_margin="@dimen/margin_small"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@color/ashGrey"
+            android:text="Looks like you haven't added\n any address group yet"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvEmptyCart"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package com.sample.chrono12.data.database
 
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.sample.chrono12.data.dao.UserDao

@@ -17,7 +17,7 @@ class ImageSliderAdapter(
     class ImageViewHolder(private val binding: ImageSliderItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(image: String, lifecycleScope: LifecycleCoroutineScope){
             binding.ivImages.load(image)
-//            ImageUtil.loadImage("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ_yLOXvX1Imh_2_JyiVocBCHKRN-aCfF8p6f3d_fdTCXLGIfg8",binding.ivImages, lifecycleScope)
+//            ImageUtil.loadImage(image,binding.ivImages, lifecycleScope)
         }
     }
 

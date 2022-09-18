@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
@@ -65,6 +66,10 @@ class CartAdapter(
 
         fun bindProductQuantity(product: Product, quantity: Int) {
             productQuantity.text = quantity.toString()
+            if(productQuantity.text.toString().toInt()==1){
+                btnQuantityMinus.alpha = 0.7F
+                btnQuantityMinus.isEnabled = false
+            }
             btnQuantityMinus.setOnClickListener{
                 val currentValue = productQuantity.text.toString().toInt()
                 if (onQuantityClickListener.onClickMinus(
@@ -72,6 +77,10 @@ class CartAdapter(
                         currentValue
                 )){
                     productQuantity.text = (currentValue-1).toString()
+
+                }else{
+                    btnQuantityMinus.alpha = 0.7F
+                    btnQuantityMinus.isEnabled = false
                 }
             }
             btnQuantityPlus.setOnClickListener{

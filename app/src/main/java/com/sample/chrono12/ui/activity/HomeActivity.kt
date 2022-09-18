@@ -19,7 +19,9 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.ActivityMainBinding
+import com.sample.chrono12.ui.fragment.FilterFragment
 import com.sample.chrono12.ui.fragment.HomeFragment
+import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,6 +34,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var userViewModel: UserViewModel
+    private val filterViewModel by lazy { ViewModelProvider(this)[FilterViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +66,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun onNavDestinationChangedListener() =
-        NavController.OnDestinationChangedListener { _, destination, _ ->
+        NavController.OnDestinationChangedListener { controller, destination, _ ->
             when (destination.id) {
                 R.id.homeFragment -> showBottomBar()
                 R.id.cartFragment -> showBottomBar()

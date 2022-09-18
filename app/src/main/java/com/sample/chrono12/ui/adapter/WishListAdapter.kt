@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
@@ -61,7 +62,7 @@ class WishListAdapter(
             onAddToCartClickListener.initButton(binding.btnAddToCart, productId)
 
             binding.btnAddToCart.setOnClickListener{
-                onAddToCartClickListener.onClickAdd(it as Button, productId)
+                onAddToCartClickListener.onClickAdd(it as MaterialButton, productId)
             }
         }
 
@@ -92,9 +93,9 @@ class WishListAdapter(
 
     interface OnClickAddToCart {
 
-        fun initButton(button: Button, productId: Int)
+        fun initButton(button: MaterialButton, productId: Int)
 
-        fun onClickAdd(button: Button, productId: Int)
+        fun onClickAdd(button: MaterialButton, productId: Int)
     }
 }
 

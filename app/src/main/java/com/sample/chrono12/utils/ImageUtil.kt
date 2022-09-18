@@ -30,7 +30,7 @@ object ImageUtil {
             imageview.setImageBitmap(getBitmapFromMemoryCache(url))
             Log.d("TAG", "Image set from cache")
         } else {
-            lifecycleCoroutineScope.launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 imageview.setImageResource(R.drawable.ic_image_loaading)
                 val result = async(Dispatchers.IO) {
                     val imageUrl = URL(url)
@@ -77,9 +77,11 @@ object ImageUtil {
 
             val halfHeight: Int = height / 2
             val halfWidth: Int = width / 2
-
+            Log.d("SampleSize", "$reqHeight $reqWidth $halfHeight $halfWidth $inSampleSize")
             while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
                 inSampleSize *= 2
+                Log.d("SampleSizeUpdated", "$halfHeight $halfWidth $inSampleSize")
+
             }
         }
 

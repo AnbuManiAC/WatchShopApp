@@ -15,11 +15,13 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.SearchSuggestion
 import com.sample.chrono12.databinding.FragmentSearchBinding
 import com.sample.chrono12.ui.adapter.SuggestionAdapter
+import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_COMPLETED
 import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_INITIATED
 import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_NOT_INITIATED
 import com.sample.chrono12.viewmodels.UserViewModel
+import java.util.logging.Filter
 
 
 class SearchFragment : Fragment() {
@@ -27,6 +29,7 @@ class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
+    private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
     private lateinit var searchView: SearchView
 
 
@@ -175,6 +178,7 @@ class SearchFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         searchView.setOnQueryTextListener(null)
+        filterViewModel.clearSelectedFilterIds()
     }
 
 }

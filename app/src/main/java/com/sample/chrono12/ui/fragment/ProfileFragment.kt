@@ -67,6 +67,9 @@ class ProfileFragment : Fragment() {
         bindingLoginPrompt.btnLogIn.setOnClickListener{
             Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToLogInFragment())
         }
+        bindingLoginPrompt.toSignup.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToSignUpFragment())
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

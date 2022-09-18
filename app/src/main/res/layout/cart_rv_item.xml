@@ -33,23 +33,28 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="4dp">
 
                 <ImageButton
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:id="@+id/btnDelete"
                     android:visibility="visible"
                     android:src="@drawable/ic_delete"
                     android:backgroundTint="@color/white"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btnDecQuantity"/>
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/btnDecQuantity"
                     android:src="@drawable/ic_minus"
+                    app:layout_constraintHorizontal_bias="0.5"
                     android:backgroundTint="@color/goldenYellow"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -57,28 +62,29 @@
                     app:layout_constraintEnd_toStartOf="@id/tvQuantity"/>
 
                 <TextView
-                    android:background="@drawable/cart_quantity_layout_border"
+                    android:id="@+id/tvQuantity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/tvQuantity"
-                    android:text="12"
-                    android:textColor="@color/ashBlack"
-                    android:maxLength="2"
-                    android:textStyle="bold"
+                    android:background="@drawable/cart_quantity_layout_border"
+                    android:maxLength="1"
                     android:paddingHorizontal="@dimen/padding_large"
                     android:paddingVertical="@dimen/padding_small"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                    app:layout_constraintStart_toEndOf="@id/btnDecQuantity"
-                    app:layout_constraintEnd_toStartOf="@id/btnIncQuantity"
-                    app:layout_constraintTop_toTopOf="parent"
+                    android:text="1"
+                    android:textColor="@color/ashBlack"
+                    android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    />
+                    app:layout_constraintEnd_toStartOf="@id/btnIncQuantity"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@id/btnDecQuantity"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/btnIncQuantity"
                     android:src="@drawable/ic_add"
+                    app:layout_constraintHorizontal_chainStyle="spread_inside"
+                    app:layout_constraintHorizontal_bias="0.5"
                     android:backgroundTint="@color/goldenYellow"
                     app:layout_constraintStart_toEndOf="@id/tvQuantity"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +103,7 @@
             android:id="@+id/ivItemProductImage"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_image_loading"
-            app:layout_constraintDimensionRatio="3:3.5"
+            app:layout_constraintDimensionRatio="3:4.5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline2"
             app:layout_constraintStart_toStartOf="parent"
@@ -195,3 +201,4 @@
 
 
 </com.google.android.material.card.MaterialCardView>
+

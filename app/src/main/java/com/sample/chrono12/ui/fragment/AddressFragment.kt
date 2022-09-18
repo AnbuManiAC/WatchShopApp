@@ -14,15 +14,12 @@ import com.sample.chrono12.data.entities.Address
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.FragmentAddressBinding
 import com.sample.chrono12.ui.adapter.AddressAdapter
-import com.sample.chrono12.viewmodels.CartViewModel
-import com.sample.chrono12.viewmodels.OrderViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 
 class AddressFragment : Fragment() {
 
     private lateinit var binding: FragmentAddressBinding
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
-    private val cartViewModel by lazy { ViewModelProvider(requireActivity())[CartViewModel::class.java]}
     private val navArgs by navArgs<AddressFragmentArgs>()
     private lateinit var addressAdapter: AddressAdapter
 
@@ -66,6 +63,7 @@ class AddressFragment : Fragment() {
     }
 
     private fun setupAddressAdapter() {
+
         addressAdapter = AddressAdapter(
             getOnAddressButtonClickListener(),
             navArgs.addFromExisting,
@@ -94,6 +92,11 @@ class AddressFragment : Fragment() {
                         }
                         binding.rvAddress.adapter = addressAdapter
                     }
+                    if(it.addressList.isEmpty()){
+                        binding.clNoDataFound.visibility = View.VISIBLE
+                    }else{
+                        binding.clNoDataFound.visibility = View.GONE
+                    }
                 }
             }
             else {
@@ -105,6 +108,12 @@ class AddressFragment : Fragment() {
                                 notifyDataSetChanged()
                             }
                             binding.rvAddress.adapter = addressAdapter
+                        }
+                        if(it.addressList.isEmpty()){
+                            binding.clNoDataFound.visibility = View.VISIBLE
+                            binding.btnSelectAddress.visibility = View.GONE
+                        }else{
+                            binding.clNoDataFound.visibility = View.GONE
                         }
 
                     }

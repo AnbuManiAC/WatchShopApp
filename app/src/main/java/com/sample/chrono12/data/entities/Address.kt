@@ -19,5 +19,5 @@ data class Address(
     val city: String,
     val state: String,
     val pincode: Int,
-    val contactNumber: Int,
+    val contactNumber: String,
 )

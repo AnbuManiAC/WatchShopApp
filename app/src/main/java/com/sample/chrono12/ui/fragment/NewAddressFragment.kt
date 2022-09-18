@@ -133,7 +133,7 @@ class NewAddressFragment : Fragment() {
         val city = binding.tilEtCity.text.toString()
         val state = binding.tilEtState.text.toString()
         val pincode = binding.tilEtPincode.text.toString().toInt()
-        val mobile = binding.tilEtMobile.text.toString().toInt()
+        val mobile = binding.tilEtMobile.text.toString()
         val address = if (navArgs.addressId > 0) {
             Address(
                 addressId = navArgs.addressId,

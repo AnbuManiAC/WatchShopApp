@@ -63,7 +63,7 @@ interface UserDao {
     suspend fun deleteCartItems(userId: Int)
 
     //Suggestions
-    @Query("SELECT * FROM SearchSuggestion WHERE userId = 0 OR userId =:userId ORDER BY userId DESC")
+    @Query("SELECT * FROM SearchSuggestion WHERE userId is Null OR userId = :userId ORDER BY userId DESC")
     suspend fun getSuggestions(userId: Int): List<SearchSuggestion>
 
     @Insert

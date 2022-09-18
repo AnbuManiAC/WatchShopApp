@@ -20,7 +20,7 @@ import androidx.room.PrimaryKey
 data class SearchSuggestion(
     @PrimaryKey(autoGenerate = true)
     val searchSuggestionId: Int = 0,
-    val userId: Int = 0,
+    val userId: Int? = null,
     val suggestion: String,
     val timestamp: Long
 )

@@ -1,11 +1,9 @@
 package com.sample.chrono12.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.chrono12.data.dao.WatchDao
 import com.sample.chrono12.data.entities.Category
 import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.SubCategory
@@ -14,10 +12,7 @@ import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.data.models.SortType.*
 import com.sample.chrono12.data.repository.WatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,11 +27,6 @@ class ProductListViewModel @Inject constructor(
 
     private var productListTitle: String? = null
 
-//    private val productWithBrandAndImagesList = MutableLiveData<SubCategoryWithProduct>()
-//    private val brandWithProductList = MutableLiveData<List<ProductWithBrandAndImages>>()
-//    private val topRatedWatchesList = MutableLiveData<List<ProductWithBrandAndImages>>()
-//    private val searchResult = MutableLiveData<List<ProductWithBrandAndImages>>()
-
     private var sortType: SortType? = null
 
     private val _searchStatus = MutableLiveData<Int>()
@@ -48,7 +38,6 @@ class ProductListViewModel @Inject constructor(
         setSubCategory()
         setBrand()
         _searchStatus.value = SEARCH_NOT_INITIATED
-        Log.d("SEARCH2", "In search not initiated")
     }
 
     fun clearSortType() {
@@ -90,19 +79,17 @@ class ProductListViewModel @Inject constructor(
         _searchStatus.value = SEARCH_NOT_INITIATED
     }
 
-    fun setCategory() {
+    private fun setCategory() {
         viewModelScope.launch { categoryList.postValue(watchRepository.getCategory()) }
     }
 
-    fun setSubCategory() {
+    private fun setSubCategory() {
         viewModelScope.launch { subCategoryList.postValue(watchRepository.getSubcategory()) }
     }
 
-    fun setBrand() {
+    private fun setBrand() {
         viewModelScope.launch { brandList.postValue(watchRepository.getBrand()) }
     }
-
-    fun getCategory(): LiveData<List<Category>> = categoryList
 
     fun getSubCategory(): LiveData<List<SubCategory>> = subCategoryList
 
@@ -116,10 +103,6 @@ class ProductListViewModel @Inject constructor(
                 ).productWithBrandAndImagesList
             )
         }
-    }
-
-    fun setSubcategoryWithProductList(subCategoryIds: List<Int>) {
-        viewModelScope.launch { watchList.postValue(watchRepository.getSubCategoryWithProduct().productWithBrandAndImagesList) }
     }
 
     fun setBrandWithProductList(brandId: Int) {
@@ -154,35 +137,26 @@ class ProductListViewModel @Inject constructor(
 
     fun getAllWatches(): LiveData<List<ProductWithBrandAndImages>> = watchList
 
-    fun setSearchResult(list: List<ProductWithBrandAndImages>) {
-//        searchResult.value = list
+    private fun setSearchResult(list: List<ProductWithBrandAndImages>) {
         watchList.value = list
         _searchStatus.value = SEARCH_COMPLETED
-        Log.d("SEARCH2", "In search completed")
     }
 
     fun getSearchResult(): LiveData<List<ProductWithBrandAndImages>> {
-        Log.d("WatchList", watchList.value?.size.toString())
         return watchList
     }
 
     fun setProductsWithBrandAndImagesByQuery(searchQuery: String) = viewModelScope.launch {
         productListTitle = searchQuery
         _searchStatus.value = SEARCH_INITIATED
-        Log.d("SEARCH2", "In search initiated")
         val searchList = getQueryAsList(searchQuery)
         watchRepository.getProductWithBrandAndImagesByQuery(searchList).also {
             setSearchResult(it)
-            it.forEach {
-                Log.d("SEARCH", "${it.productWithBrand.product.productId}")
-            }
-            Log.d("SEARCH", "${it.size}")
         }
     }
 
     private fun getQueryAsList(query: String): List<String> {
         val list = query.split(" ", ",", ", ", " ,","'")
-        Log.d("SEARCH", list.toString())
         val searchQuery = ArrayList<String>()
         list.forEach {
             searchQuery.add("%$it%")
@@ -207,22 +181,22 @@ class ProductListViewModel @Inject constructor(
         args6: List<Pair<Int, Int>>
     ) {
         viewModelScope.launch {
-//                watchList.postValue(
             var filterResult = watchRepository.getFilterResult(
-                if (args1.isEmpty()) listOf(1, 2, 3) else args1,
-                if (args2.isEmpty()) listOf(4, 5, 6) else args2,
-                if (args3.isEmpty()) listOf(7, 8, 9, 10, 11) else args3,
-                if (args4.isEmpty()) listOf(
-                    "Fastrack",
-                    "Titan",
-                    "Sonata",
-                    "Timex",
-                    "Maxima",
-                    "Helix",
-                    "Fossil"
-                ) else args4
+                args1.ifEmpty { listOf(1, 2, 3) },
+                args2.ifEmpty { listOf(4, 5, 6) },
+                args3.ifEmpty { listOf(7, 8, 9, 10, 11) },
+                args4.ifEmpty {
+                    listOf(
+                        "Fastrack",
+                        "Titan",
+                        "Sonata",
+                        "Timex",
+                        "Maxima",
+                        "Helix",
+                        "Fossil"
+                    )
+                }
             )
-//                )
 
             if (args5.isNotEmpty()) {
                 val filterResultSet = mutableSetOf<ProductWithBrandAndImages>()
@@ -241,8 +215,8 @@ class ProductListViewModel @Inject constructor(
                 args6.forEach { (ratingAbove, ratingBelow) ->
                     filterResultSet.addAll(
                         filterResult.filter {
-                            it.productWithBrand.product.totalRating!! >= ratingAbove.toFloat() &&
-                                    it.productWithBrand.product.totalRating!! <= ratingBelow.toFloat()
+                            it.productWithBrand.product.totalRating >= ratingAbove.toFloat() &&
+                                    it.productWithBrand.product.totalRating <= ratingBelow.toFloat()
                         }
                     )
                 }
@@ -251,24 +225,6 @@ class ProductListViewModel @Inject constructor(
             watchList.postValue(filterResult)
         }
 
-    }
-
-    fun setPriceFilter(priceFilter: List<Pair<Int, Int>>) {
-        priceFilter.forEach { (priceAbove, priceBelow) ->
-            watchList.value = watchList.value?.filter {
-                it.productWithBrand.product.currentPrice >= priceAbove &&
-                        it.productWithBrand.product.currentPrice <= priceBelow
-            }
-        }
-    }
-
-    fun setRatingFilter(ratingFilter: List<Pair<Int, Int>>) {
-        ratingFilter.forEach { (ratingAbove, ratingBelow) ->
-            watchList.value = watchList.value?.filter {
-                it.productWithBrand.product.totalRating!! >= ratingAbove &&
-                        it.productWithBrand.product.totalRating!! <= ratingBelow
-            }
-        }
     }
 
     companion object {

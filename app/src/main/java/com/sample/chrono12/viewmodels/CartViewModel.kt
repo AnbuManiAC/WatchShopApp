@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.chrono12.data.entities.Cart
-import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
 import com.sample.chrono12.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,12 +16,9 @@ class CartViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val deliverAddressList = MutableLiveData<AddressGroupWithAddress>()
     private val totalOriginalPrice = MutableLiveData<Int>()
     private val totalCurrentPrice = MutableLiveData<Int>()
     private val totalDiscount = MutableLiveData<Int>()
-
-    fun getDeliverAddressList(): LiveData<AddressGroupWithAddress> = deliverAddressList
 
     fun getTotalOriginPrice(): LiveData<Int> = totalOriginalPrice
     fun getTotalCurrentPrice(): LiveData<Int> = totalCurrentPrice

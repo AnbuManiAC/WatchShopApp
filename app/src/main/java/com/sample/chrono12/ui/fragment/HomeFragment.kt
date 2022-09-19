@@ -57,6 +57,8 @@ class HomeFragment : Fragment() {
 
         binding.tvAllWatches.setOnClickListener(View.OnClickListener {
             mProductListViewModel.setProductListTitle("All Watches")
+            filterViewModel.clearSelectedFilterIds()
+            filterViewModel.clearSelectedFilterPosition()
             Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(fromAllWatches = true))
         })
 

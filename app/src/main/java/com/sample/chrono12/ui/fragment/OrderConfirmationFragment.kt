@@ -49,6 +49,7 @@ class OrderConfirmationFragment : Fragment() {
     private lateinit var cartWithProductInfo: List<CartWithProductInfo>
     private  var originalPrice: Int = 0
     private var currentPrice: Int = 0
+    private var orderCount: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,8 +64,8 @@ class OrderConfirmationFragment : Fragment() {
 
         setupProductsAdapter()
         setupAddressAdapter()
-        setupPriceDetails()
         setupConfirmOrder()
+        setupPriceDetails()
     }
 
     private fun setupConfirmOrder() {
@@ -74,6 +75,7 @@ class OrderConfirmationFragment : Fragment() {
                 Context.MODE_PRIVATE
             )
             val bulkOrderId = sharedPref.getInt(getString(R.string.bulk_order_id), 0)
+            var orderId = 0
             val editor = sharedPref?.edit()
             editor?.let {
                 editor.putInt(getString(R.string.bulk_order_id), bulkOrderId+1)
@@ -90,7 +92,7 @@ class OrderConfirmationFragment : Fragment() {
                         addressInfo = getAddressString(it),
                         orderStatus = OrderStatus.ORDERED.toString()
                     )
-                    val orderId = orderViewModel.insertOrder(order)
+                    orderId = orderViewModel.insertOrder(order)
                     cartWithProductInfo.forEach {
                         val productOrdered = ProductOrdered(
                             orderId = orderId,
@@ -100,25 +102,27 @@ class OrderConfirmationFragment : Fragment() {
                         orderViewModel.insertProductOrdered(productOrdered)
                     }
                 }
+                cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
+                findNavController().navigate(
+                    OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(bulkOrderId+1, orderId)
+                )
             }
-            cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
-            findNavController().navigate(
-                OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog()
-            )
+
         }
     }
 
     private fun setupPriceDetails() {
+
         cartViewModel.getTotalOriginPrice().observe(viewLifecycleOwner) { originalPrice ->
             this.originalPrice = originalPrice
-            binding.tvTotalOriginalPriceInRps.text = getString(R.string.price, originalPrice)
+            binding.tvTotalOriginalPriceInRps.text = getString(R.string.price, originalPrice*orderCount)
         }
         cartViewModel.getTotalCurrentPrice().observe(viewLifecycleOwner) { currentPrice ->
             this.currentPrice = currentPrice
-            binding.tvTotalCurrentPriceInRps.text = getString(R.string.price, currentPrice)
+            binding.tvTotalCurrentPriceInRps.text = getString(R.string.price, currentPrice*orderCount)
         }
         cartViewModel.getTotalDiscount().observe(viewLifecycleOwner) { totalDiscount ->
-            binding.tvDiscountInRps.text = getString(R.string.discount_price, totalDiscount)
+            binding.tvDiscountInRps.text = getString(R.string.discount_price, totalDiscount*orderCount)
         }
     }
 
@@ -141,6 +145,7 @@ class OrderConfirmationFragment : Fragment() {
                         addressGroup = it.addressGroup,
                         addressList = addresses.toList()
                     )
+                    orderCount = addressGroupWithAddress.addressList.size
                     with(addressAdapter) {
                         setData(addressGroupWithAddress)
                         notifyDataSetChanged()
@@ -155,6 +160,7 @@ class OrderConfirmationFragment : Fragment() {
             )
                 .observe(viewLifecycleOwner) {
                     addressGroupWithAddress = it
+                    orderCount = addressGroupWithAddress.addressList.size
                     with(addressAdapter) {
                         setData(it)
                         notifyDataSetChanged()
@@ -297,5 +303,9 @@ class OrderConfirmationFragment : Fragment() {
     private fun getAddressString(address: Address): String {
         return address.contactName + "\n" + address.addressLine1.split("___")
             .joinToString(", ") + "\n" + address.addressLine2 + "\n" + address.city + ", " + address.state + " - " + address.pincode + "\n" + "Mobile Number : " + address.contactNumber.toString()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 }

@@ -1,24 +1,18 @@
 package com.sample.chrono12.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
+import android.widget.ArrayAdapter
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Address
-import com.sample.chrono12.data.entities.AddressAndGroupCrossRef
-import com.sample.chrono12.data.entities.AddressGroup
 import com.sample.chrono12.databinding.FragmentNewAddressBinding
 import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.viewmodels.UserViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class NewAddressFragment : Fragment() {
 
@@ -55,6 +49,13 @@ class NewAddressFragment : Fragment() {
                 }
             }
         }
+        setupStatesDropDownAdapter()
+    }
+
+    private fun setupStatesDropDownAdapter() {
+        val states = resources.getStringArray(R.array.india_states)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.state_name_item, states)
+        binding.tilEtState.setAdapter(arrayAdapter)
     }
 
     private fun cancelErrors() {
@@ -80,7 +81,18 @@ class NewAddressFragment : Fragment() {
     }
 
     private fun checkInput(): Boolean =
-        isFieldsNotEmpty() && pincodeCheck()
+        isFieldsNotEmpty() && pincodeCheck() && mobileCheck()
+
+    private fun mobileCheck(): Boolean {
+        val mobile = binding.tilEtMobile.text.toString()
+        if ( !mobile.isDigitsOnly() || mobile.length!=10 || mobile.first().toString().toInt() !in listOf(6,7,8,9)){
+            val mobileInfo = getString(R.string.not_a_mobile)
+            binding.tilMobile.error = mobileInfo
+            return false
+        }
+        return true
+    }
+
 
     private fun isFieldsNotEmpty(): Boolean {
         val name = binding.tilEtAddressName

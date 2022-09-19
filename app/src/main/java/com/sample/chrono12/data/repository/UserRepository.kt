@@ -1,12 +1,10 @@
 package com.sample.chrono12.data.repository
 
 import androidx.lifecycle.LiveData
-import androidx.sqlite.db.SimpleSQLiteQuery
 import com.sample.chrono12.data.dao.UserDao
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.*
 import com.sample.chrono12.data.models.OrderInfo
-import com.sample.chrono12.data.models.OrderStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -19,6 +17,10 @@ class UserRepository(private val userDao: UserDao) {
 
     suspend fun isExistingEmail(emailId: String): Int = withContext(Dispatchers.IO) {
         userDao.isExistingEmail(emailId)
+    }
+
+    suspend fun isExistingMobile(mobile: String): Int = withContext(Dispatchers.IO){
+        userDao.isExistingMobile(mobile)
     }
 
     suspend fun validatePassword(emailId: String, password: String): Int =
@@ -71,7 +73,7 @@ class UserRepository(private val userDao: UserDao) {
 
     //Suggestion
     suspend fun getSuggestions(userId: Int): List<SearchSuggestion> = withContext(Dispatchers.IO) {
-        userDao.getSuggestions(userId)
+        userDao.getSearchHistory(userId)
     }
 
     suspend fun insertSuggestion(suggestion: SearchSuggestion) = withContext(Dispatchers.IO) {
@@ -194,5 +196,10 @@ class UserRepository(private val userDao: UserDao) {
     suspend fun getOrderedProductInfo(orderId: Int): List<OrderedProductInfo> =
         withContext(Dispatchers.IO){
             userDao.getOrderedProductInfo(orderId)
+        }
+
+    suspend fun deleteSearchHistory(userId: Int) =
+        withContext(Dispatchers.IO){
+            userDao.deleteSearchHistory(userId)
         }
 }

@@ -30,7 +30,7 @@ class CartFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
         return if(isUserLoggedIn){
@@ -58,7 +58,7 @@ class CartFragment : Fragment() {
     }
 
     private fun setupCartMissing() {
-
+        loginPromptBinding.ivMissingCart.setImageResource(R.drawable.missing_cart)
         loginPromptBinding.btnLogIn.setOnClickListener {
             Log.d("cart","In missing cart nav")
             Navigation.findNavController(requireView()).navigate(CartFragmentDirections.actionCartFragmentToLogInFragment())
@@ -89,16 +89,16 @@ class CartFragment : Fragment() {
         fragmentCartBinding.btnGoHome.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
         }
-        cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).observe(viewLifecycleOwner){
-            cartViewModel.initPriceCalculating(it)
-            if(it.isNotEmpty()){
+        cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).observe(viewLifecycleOwner){ cart ->
+            cartViewModel.initPriceCalculating(cart)
+            if(cart.isNotEmpty()){
                 fragmentCartBinding.ivEmptyCart.visibility = View.GONE
                 fragmentCartBinding.tvEmptyCart.visibility = View.GONE
                 fragmentCartBinding.tvEmptyCartDesc.visibility = View.GONE
                 fragmentCartBinding.btnGoHome.visibility = View.GONE
                 fragmentCartBinding.layoutPriceOrder.visibility = View.VISIBLE
             }
-            if(it.isEmpty()){
+            if(cart.isEmpty()){
                 fragmentCartBinding.ivEmptyCart.setImageResource(R.drawable.ic_empty_cart_svg)
                 fragmentCartBinding.ivEmptyCart.visibility = View.VISIBLE
                 fragmentCartBinding.tvEmptyCart.visibility = View.VISIBLE
@@ -107,7 +107,7 @@ class CartFragment : Fragment() {
                 fragmentCartBinding.layoutPriceOrder.visibility = View.GONE
             }
             fragmentCartBinding.rvCart.adapter = CartAdapter(
-                it,
+                cart,
                 {
                     Navigation.findNavController(requireView()).navigate(CartFragmentDirections.actionCartFragmentToProductFragment(it.productId))
                 },

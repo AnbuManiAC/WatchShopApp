@@ -3,163 +3,264 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".ui.fragment.ProfileFragment">
 
-    <TextView
-        android:id="@+id/tvUserName"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:text="Anbumani A C"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/tvEmailId"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvEmailId"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:text="anbumani@gmail.com"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/tvMobileNum"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvUserName" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.activity.HomeActivity">
 
-    <TextView
-        android:id="@+id/tvMobileNum"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="center"
-        android:text="8760704332"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/guideline4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvEmailId" />
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_large"
+                android:clickable="true"
+                android:focusable="true"
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="Anbumani A C" />
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvMyWishlist" />
+            <TextView
+                android:id="@+id/tvMobileNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_mobile"
+                android:drawablePadding="@dimen/padding_small"
+                android:drawableTint="@color/primaryColor"
+                android:focusable="true"
+                android:inputType="none"
+                android:paddingHorizontal="@dimen/padding_small"
+                android:paddingBottom="@dimen/padding_small"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                app:layout_constraintEnd_toEndOf="@+id/tvEmail"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="@+id/tvEmail"
+                app:layout_constraintTop_toBottomOf="@+id/tvEmail"
+                tools:text="8760704332" />
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvMyOrder" />
+            <TextView
+                android:id="@+id/tvEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:clickable="true"
+                android:drawableLeft="@drawable/ic_mail"
+                android:drawablePadding="@dimen/padding_small"
+                android:drawableTint="@color/primaryColor"
+                android:focusable="true"
+                android:padding="@dimen/padding_small"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserName"
+                tools:text="anbumani@gmail.com" />
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvMyAddress" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:elevation="@dimen/padding_small"
+                app:cardCornerRadius="@dimen/margin_large"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvMobileNumber"
+                app:strokeColor="@color/primaryColor"
+                app:strokeWidth="1dp">
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvMyAddressGroup" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/tvMyAddressGroup"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+                    <TextView
+                        android:id="@+id/myWishList"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_favorite"
+                        android:drawableEnd="@drawable/ic_small_right_arrow"
+                        android:drawablePadding="@dimen/padding_small"
+                        android:drawableTint="@color/primaryColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/padding_large"
+                        android:text="My Wishlist"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvMyWishlist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:drawableEnd="@drawable/ic_small_right_arrow"
-        android:focusable="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:padding="@dimen/padding_large"
-        android:text="My Wishlist"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline4" />
+                    <TextView
+                        android:id="@+id/myOrders"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_shopping_bag"
+                        android:drawableEnd="@drawable/ic_small_right_arrow"
+                        android:drawablePadding="@dimen/padding_small"
+                        android:drawableTint="@color/primaryColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/padding_large"
+                        android:text="My Orders"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/wishlistDivider" />
 
-    <TextView
-        android:id="@+id/tvMyOrder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableEnd="@drawable/ic_small_right_arrow"
-        android:foreground="?attr/selectableItemBackground"
-        android:padding="@dimen/padding_large"
-        android:text="My Order"
-        android:clickable="true"
-        android:focusable="true"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvMyWishlist" />
+                    <TextView
+                        android:id="@+id/myAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_location"
+                        android:drawableEnd="@drawable/ic_small_right_arrow"
+                        android:drawablePadding="@dimen/padding_small"
+                        android:drawableTint="@color/primaryColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/padding_large"
+                        android:text="My Address"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/orderDivider" />
 
-    <TextView
-        android:id="@+id/tvMyAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableEnd="@drawable/ic_small_right_arrow"
-        android:foreground="?attr/selectableItemBackground"
-        android:padding="@dimen/padding_large"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="My Address"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvMyOrder" />
+                    <TextView
+                        android:id="@+id/myAddressGroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_locations"
+                        android:drawableEnd="@drawable/ic_small_right_arrow"
+                        android:drawablePadding="@dimen/padding_small"
+                        android:drawableTint="@color/primaryColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/padding_large"
+                        android:text="My Address Group"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/addressDivider" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/wishlistDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="@dimen/padding_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/myWishList" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/orderDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="@dimen/padding_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/myOrders" />
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/addressDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="@dimen/padding_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/myAddress" />
 
 
-    <TextView
-        android:id="@+id/tvMyAddressGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableEnd="@drawable/ic_small_right_arrow"
-        android:foreground="?attr/selectableItemBackground"
-        android:padding="@dimen/padding_large"
-        android:clickable="true"
-        android:focusable="true"
-        android:text="My Address Group"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvMyAddress" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
 
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="0dp"
-        app:layout_constraintGuide_percent="0.3" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cvOthers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_small"
+                android:layout_marginBottom="@dimen/margin_large"
+                android:elevation="@dimen/padding_small"
+                app:cardCornerRadius="@dimen/margin_large"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/cvProfile"
+                app:strokeColor="@color/primaryColor"
+                app:strokeWidth="1dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/deleteSearchHistory"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_delete"
+                        android:drawableEnd="@drawable/ic_small_right_arrow"
+                        android:drawablePadding="@dimen/padding_small"
+                        android:drawableTint="@color/primaryColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/padding_large"
+                        android:text="Delete Search History"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/signOut"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_sign_out"
+                        android:drawableEnd="@drawable/ic_small_right_arrow"
+                        android:drawablePadding="@dimen/padding_small"
+                        android:drawableTint="@color/primaryColor"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/padding_large"
+                        android:text="Sign out"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/signOutDivider" />
+
+
+                    <com.google.android.material.divider.MaterialDivider
+                        android:id="@+id/signOutDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="@dimen/padding_small"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/deleteSearchHistory" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

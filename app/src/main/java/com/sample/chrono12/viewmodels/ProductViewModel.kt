@@ -5,9 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.ProductDetail
-import com.sample.chrono12.data.entities.relations.*
+import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.repository.WatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

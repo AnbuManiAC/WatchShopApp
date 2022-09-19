@@ -30,6 +30,7 @@ import com.sample.chrono12.viewmodels.UserViewModel
 import com.sample.chrono12.viewmodels.WishListViewModel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.math.log
 
 class WishListFragment : Fragment() {
 
@@ -37,7 +38,6 @@ class WishListFragment : Fragment() {
     private lateinit var loginPromptBinding: LoginPromptCartWishlistDialogBinding
     private var isUserLoggedIn = false
 
-    private val productViewModel by lazy { ViewModelProvider(requireActivity())[ProductViewModel::class.java] }
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private val wishListViewModel by lazy { ViewModelProvider(requireActivity())[WishListViewModel::class.java] }
     private val cartViewModel by lazy { ViewModelProvider(requireActivity())[CartViewModel::class.java] }
@@ -67,7 +67,7 @@ class WishListFragment : Fragment() {
     }
 
     private fun setupLoginPrompt() {
-
+        loginPromptBinding.ivMissingCart.setImageResource(R.drawable.missing_wishlist)
         loginPromptBinding.tvContinueShopping.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
         }
@@ -88,7 +88,6 @@ class WishListFragment : Fragment() {
         wishListViewModel.getWishListItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
                 if (it.isEmpty()) {
-                    fragmentWishListBinding.ivEmptyCart.setImageResource(R.drawable.ic_empty_cart_svg)
                     fragmentWishListBinding.ivEmptyCart.visibility = View.VISIBLE
                     fragmentWishListBinding.tvEmptyCart.visibility = View.VISIBLE
                     fragmentWishListBinding.tvEmptyCartDesc.visibility = View.VISIBLE

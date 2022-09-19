@@ -95,6 +95,7 @@ class SignUpFragment : Fragment() {
     private fun deliverFieldMessage(field: UserField) {
         when(field){
             EMAIL -> binding.tilEmail.error = field.response.message
+            MOBILE -> binding.tilMobile.error = field.response.message
             ALL -> {
                 Toast.makeText(requireContext(), field.response.message, Toast.LENGTH_SHORT).show()
             }

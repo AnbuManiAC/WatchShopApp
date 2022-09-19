@@ -21,7 +21,9 @@ import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_COMP
 import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_INITIATED
 import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_NOT_INITIATED
 import com.sample.chrono12.viewmodels.UserViewModel
+import java.util.*
 import java.util.logging.Filter
+import kotlin.collections.ArrayList
 
 
 class SearchFragment : Fragment() {
@@ -46,7 +48,6 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         productListViewModel.searchStatus.observe(viewLifecycleOwner) { status ->
-            Log.d("PSearch", "In observe - $status")
             when (status) {
                 SEARCH_COMPLETED -> {
                     val list = productListViewModel.getSearchResult().value
@@ -57,9 +58,7 @@ class SearchFragment : Fragment() {
                     } else if (list.isNotEmpty()) {
                         binding.ivSearch.visibility = View.GONE
                         binding.tvSearchInfo.visibility = View.GONE
-                        Log.d("PSearch", "In else")
                         productListViewModel.setSearchStatus()
-//                                productListViewModel.searchStatus.removeObservers(viewLifecycleOwner)
                         findNavController()
                             .navigate(SearchFragmentDirections.actionSearchFragmentToProductListFragment())
                     }
@@ -107,7 +106,7 @@ class SearchFragment : Fragment() {
                 hideInput()
                 if (query == null) return false
                 productListViewModel.setProductsWithBrandAndImagesByQuery(query).also {
-                    userViewModel.insertSuggestion(query, 0)
+                    userViewModel.insertSuggestion(query, Calendar.getInstance().timeInMillis)
                 }
                 return true
             }

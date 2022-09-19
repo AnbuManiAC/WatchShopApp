@@ -40,12 +40,20 @@ class OrderHistoryFragment : Fragment() {
     private fun setupOrderHistoryAdapter() {
         val adapter = OrderHistoryAdapter(onOrderClickListener)
         binding.rvOrderHistory.layoutManager = LinearLayoutManager(requireContext())
-        orderViewModel.getOrderHistory().observe(viewLifecycleOwner){ orderHistory ->
-            with(adapter){
-                setData(orderHistory)
-                notifyDataSetChanged()
+        orderViewModel.getOrderHistory().observe(viewLifecycleOwner){  orderHistory ->
+            if (orderHistory.isEmpty()){
+                binding.clEmptyOrder.visibility = View.VISIBLE
+            }else{
+                binding.clEmptyOrder.visibility = View.GONE
             }
-            binding.rvOrderHistory.adapter = adapter
+            orderHistory?.let {
+                with(adapter){
+                    setData(orderHistory)
+                    notifyDataSetChanged()
+                }
+                binding.rvOrderHistory.adapter = adapter
+            }
+
         }
     }
 

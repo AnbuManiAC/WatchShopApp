@@ -46,20 +46,27 @@ class ProfileFragment : Fragment() {
     private fun setupProfile() {
         userViewModel.getUserDetails().observe(viewLifecycleOwner){ user ->
             bindingProfile.tvUserName.text = user.name
-            bindingProfile.tvEmailId.text = user.email
-            bindingProfile.tvMobileNum.text = user.mobile
+            bindingProfile.tvEmail.text = user.email
+            bindingProfile.tvMobileNumber .text = user.mobile
         }
-        bindingProfile.tvMyWishlist.setOnClickListener {
+        bindingProfile.myWishList.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToWishlistFragment())
         }
-        bindingProfile.tvMyOrder.setOnClickListener {
+        bindingProfile.myOrders.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToOrderHistoryFragment())
         }
-        bindingProfile.tvMyAddress.setOnClickListener {
+        bindingProfile.myAddress.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToAddressFragment())
         }
-        bindingProfile.tvMyAddressGroup.setOnClickListener {
+        bindingProfile.myAddressGroup.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToAddressGroupFragment())
+        }
+        bindingProfile.deleteSearchHistory.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToDeleteSearchDialog())
+        }
+
+        bindingProfile.signOut.setOnClickListener {
+            Navigation.findNavController(requireView()).navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
         }
     }
 

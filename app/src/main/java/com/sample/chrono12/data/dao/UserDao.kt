@@ -19,6 +19,9 @@ interface UserDao {
     @Query("SELECT EXISTS(SELECT 1 FROM User WHERE email = :emailId)")
     suspend fun isExistingEmail(emailId: String): Int
 
+    @Query("SELECT EXISTS(SELECT 1 FROM User WHERE mobileNumber = :mobile)")
+    suspend fun isExistingMobile(mobile: String): Int
+
     @Query("SELECT EXISTS(SELECT 1 FROM User WHERE email = :emailId AND password = :password)")
     suspend fun validatePassword(emailId: String, password: String): Int
 
@@ -63,8 +66,11 @@ interface UserDao {
     suspend fun deleteCartItems(userId: Int)
 
     //Suggestions
-    @Query("SELECT * FROM SearchSuggestion WHERE userId is Null OR userId = :userId ORDER BY userId DESC")
-    suspend fun getSuggestions(userId: Int): List<SearchSuggestion>
+    @Query("SELECT * FROM SearchSuggestion WHERE userId is Null OR userId = :userId ORDER BY timestamp DESC")
+    suspend fun getSearchHistory(userId: Int): List<SearchSuggestion>
+
+    @Query("SELECT * FROM SearchSuggestion WHERE userId is Null")
+    suspend fun getSearchSuggestion(): List<SearchSuggestion>
 
     @Insert
     suspend fun insertSuggestion(suggestion: SearchSuggestion)
@@ -148,5 +154,8 @@ interface UserDao {
 
     @Query("SELECT * FROM ProductOrdered where orderId = :orderId")
     suspend fun getOrderedProductInfo(orderId: Int): List<OrderedProductInfo>
+
+    @Query("DELETE FROM SearchSuggestion WHERE userId = :userId")
+    suspend fun deleteSearchHistory(userId: Int)
 
 }

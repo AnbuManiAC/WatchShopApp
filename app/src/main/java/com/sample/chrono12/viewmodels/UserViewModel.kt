@@ -1,20 +1,19 @@
 package com.sample.chrono12.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.chrono12.data.entities.*
+import com.sample.chrono12.data.entities.Address
+import com.sample.chrono12.data.entities.AddressGroup
+import com.sample.chrono12.data.entities.SearchSuggestion
+import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
-import com.sample.chrono12.data.models.OrderInfo
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserDetails
 import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -79,35 +78,43 @@ class UserViewModel @Inject constructor(
             if (validatePassword(emailId, password)) {
                 val userId = userRepository.getUserId(emailId)
                 setLoggedInUser(userId)
-                userField.value = UserField.ALL.also {
-                    it.response = Response.SUCCESS.also { it.message = "Logged in successfully" }
+                userField.value = UserField.ALL.also { userField ->
+                    userField.response = Response.SUCCESS.also { it.message = "Logged in successfully" }
                 }
             } else {
-                userField.value = UserField.PASSWORD.also {
-                    it.response = Response.FAILURE.also { it.message = "Incorrect password" }
+                userField.value = UserField.PASSWORD.also { userField ->
+                    userField.response = Response.FAILURE.also { it.message = "Incorrect password" }
                 }
             }
         } else {
-            userField.value = UserField.EMAIL.also {
-                it.response = Response.FAILURE.also { it.message = "Email does not exists" }
+            userField.value = UserField.EMAIL.also { userField ->
+                userField.response = Response.FAILURE.also { it.message = "Email does not exists" }
             }
         }
     }
 
     fun initiateSignUp(user: User) = viewModelScope.launch {
-        if (isExistingEmail(user.email)) {
-            userField.value = UserField.EMAIL.also {
-                it.response = Response.FAILURE.also { it.message = "Email id already Exists" }
+        if (!isExistingEmail(user.email)) {
+            if(isExistingMobileNumber(user.mobileNumber)){
+                userField.value = UserField.MOBILE.also { userField ->
+                    userField.response = Response.FAILURE.also { it.message = "Mobile Number already Exists" }
+                }
             }
-            return@launch
+            else{
+                createUser(user)
+            }
         }
-        createUser(user)
+        else{
+            userField.value = UserField.EMAIL.also { userField ->
+                userField.response = Response.FAILURE.also { it.message = "Email id already Exists" }
+            }
+        }
     }
 
     private fun createUser(user: User) = viewModelScope.launch {
         setLoggedInUser(userRepository.createUser(user))
-        userField.value = UserField.ALL.also {
-            it.response = Response.SUCCESS.also { it.message = "Sign up  successfull" }
+        userField.value = UserField.ALL.also { userField ->
+            userField.response = Response.SUCCESS.also { it.message = "Sign up  successfull" }
         }
     }
 
@@ -116,6 +123,9 @@ class UserViewModel @Inject constructor(
 
     private suspend fun isExistingEmail(emailId: String): Boolean =
         userRepository.isExistingEmail(emailId) == 1
+
+    private suspend fun isExistingMobileNumber(mobile: String): Boolean =
+        userRepository.isExistingMobile(mobile) == 1
 
     fun getUserFieldInfo(): LiveData<UserField> = userField
 
@@ -184,8 +194,6 @@ class UserViewModel @Inject constructor(
 
     fun getAddressGroupId(): LiveData<Int> = addressGroupId
 
-    fun getAddressId(): LiveData<Int> = addressId
-
     fun insertAddress(address: Address, addressGroupName: String) {
         viewModelScope.launch {
             val id = userRepository.insertAddress(address)
@@ -235,4 +243,9 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch { userRepository.deleteAddress(addressId) }
     }
 
+    fun deleteSearchHistory(userId: Int){
+        viewModelScope.launch {
+            userRepository.deleteSearchHistory(userId)
+        }
+    }
 }

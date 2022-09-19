@@ -5,12 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.chrono12.data.entities.Order
-import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.data.entities.ProductOrdered
-import com.sample.chrono12.data.entities.relations.*
+import com.sample.chrono12.data.entities.relations.OrderedProductInfo
 import com.sample.chrono12.data.models.OrderInfo
 import com.sample.chrono12.data.repository.UserRepository
-import com.sample.chrono12.data.repository.WatchRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

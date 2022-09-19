@@ -16,14 +16,6 @@ class WishListViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-    private val isProductInUserCart = MutableLiveData<Boolean>()
-
-    fun getIsProductInUserCart(): LiveData<Boolean> = isProductInUserCart
-
-    fun setIsProductInUserCart(isInCart: Boolean){
-        isProductInUserCart.value = isInCart
-    }
-
     fun getWishListItems(userId: Int): LiveData<List<WishListWithProductInfo>> = userRepository.getUserWishListItems(userId)
 
     suspend fun isProductInUserWishList(productId: Int, userId: Int): Boolean = userRepository.isProductInUserWishList(productId,userId)==1

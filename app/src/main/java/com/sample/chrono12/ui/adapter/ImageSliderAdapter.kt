@@ -6,18 +6,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.ImageSliderItemBinding
 import com.sample.chrono12.utils.ImageUtil
 
 class ImageSliderAdapter(
-    private val imageList: List<String>,
-    val lifecycleScope: LifecycleCoroutineScope
+    private val imageList: List<String>
 ): RecyclerView.Adapter<ImageSliderAdapter.ImageViewHolder>() {
 
     class ImageViewHolder(private val binding: ImageSliderItemBinding): RecyclerView.ViewHolder(binding.root){
-        fun bind(image: String, lifecycleScope: LifecycleCoroutineScope){
-            binding.ivImages.load(image)
-//            ImageUtil.loadImage(image,binding.ivImages, lifecycleScope)
+        fun bind(image: String){
+//            binding.ivImages.load(image)
+            ImageUtil.loadImage(image,binding.ivImages, ImageKey.LARGE)
         }
     }
 
@@ -31,7 +31,7 @@ class ImageSliderAdapter(
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        holder.bind(imageList[position], lifecycleScope)
+        holder.bind(imageList[position])
     }
 
     override fun getItemCount(): Int {

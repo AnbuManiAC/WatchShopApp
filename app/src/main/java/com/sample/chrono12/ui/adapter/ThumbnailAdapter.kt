@@ -10,7 +10,9 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sample.chrono12.R
+import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.ImageThumbnailItemBinding
+import com.sample.chrono12.utils.ImageUtil
 import java.io.InputStream
 import java.net.URL
 
@@ -28,7 +30,7 @@ class ThumbnailAdapter(
 
     inner class ThumbnailViewHolder(val binding: ImageThumbnailItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(image: String) {
-            binding.ivThumbnail.load(image)
+            ImageUtil.loadImage(image,binding.ivThumbnail, ImageKey.SMALL)
             binding.clThumbnail.setOnClickListener {
                 onThumbnailClick(image)
             }

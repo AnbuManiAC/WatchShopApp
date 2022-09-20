@@ -6,6 +6,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.*
 import com.sample.chrono12.data.models.OrderInfo
+import com.sample.chrono12.data.models.OrderStatus
 import com.sample.chrono12.ui.adapter.AddressAdapter
 import java.io.Flushable
 
@@ -14,7 +15,7 @@ interface UserDao {
 
     //Signup, Signin
     @Insert
-    suspend fun createUser(user: User) : Long
+    suspend fun createUser(user: User): Long
 
     @Query("SELECT EXISTS(SELECT 1 FROM User WHERE email = :emailId)")
     suspend fun isExistingEmail(emailId: String): Int
@@ -102,26 +103,36 @@ interface UserDao {
     suspend fun getAddressById(addressId: Int): Address
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertIntoAddress(address: Address):Long
+    suspend fun insertIntoAddress(address: Address): Long
 
     @Query("DELETE FROM Address WHERE addressId = :addressId")
     fun deleteAddress(addressId: Int)
 
     //Address group
     @Query("SELECT * FROM AddressGroup WHERE userId =:userId AND groupName!=:def")
-    fun getAddressGroupWithAddresses(userId: Int, def: String = "default"): LiveData<List<AddressGroupWithAddress>>
+    fun getAddressGroupWithAddresses(
+        userId: Int,
+        def: String = "default"
+    ): LiveData<List<AddressGroupWithAddress>>
 
     @Query("SELECT * FROM AddressGroup WHERE userId =:userId And addressGroupId = :addressGroupId")
-    fun getAddressGroupWithAddresses(userId: Int, addressGroupId: Int): LiveData<AddressGroupWithAddress>
+    fun getAddressGroupWithAddresses(
+        userId: Int,
+        addressGroupId: Int
+    ): LiveData<AddressGroupWithAddress>
 
     @Query("SELECT * FROM AddressGroup, Address WHERE userId =:userId And addressId = :addressId And addressGroupId = :addressGroupId")
-    fun getAddressGroupWithAddressByAddressId(userId: Int, addressGroupId: Int, addressId:Int): LiveData<AddressGroupWithAddress>
+    fun getAddressGroupWithAddressByAddressId(
+        userId: Int,
+        addressGroupId: Int,
+        addressId: Int
+    ): LiveData<AddressGroupWithAddress>
 
     @Query("SELECT addressGroupId FROM AddressGroup where userId =:userId AND groupName =:groupName")
     suspend fun getAddressGroupId(userId: Int, groupName: String): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertIntoAddressGroup(addressGroup: AddressGroup):Long
+    suspend fun insertIntoAddressGroup(addressGroup: AddressGroup): Long
 
     @Query("UPDATE AddressGroup SET groupName = :groupName WHERE addressGroupId = :addressGroupId")
     suspend fun updateAddressGroupName(addressGroupId: Int, groupName: String)
@@ -131,7 +142,11 @@ interface UserDao {
 
     //Address and group CrossRef
     @Query("INSERT OR IGNORE INTO AddressAndGroupCrossRef(addressId, addressGroupId) values(:addressId, (SELECT addressGroupId FROM AddressGroup WHERE userId =:userId AND groupName =:addressGroupName))")
-    suspend fun insertIntoAddressAndGroupCrossRef(userId: Int, addressId: Int, addressGroupName: String)
+    suspend fun insertIntoAddressAndGroupCrossRef(
+        userId: Int,
+        addressId: Int,
+        addressGroupName: String
+    )
 
     @Query("DELETE FROM AddressAndGroupCrossRef WHERE addressId = :addressId AND addressGroupId = :addressGroupId")
     suspend fun deleteAddressFromGroup(addressId: Int, addressGroupId: Int)
@@ -157,5 +172,8 @@ interface UserDao {
 
     @Query("DELETE FROM SearchSuggestion WHERE userId = :userId")
     suspend fun deleteSearchHistory(userId: Int)
+
+    @Query("UPDATE `Order` set orderStatus = :orderStatus where orderId = :orderId")
+    fun changeOrderStatus(orderId: Int, orderStatus: OrderStatus)
 
 }

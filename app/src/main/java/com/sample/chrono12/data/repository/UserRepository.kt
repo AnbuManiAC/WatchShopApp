@@ -5,11 +5,13 @@ import com.sample.chrono12.data.dao.UserDao
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.*
 import com.sample.chrono12.data.models.OrderInfo
+import com.sample.chrono12.data.models.OrderStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.*
+import javax.inject.Inject
 
-class UserRepository(private val userDao: UserDao) {
+class UserRepository @Inject constructor(private val userDao: UserDao) {
 
     suspend fun createUser(user: User): Long = withContext(Dispatchers.IO) {
         userDao.createUser(user)
@@ -202,4 +204,8 @@ class UserRepository(private val userDao: UserDao) {
         withContext(Dispatchers.IO){
             userDao.deleteSearchHistory(userId)
         }
+
+fun changeOrderStatus(orderId: Int, orderStatus: OrderStatus) =
+            userDao.changeOrderStatus(orderId, orderStatus)
+
 }

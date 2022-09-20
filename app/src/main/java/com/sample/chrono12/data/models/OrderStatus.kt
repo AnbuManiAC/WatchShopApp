@@ -2,6 +2,6 @@ package com.sample.chrono12.data.models
 
 enum class OrderStatus {
     ORDERED,
-    PENDING,
+    IN_TRANSIT,
     DELIVERED
 }

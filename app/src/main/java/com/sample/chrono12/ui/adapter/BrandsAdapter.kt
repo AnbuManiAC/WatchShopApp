@@ -10,6 +10,8 @@ import coil.load
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.SubCategory
+import com.sample.chrono12.data.models.ImageKey
+import com.sample.chrono12.utils.ImageUtil
 
 class BrandsAdapter(
     private val categories: List<ProductBrand>,
@@ -23,9 +25,7 @@ class BrandsAdapter(
         fun bind(brand: ProductBrand){
             view.setOnClickListener { onClickListener.onClick(brand) }
             tvCategoryName.text = brand.brandName
-            ivCategoryImage.load(brand.brandImageUrl){
-                crossfade(true)
-            }
+            ImageUtil.loadImage(brand.brandImageUrl, ivCategoryImage, ImageKey.SMALL)
         }
     }
 

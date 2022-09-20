@@ -15,6 +15,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.WorkManager
 import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Address
@@ -102,6 +103,8 @@ class OrderConfirmationFragment : Fragment() {
                         orderViewModel.insertProductOrdered(productOrdered)
                     }
                 }
+
+                orderViewModel.initOrderStatusUpdate(orderId, bulkOrderId, WorkManager.getInstance(requireContext()))
                 cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
                 findNavController().navigate(
                     OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(bulkOrderId+1, orderId)

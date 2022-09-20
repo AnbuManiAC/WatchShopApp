@@ -1,20 +1,20 @@
 package com.sample.chrono12.di
 
 import android.app.Application
+import android.content.Context
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.sample.chrono12.data.database.WatchShopDatabase
-import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.data.repository.UserRepository
 import com.sample.chrono12.data.repository.WatchRepository
-import dagger.Module
-import dagger.Provides
+import dagger.*
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object  AppModule {
+object AppModule {
 
     @Singleton
     @Provides
@@ -23,7 +23,7 @@ object  AppModule {
             app,
             WatchShopDatabase::class.java,
             "watch_shop"
-        ).createFromAsset("watch_app_db").build()
+        ).createFromAsset("watch_db_new").build()
     }
 
     @Singleton
@@ -37,4 +37,7 @@ object  AppModule {
     fun providesUserRepository(db: WatchShopDatabase): UserRepository{
         return UserRepository(db.userDao)
     }
+
+
+
 }

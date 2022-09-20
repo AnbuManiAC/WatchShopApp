@@ -7,8 +7,10 @@ import android.util.LruCache
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleCoroutineScope
 import com.sample.chrono12.R
+import com.sample.chrono12.data.models.ImageKey
 import kotlinx.coroutines.*
 import java.net.URL
+import kotlin.coroutines.coroutineContext
 
 object ImageUtil {
 
@@ -24,39 +26,54 @@ object ImageUtil {
         }
     }
 
-    fun loadImage(url: String, imageview: ImageView, lifecycleCoroutineScope: LifecycleCoroutineScope) {
+    fun loadImage(url: String, imageview: ImageView, imageKey: ImageKey = ImageKey.SMALL) {
 
-        if (getBitmapFromMemoryCache(url) != null) {
-            imageview.setImageBitmap(getBitmapFromMemoryCache(url))
+        if (getBitmapFromMemoryCache(url+imageKey) != null) {
+            imageview.setImageBitmap(getBitmapFromMemoryCache(url+imageKey.toString()))
             Log.d("TAG", "Image set from cache")
         } else {
             CoroutineScope(Dispatchers.IO).launch {
-                imageview.setImageResource(R.drawable.ic_image_loaading)
-                val result = async(Dispatchers.IO) {
+                withContext(Dispatchers.Main) { imageview.setImageResource(R.drawable.ic_image_loaading) }
+                val result: Deferred<Bitmap?> = async(Dispatchers.IO) {
                     val imageUrl = URL(url)
 
                     val options = BitmapFactory.Options().apply {
                         inJustDecodeBounds = true
                     }
 
-                    BitmapFactory.decodeStream(imageUrl.openStream(), null, options)
+                    try {
+                        BitmapFactory.decodeStream(imageUrl.openStream(), null, options)
 
-                    val sampleSize = calculateSampleSize(options, imageview.width, imageview.height)
+                        val sampleSize =
+                            calculateSampleSize(options, imageview.width, imageview.height)
 
-                    val finalOptions = BitmapFactory.Options().apply {
-                        inJustDecodeBounds = false
-                        inSampleSize = sampleSize
+                        val finalOptions = BitmapFactory.Options().apply {
+                            inJustDecodeBounds = false
+                            inSampleSize = sampleSize
+                        }
+
+                        return@async BitmapFactory.decodeStream(
+                            imageUrl.openStream(),
+                            null,
+                            finalOptions
+                        )
+                    } catch (e: Exception) {
+                        return@async null
                     }
-
-                    return@async BitmapFactory.decodeStream(imageUrl.openStream(), null, finalOptions)
                 }
 
 
                 try {
-                    val bitmap = result.await()
-                    memoryCache.put(url, bitmap)
-                    Log.d("TAG", "Image set from loading url")
-                    imageview.setImageBitmap(bitmap)
+                    withContext(Dispatchers.Main) {
+                        val bitmap = result.await()
+                        if (bitmap != null) {
+                            memoryCache.put(url+imageKey.toString(), bitmap)
+                            Log.d("TAG", "Image set from loading url")
+                            imageview.setImageBitmap(bitmap)
+                        }
+
+                    }
+
                 } catch (e: Exception) {
                     Log.d("TAG", "Exception : $e")
                 }
@@ -78,7 +95,7 @@ object ImageUtil {
             val halfHeight: Int = height / 2
             val halfWidth: Int = width / 2
             Log.d("SampleSize", "$reqHeight $reqWidth $halfHeight $halfWidth $inSampleSize")
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+            while (inSampleSize != 0 && halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
                 inSampleSize *= 2
                 Log.d("SampleSizeUpdated", "$halfHeight $halfWidth $inSampleSize")
 

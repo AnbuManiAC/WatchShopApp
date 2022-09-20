@@ -1,6 +1,7 @@
 package com.sample.chrono12.ui.adapter
 
 import android.graphics.Paint
+import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
+import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.ProductRvItemBinding
+import com.sample.chrono12.utils.ImageUtil
 
 class ProductListAdapter(
     private val productWithBrandAndImagesList: List<ProductWithBrandAndImages>,
@@ -28,7 +31,7 @@ class ProductListAdapter(
             val brand = productWithBrandAndImages.productWithBrand.brand
             val image = productWithBrandAndImages.images[0].imageUrl
             binding.root.setOnClickListener { onClickListener.onClick(product) }
-            itemImage.load(image)
+            ImageUtil.loadImage(image, itemImage, ImageKey.MEDIUM)
             itemName.text = product.name
             itemBrand.text = brand.brandName
             itemCurrentPrice.text = "₹"+product.currentPrice.toInt().toString()

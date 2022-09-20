@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.SubCategory
+import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.AddressOrderInfoRvItemBinding
 import com.sample.chrono12.databinding.CartRvItemBinding
 import com.sample.chrono12.databinding.CategoriesRvItemBinding
@@ -26,9 +27,7 @@ class CategoriesAdapter(
         fun bind(category: SubCategory){
             binding.root.setOnClickListener { onClickListener.onClick(category) }
             tvCategoryName.text = category.name
-            ivCategoryImage.load(category.imageUrl){
-                crossfade(true)
-            }
+            ImageUtil.loadImage(category.imageUrl, ivCategoryImage, ImageKey.SMALL)
         }
     }
 

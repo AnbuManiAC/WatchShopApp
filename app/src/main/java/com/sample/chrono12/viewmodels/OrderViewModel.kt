@@ -12,6 +12,7 @@ import com.sample.chrono12.data.entities.Order
 import com.sample.chrono12.data.entities.ProductOrdered
 import com.sample.chrono12.data.entities.relations.OrderedProductInfo
 import com.sample.chrono12.data.models.OrderInfo
+import com.sample.chrono12.data.models.OrderStatus
 import com.sample.chrono12.data.repository.UserRepository
 import com.sample.chrono12.utils.OrderStatusUpdater
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -73,12 +74,16 @@ class OrderViewModel @Inject constructor(
 
     fun getOrderedProductInfo(): LiveData<List<OrderedProductInfo>> = orderedProductInfoList
 
-    fun initOrderStatusUpdate(orderId: Int, bulkOrderId: Int, workManager: WorkManager) {
-        val workRequest = OneTimeWorkRequestBuilder<OrderStatusUpdater>()
-            .setInputData(workDataOf("orderId" to orderId, "bulkOrderId" to bulkOrderId))
+    fun initOrderStatusUpdate(orderId: Int, bulkOrderId: Int, isBulkOrder: Boolean, workManager: WorkManager) {
+        val workRequest1 = OneTimeWorkRequestBuilder<OrderStatusUpdater>()
+            .setInputData(workDataOf("orderId" to orderId, "bulkOrderId" to bulkOrderId, "isBulkOrder" to isBulkOrder, "orderStatus" to "IN TRANSIT"))
             .setInitialDelay(10000, TimeUnit.MILLISECONDS)
             .build()
-        workManager.enqueue(workRequest)
+        val workRequest2 = OneTimeWorkRequestBuilder<OrderStatusUpdater>()
+            .setInputData(workDataOf("orderId" to orderId, "bulkOrderId" to bulkOrderId, "isBulkOrder" to isBulkOrder, "orderStatus" to "DELIVERED"))
+            .setInitialDelay(10000, TimeUnit.MILLISECONDS)
+            .build()
+        workManager.beginWith(workRequest1).then(workRequest2).enqueue()
     }
 
 }

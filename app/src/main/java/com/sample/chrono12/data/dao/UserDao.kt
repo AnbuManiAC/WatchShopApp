@@ -174,6 +174,6 @@ interface UserDao {
     suspend fun deleteSearchHistory(userId: Int)
 
     @Query("UPDATE `Order` set orderStatus = :orderStatus where orderId = :orderId")
-    fun changeOrderStatus(orderId: Int, orderStatus: OrderStatus)
+    fun changeOrderStatus(orderId: Int, orderStatus: String)
 
 }

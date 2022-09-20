@@ -1,6 +1,7 @@
 package com.sample.chrono12.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,7 @@ class OrderDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentOrderDetailBinding.inflate(layoutInflater)
+        Log.d("NavArgs", "${navArgs.orderId} and ${navArgs.bulkOrderId}")
         orderViewModel.setOrderDetail(navArgs.bulkOrderId, userViewModel.getLoggedInUser().toInt())
         orderViewModel.setOrderedProductInfo(navArgs.orderId)
         return binding.root

@@ -16,9 +16,10 @@ import com.sample.chrono12.utils.ImageUtil
 class ProductListAdapter(
     private val productWithBrandAndImagesList: List<ProductWithBrandAndImages>,
     private val onClickListener: OnClickProduct
-):  RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>(){
+) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
 
-    inner class ProductListViewHolder(val binding: ProductRvItemBinding): RecyclerView.ViewHolder(binding.root){
+    inner class ProductListViewHolder(val binding: ProductRvItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private val itemName = binding.tvItemProductName
         private val itemBrand = binding.tvItemProductBrand
         private val itemCurrentPrice = binding.tvItemCurrentPrice
@@ -26,20 +27,22 @@ class ProductListAdapter(
         private val itemOffPercent = binding.tvItemOffPercent
         private val itemRating = binding.rbItemRating
         private val itemImage = binding.ivItemProductImage
-        fun bind(productWithBrandAndImages: ProductWithBrandAndImages){
+        fun bind(productWithBrandAndImages: ProductWithBrandAndImages) {
             val product = productWithBrandAndImages.productWithBrand.product
             val brand = productWithBrandAndImages.productWithBrand.brand
             val image = productWithBrandAndImages.images[0].imageUrl
             binding.root.setOnClickListener { onClickListener.onClick(product) }
             ImageUtil.loadImage(image, itemImage, ImageKey.MEDIUM)
+//            itemImage.load(image)
+
             itemName.text = product.name
             itemBrand.text = brand.brandName
-            itemCurrentPrice.text = "₹"+product.currentPrice.toInt().toString()
+            itemCurrentPrice.text = "₹" + product.currentPrice.toInt().toString()
             itemRating.rating = product.totalRating!!
-            if(product.originalPrice==product.currentPrice){
+            if (product.originalPrice == product.currentPrice) {
                 itemOriginalPrice.visibility = View.GONE
                 itemOffPercent.visibility = View.GONE
-            } else{
+            } else {
                 itemOriginalPrice.apply {
                     text = "₹" + product.originalPrice.toInt().toString()
                     paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -67,7 +70,7 @@ class ProductListAdapter(
         return productWithBrandAndImagesList.size
     }
 
-    fun interface OnClickProduct{
+    fun interface OnClickProduct {
         fun onClick(product: Product)
     }
 }

@@ -34,7 +34,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var userViewModel: UserViewModel
-    private val filterViewModel by lazy { ViewModelProvider(this)[FilterViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +71,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.cartFragment -> showBottomBar()
                 R.id.profileFragment -> showBottomBar()
                 R.id.logoutDialog -> showBottomBar()
+                R.id.deleteSearchHistory -> showBottomBar()
                 R.id.chooseAddressTypeFragment -> showBottomBar()
                 else -> hideBottomBar()
             }

@@ -37,6 +37,7 @@
     <string name="categories">Categories</string>
     <string name="user_pref">User_Preference</string>
     <string name="user_id">User_Id</string>
+    <string name="notification_id">Notification_Id</string>
     <string name="bulk_order_id">Bulk_Order_Id</string>
     <string name="sort_by">Sort By</string>
     <string name="price_high_to_low">Price - High to Low</string>

@@ -1,5 +1,6 @@
 package com.sample.chrono12.utils
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -25,6 +26,7 @@ object ImageUtil {
             }
         }
     }
+
 
     fun loadImage(url: String, imageview: ImageView, imageKey: ImageKey = ImageKey.SMALL) {
 
@@ -58,6 +60,7 @@ object ImageUtil {
                             finalOptions
                         )
                     } catch (e: Exception) {
+                        Log.d("ImageException" , e.cause.toString() + " " +e.message.toString())
                         return@async null
                     }
                 }

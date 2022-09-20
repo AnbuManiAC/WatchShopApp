@@ -75,17 +75,18 @@ class OrderConfirmationFragment : Fragment() {
                 getString(R.string.user_pref),
                 Context.MODE_PRIVATE
             )
-            val bulkOrderId = sharedPref.getInt(getString(R.string.bulk_order_id), 0)
+            var bulkOrderId = sharedPref.getInt(getString(R.string.bulk_order_id), 0)
+            bulkOrderId+=1
             var orderId = 0
             val editor = sharedPref?.edit()
             editor?.let {
-                editor.putInt(getString(R.string.bulk_order_id), bulkOrderId+1)
+                editor.putInt(getString(R.string.bulk_order_id), bulkOrderId)
                 editor.apply()
             }
             lifecycleScope.launch {
                 addressGroupWithAddress.addressList.forEach {
                     val order = Order(
-                        bulkOrderId = bulkOrderId + 1,
+                        bulkOrderId = bulkOrderId,
                         userId = userViewModel.getLoggedInUser().toInt(),
                         timestamp = Calendar.getInstance().timeInMillis,
                         actualTotal = originalPrice.toFloat(),
@@ -102,12 +103,13 @@ class OrderConfirmationFragment : Fragment() {
                         )
                         orderViewModel.insertProductOrdered(productOrdered)
                     }
+                    val isBulkOrder = addressGroupWithAddress.addressList.size>1
+                    orderViewModel.initOrderStatusUpdate(orderId, bulkOrderId, isBulkOrder, WorkManager.getInstance(requireContext()))
                 }
 
-                orderViewModel.initOrderStatusUpdate(orderId, bulkOrderId, WorkManager.getInstance(requireContext()))
                 cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
                 findNavController().navigate(
-                    OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(bulkOrderId+1, orderId)
+                    OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(bulkOrderId, orderId)
                 )
             }
 

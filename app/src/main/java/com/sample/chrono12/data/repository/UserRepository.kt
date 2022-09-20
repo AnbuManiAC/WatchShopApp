@@ -21,7 +21,7 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
         userDao.isExistingEmail(emailId)
     }
 
-    suspend fun isExistingMobile(mobile: String): Int = withContext(Dispatchers.IO){
+    suspend fun isExistingMobile(mobile: String): Int = withContext(Dispatchers.IO) {
         userDao.isExistingMobile(mobile)
     }
 
@@ -181,7 +181,7 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
         }
 
     suspend fun getOrderInfo(bulkOrderId: Int, userId: Int): OrderInfo =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             userDao.getOrderInfo(bulkOrderId, userId)
         }
 
@@ -191,21 +191,21 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
         }
 
     suspend fun getOrderDetail(bulkOrderId: Int, userId: Int): List<Order> =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             userDao.getOrderDetail(bulkOrderId, userId)
         }
 
     suspend fun getOrderedProductInfo(orderId: Int): List<OrderedProductInfo> =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             userDao.getOrderedProductInfo(orderId)
         }
 
     suspend fun deleteSearchHistory(userId: Int) =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             userDao.deleteSearchHistory(userId)
         }
 
-fun changeOrderStatus(orderId: Int, orderStatus: OrderStatus) =
-            userDao.changeOrderStatus(orderId, orderStatus)
+    fun changeOrderStatus(orderId: Int, orderStatus: String) =
+        userDao.changeOrderStatus(orderId, orderStatus)
 
 }

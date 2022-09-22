@@ -17,6 +17,9 @@ interface UserDao {
     @Insert
     suspend fun createUser(user: User): Long
 
+    @Query("UPDATE USER SET image = :imageName where userId = :userId")
+    suspend fun addProfilePicture(imageName: String, userId: Int)
+
     @Query("SELECT EXISTS(SELECT 1 FROM User WHERE email = :emailId)")
     suspend fun isExistingEmail(emailId: String): Int
 
@@ -63,15 +66,19 @@ interface UserDao {
     @Query("UPDATE Cart SET quantity = :quantity where userId = :userId AND productId = :productId")
     suspend fun updateQuantity(productId: Int, userId: Int, quantity: Int)
 
+    @Query("UPDATE Product set stockCount = :stockCount where productId = :productId")
+    suspend fun updateStockCount(productId: Int, stockCount: Int)
+
     @Query("DELETE FROM Cart WHERE userId = :userId")
     suspend fun deleteCartItems(userId: Int)
 
     //Suggestions
-    @Query("SELECT * FROM SearchSuggestion WHERE userId is Null OR userId = :userId ORDER BY timestamp DESC")
+    @Query("SELECT * FROM SearchSuggestion WHERE userId = :userId ORDER BY timestamp DESC")
     suspend fun getSearchHistory(userId: Int): List<SearchSuggestion>
 
-    @Query("SELECT * FROM SearchSuggestion WHERE userId is Null")
-    suspend fun getSearchSuggestion(): List<SearchSuggestion>
+    @RawQuery
+    suspend fun getSuggestions(suggestionQuery: SupportSQLiteQuery): List<SearchSuggestion>
+
 
     @Insert
     suspend fun insertSuggestion(suggestion: SearchSuggestion)
@@ -158,7 +165,7 @@ interface UserDao {
     @Insert
     suspend fun insertProductOrdered(productOrdered: ProductOrdered): Long
 
-    @Query("select distinct bulkOrderId,orderId,timestamp, sum(actualTotal) as totalPrice, sum(totalPrice) as currentPrice,count() as orderCount,(select count() from ProductOrdered where ProductOrdered.orderId = `Order`.orderId) as productCount from `Order` where userId = :userId group by bulkOrderId")
+    @Query("select distinct bulkOrderId,orderId,timestamp, sum(actualTotal) as totalPrice, sum(totalPrice) as currentPrice,count() as orderCount,(select count() from ProductOrdered where ProductOrdered.orderId = `Order`.orderId) as productCount from `Order` where userId = :userId group by bulkOrderId order by timestamp desc")
     suspend fun getOrderHistory(userId: Int): List<OrderInfo>
 
     @Query("select distinct bulkOrderId,orderId,timestamp, sum(actualTotal) as totalPrice, sum(totalPrice) as currentPrice,count() as orderCount,(select count() from ProductOrdered where ProductOrdered.orderId = `Order`.orderId) as productCount from `Order` where userId = :userId and bulkOrderId = :bulkOrderId group by bulkOrderId")

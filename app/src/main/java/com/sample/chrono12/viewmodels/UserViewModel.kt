@@ -13,6 +13,7 @@ import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserDetails
 import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.data.repository.UserRepository
+import com.sample.chrono12.data.models.ProfileSettingAction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -26,11 +27,21 @@ class UserViewModel @Inject constructor(
     private var loggedInUser: Long = 0
     private var userDetails = MutableLiveData<UserDetails>()
     private var userField = MutableLiveData<UserField>()
-    private val suggestions = MutableLiveData<List<SearchSuggestion>>()
+    private val _suggestions = MutableLiveData<List<SearchSuggestion>>()
+    val suggestion: LiveData<List<SearchSuggestion>>
+    get() = _suggestions
+
     private val address = MutableLiveData<Address>()
     private var addressId = MutableLiveData<Int>()
     private var addressGroupId = MutableLiveData<Int>()
     private val addressIds = MutableLiveData<List<Int>>()
+    private var profileSettingAction = MutableLiveData<ProfileSettingAction>()
+
+    fun setProfileSettingAction(action: ProfileSettingAction){
+        profileSettingAction.value = action
+    }
+
+    fun getProfileSettingAction(): LiveData<ProfileSettingAction> = profileSettingAction
 
     fun clearAddressIds() {
         null.also { addressIds.value = it }
@@ -67,7 +78,7 @@ class UserViewModel @Inject constructor(
     private fun setUserDetails(userId: Long) {
         viewModelScope.launch {
             val user: User = userRepository.getUser(userId)
-            userDetails.value = UserDetails(user.name, user.email, user.mobileNumber)
+            userDetails.value = UserDetails(user.name, user.email, user.mobileNumber, user.image)
         }
     }
 
@@ -118,6 +129,11 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    fun addProfilePicture(imagePath: String, userId: Int) = viewModelScope.launch {
+        userRepository.addProfilePicture(imagePath, userId)
+        setUserDetails(userId.toLong())
+    }
+
     private suspend fun validatePassword(emailId: String, password: String): Boolean =
         userRepository.validatePassword(emailId, password) == 1
 
@@ -134,13 +150,26 @@ class UserViewModel @Inject constructor(
         isUserLoggedIn = false
     }
 
-    fun setSuggestions() {
+    fun setSearchHistory() {
         viewModelScope.launch {
-            suggestions.postValue(userRepository.getSuggestions(loggedInUser.toInt()))
+            _suggestions.postValue(userRepository.getSearchHistory(loggedInUser.toInt()))
         }
     }
 
-    fun getSuggestions(): LiveData<List<SearchSuggestion>> = suggestions
+    fun updateSearchSuggestion(searchString: String){
+        viewModelScope.launch {
+            _suggestions.postValue(userRepository.getSearchSuggestion(getQueryAsList(searchString), loggedInUser.toInt()))
+        }
+    }
+
+    private fun getQueryAsList(query: String): List<String> {
+        val list = query.split(" ", ",", ", ", " ,", "'")
+        val searchQuery = ArrayList<String>()
+        list.forEach {
+            searchQuery.add("%$it%")
+        }
+        return searchQuery
+    }
 
     fun insertSuggestion(suggestion: String, timeStamp: Long) {
         viewModelScope.launch {

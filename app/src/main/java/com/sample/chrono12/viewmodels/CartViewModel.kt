@@ -19,10 +19,12 @@ class CartViewModel @Inject constructor(
     private val totalOriginalPrice = MutableLiveData<Int>()
     private val totalCurrentPrice = MutableLiveData<Int>()
     private val totalDiscount = MutableLiveData<Int>()
+    private val totalProductCount = MutableLiveData<Int>()
 
     fun getTotalOriginPrice(): LiveData<Int> = totalOriginalPrice
     fun getTotalCurrentPrice(): LiveData<Int> = totalCurrentPrice
     fun getTotalDiscount(): LiveData<Int> = totalDiscount
+    fun getTotalProductCount(): LiveData<Int> = totalProductCount
 
     private fun setTotalOriginalPrice(price: Int) {
         totalOriginalPrice.value = price
@@ -34,6 +36,10 @@ class CartViewModel @Inject constructor(
 
     private fun setTotalDiscount(price: Int) {
         totalDiscount.value = price
+    }
+
+    private fun setTotalProductCount(count: Int){
+        totalProductCount.value = count
     }
 
     fun getCartItems(userId: Int): LiveData<List<CartWithProductInfo>> =
@@ -65,7 +71,9 @@ class CartViewModel @Inject constructor(
     fun initPriceCalculating(list: List<CartWithProductInfo>) {
         var originalPrice = 0
         var currentPrice = 0
+        var productCount = 0
         list.forEach {
+            productCount+=it.cart.quantity
             originalPrice += it.productWithBrandAndImagesList.productWithBrand.product.originalPrice.toInt() * it.cart.quantity
             currentPrice += it.productWithBrandAndImagesList.productWithBrand.product.currentPrice.toInt() * it.cart.quantity
         }
@@ -73,6 +81,8 @@ class CartViewModel @Inject constructor(
         setTotalCurrentPrice(currentPrice)
         setTotalOriginalPrice(originalPrice)
         setTotalDiscount(originalPrice - currentPrice)
+        setTotalProductCount(productCount)
+
     }
 
     fun clearCart(userId: Int) {

@@ -101,6 +101,7 @@ class FilterFragment : Fragment() {
 
     private fun setupApplyButton() {
         binding.btnApply.setOnClickListener {
+            filterViewModel.setAppliedFilterIds(filterViewModel.selectedFilterIds)
             if(filterViewModel.isClearClicked) filterViewModel.clearSelectedFilterIds()
             setFilter()
             findNavController().navigate(FilterFragmentDirections.actionFilterFragmentToProductListFragment())
@@ -108,7 +109,7 @@ class FilterFragment : Fragment() {
     }
 
     fun setFilter(){
-        val filterInput = filterViewModel.selectedFilterIds
+        val filterInput = filterViewModel.appliedFilterIds
         val genderInput = filterInput.filter { it in 1..3 }
         val dialShapeInput = filterInput.filter { it in 4..6 }
         val displayTypeInput = filterInput.filter { it in 7..11 }
@@ -120,7 +121,6 @@ class FilterFragment : Fragment() {
     }
 
     private fun setupClearButton() {
-
         binding.btnClear.setOnClickListener {
             filterViewModel.isClearClicked = true
             filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
@@ -130,7 +130,7 @@ class FilterFragment : Fragment() {
 
     private fun setDataToFilterValueAdapter(filterValues: HashMap<Int, String>) {
         filterValuesAdapter.setData(filterValues)
-        filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
+        filterValuesAdapter.setSelectedFilterIds(filterViewModel.appliedFilterIds)
         filterValuesAdapter.notifyDataSetChanged()
     }
 
@@ -169,6 +169,7 @@ class FilterFragment : Fragment() {
         filterValuesAdapter = FilterValuesAdapter{ filterId, isChecked ->
             filterViewModel.addDeleteSelectedFilter(filterId, isChecked)
         }
+        filterViewModel.setSelectedFilterIds(filterViewModel.appliedFilterIds)
         filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
         binding.rvFilterValues.adapter = filterValuesAdapter
     }
@@ -176,6 +177,7 @@ class FilterFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         filterViewModel.isClearClicked = false
+        filterViewModel.clearSelectedFilterPosition()
     }
 
 }

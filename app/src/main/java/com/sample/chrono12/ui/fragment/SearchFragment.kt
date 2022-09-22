@@ -2,10 +2,12 @@ package com.sample.chrono12.ui.fragment
 
 import android.app.AlertDialog
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -13,21 +15,20 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.SearchSuggestion
+import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.databinding.FragmentSearchBinding
 import com.sample.chrono12.ui.adapter.SuggestionAdapter
+import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_COMPLETED
-import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_INITIATED
-import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_NOT_INITIATED
 import com.sample.chrono12.viewmodels.UserViewModel
 import java.util.*
-import java.util.logging.Filter
-import kotlin.collections.ArrayList
 
 
 class SearchFragment : Fragment() {
 
+    private lateinit var adapter: SuggestionAdapter
     private lateinit var binding: FragmentSearchBinding
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
@@ -52,49 +53,56 @@ class SearchFragment : Fragment() {
                 SEARCH_COMPLETED -> {
                     val list = productListViewModel.getSearchResult().value
                     if (list.isNullOrEmpty()) {
-                        binding.ivSearch.visibility = View.VISIBLE
-                        binding.tvSearchInfo.visibility = View.VISIBLE
+                        changeSearchImageAndTextVisibility(View.VISIBLE)
                         productListViewModel.setSearchStatus()
                     } else if (list.isNotEmpty()) {
-                        binding.ivSearch.visibility = View.GONE
-                        binding.tvSearchInfo.visibility = View.GONE
+                        changeSearchImageAndTextVisibility(View.GONE)
                         productListViewModel.setSearchStatus()
                         findNavController()
                             .navigate(SearchFragmentDirections.actionSearchFragmentToProductListFragment())
                     }
                 }
-                SEARCH_INITIATED -> {
-                    Log.i("PSearchFragment", "status - SEARCH_INITIALISED")
-                }
-                SEARCH_NOT_INITIATED -> {
-                    Log.i("PSearchFragment", "status - SEARCH_NOT_INITIALISED")
-                }
+                else -> {}
             }
         }
-
+        userViewModel.setSearchHistory()
         setupSuggestionAdapter()
-        initSuggestions()
+    }
+
+    private fun changeSearchImageAndTextVisibility(visibility: Int){
+        binding.ivSearch.visibility = visibility
+        binding.tvSearchInfo.visibility = visibility
     }
 
     private fun setupSuggestionAdapter() {
-
+        adapter = SuggestionAdapter(getOnClickSuggestionListener())
+        adapter.setData(mutableListOf())
         binding.rvSearchSuggestions.layoutManager = LinearLayoutManager(requireContext())
-        userViewModel.getSuggestions().observe(viewLifecycleOwner) { suggestions ->
-            val distinctSuggestions = suggestions.distinctBy {
-                it.suggestion
+        binding.rvSearchSuggestions.adapter = adapter
+        userViewModel.suggestion.observe(viewLifecycleOwner) { suggestions ->
+            if (suggestions.isEmpty()) {
+                binding.rvSearchSuggestions.visibility = View.GONE
+                return@observe
+            } else{
+                val mutableSuggestions = ArrayList<SearchSuggestion>(suggestions)
+                binding.rvSearchSuggestions.visibility = View.VISIBLE
+                adapter.setNewData(mutableSuggestions)
             }
-            if (suggestions.isEmpty()) return@observe
-            val mutableSuggestions = ArrayList<SearchSuggestion>(distinctSuggestions)
-            binding.rvSearchSuggestions.adapter = SuggestionAdapter(
-                mutableSuggestions.toMutableList(),
-                getOnClickSuggestionListener()
-            )
+
         }
+
     }
 
 
-    private fun initSuggestions() {
-        userViewModel.setSuggestions()
+
+    private fun getSortType(): SortType {
+        return when (SharedPrefUtil.getSortType(requireActivity())) {
+            SortType.PRICE_LOW_TO_HIGH.toString() -> SortType.PRICE_LOW_TO_HIGH
+            SortType.PRICE_HIGH_TO_LOW.toString() -> SortType.PRICE_HIGH_TO_LOW
+            SortType.RATING_HIGH_TO_LOW.toString() -> SortType.RATING_HIGH_TO_LOW
+            SortType.RATING_LOW_TO_HIGH.toString() -> SortType.RATING_LOW_TO_HIGH
+            else -> SortType.RATING_HIGH_TO_LOW
+        }
     }
 
     private val getSearchQueryListener =
@@ -105,17 +113,20 @@ class SearchFragment : Fragment() {
                 searchView.clearFocus()
                 hideInput()
                 if (query == null) return false
-                productListViewModel.setProductsWithBrandAndImagesByQuery(query).also {
+                productListViewModel.setProductsWithBrandAndImagesByQuery(query, getSortType()).also {
                     userViewModel.insertSuggestion(query, Calendar.getInstance().timeInMillis)
                 }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                initSuggestions()
-                binding.ivSearch.visibility = View.GONE
-                binding.tvSearchInfo.visibility = View.GONE
-                binding.rvSearchSuggestions.visibility = View.VISIBLE
+                if(newText.isNullOrEmpty()) {
+                    userViewModel.setSearchHistory()
+                }else{
+                    userViewModel.updateSearchSuggestion(newText)
+                }
+                changeSearchImageAndTextVisibility(View.GONE)
+//                binding.rvSearchSuggestions.visibility = View.VISIBLE
                 return true
             }
 
@@ -141,9 +152,7 @@ class SearchFragment : Fragment() {
                     .setMessage("Remove from Suggestion History")
                     .setPositiveButton("Remove") { _, _ ->
                         userViewModel.removeSuggestion(suggestionHistory)
-                        (binding.rvSearchSuggestions.adapter as? SuggestionAdapter)?.removeSuggestion(
-                            position
-                        )
+                        adapter.removeSuggestion(position)
                     }
                     .setNegativeButton("Cancel") { _, _ -> }
                     .create()
@@ -157,8 +166,16 @@ class SearchFragment : Fragment() {
 
         val searchItem = menu.findItem(R.id.searchFragment)
         searchView = searchItem.actionView as SearchView
+        searchView.maxWidth = Integer.MAX_VALUE
         searchItem.expandActionView()
         searchView.setOnQueryTextListener(getSearchQueryListener)
+
+        val searchText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            searchText.textCursorDrawable = resources.getDrawable(R.drawable.cursor_primary, null)
+        }
+
+
 
         searchItem.setOnActionExpandListener(
             object : MenuItem.OnActionExpandListener {

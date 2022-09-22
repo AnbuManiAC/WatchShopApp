@@ -1,17 +1,14 @@
 package com.sample.chrono12.utils
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
 import android.util.LruCache
 import android.widget.ImageView
-import androidx.lifecycle.LifecycleCoroutineScope
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.ImageKey
 import kotlinx.coroutines.*
 import java.net.URL
-import kotlin.coroutines.coroutineContext
 
 object ImageUtil {
 
@@ -35,7 +32,7 @@ object ImageUtil {
             Log.d("TAG", "Image set from cache")
         } else {
             CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main) { imageview.setImageResource(R.drawable.ic_image_loaading) }
+                withContext(Dispatchers.Main) { imageview.setImageResource(R.drawable.ic_image_loading) }
                 val result: Deferred<Bitmap?> = async(Dispatchers.IO) {
                     val imageUrl = URL(url)
 

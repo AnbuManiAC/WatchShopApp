@@ -22,6 +22,7 @@ import com.sample.chrono12.databinding.ActivityMainBinding
 import com.sample.chrono12.ui.fragment.FilterFragment
 import com.sample.chrono12.ui.fragment.HomeFragment
 import com.sample.chrono12.viewmodels.FilterViewModel
+import com.sample.chrono12.viewmodels.ProductListViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,6 +42,7 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
 
+        setupSharedPref()
         setupUser()
         bottomNav = binding.bottomNav
         navHostFragment =
@@ -95,6 +97,20 @@ class HomeActivity : AppCompatActivity() {
 
     fun setBackButtonAs(@DrawableRes drawableIcon: Int) {
         supportActionBar?.setHomeAsUpIndicator(drawableIcon)
+    }
+
+    private fun setupSharedPref(){
+        val sharedPreference = this.getSharedPreferences(getString(R.string.user_pref) , Context.MODE_PRIVATE)
+        if(sharedPreference.getLong(getString(R.string.user_id), -1) == -1L){
+            val editor = sharedPreference?.edit()
+            editor?.let { editor ->
+                editor.putLong(getString(R.string.user_id), 0)
+                editor.putInt(getString(R.string.bulk_order_id), 0)
+                editor.putInt(getString(R.string.notification_id), 0)
+                editor.putString(getString(R.string.sort_type), "")
+                editor.apply()
+            }
+        }
     }
 
 }

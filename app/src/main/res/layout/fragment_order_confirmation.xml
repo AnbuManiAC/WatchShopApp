@@ -21,6 +21,29 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <com.google.android.material.card.MaterialCardView
+                app:strokeColor="@color/orangeRed"
+                app:strokeWidth="2dp"
+                android:id="@+id/cvError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="0dp"
+                android:visibility="gone"
+                android:layout_margin="@dimen/margin_small"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tvError"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_small"
+                    android:text="Products"
+                    android:textAppearance="@style/TextAppearance.MaterialComponents.Body2" />
+            </com.google.android.material.card.MaterialCardView>
+
+
             <TextView
                 android:id="@+id/tvProducts"
                 android:layout_width="match_parent"
@@ -28,10 +51,9 @@
                 android:layout_margin="@dimen/margin_small"
                 android:text="Products"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                app:layout_constraintBottom_toTopOf="@id/rvProducts"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toBottomOf="@id/cvError" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvProducts"

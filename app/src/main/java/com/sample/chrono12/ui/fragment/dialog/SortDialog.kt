@@ -10,6 +10,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.SortType.*
 import com.sample.chrono12.databinding.FragmentSortDialogBinding
+import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.ProductListViewModel
 
 class SortDialog : BottomSheetDialogFragment() {
@@ -30,22 +31,45 @@ class SortDialog : BottomSheetDialogFragment() {
 
         val sortRadioGroup = binding.rgSort
 
-        productListViewModel.getSortType()?.let { sortType ->
-            when(sortType){
-                PRICE_LOW_TO_HIGH -> sortRadioGroup.check(R.id.rbPriceLowToHigh)
-                PRICE_HIGH_TO_LOW -> sortRadioGroup.check(R.id.rbPriceHighToLow)
-                RATING_LOW_TO_HIGH -> sortRadioGroup.check(R.id.rbRatingLowToHigh)
-                RATING_HIGH_TO_LOW -> sortRadioGroup.check(R.id.rbRatingHighToLow)
+        productListViewModel.sortType.let { sortType ->
+            when(sortType.value){
+                PRICE_LOW_TO_HIGH -> {
+                    sortRadioGroup.check(R.id.rbPriceLowToHigh)
+                }
+                PRICE_HIGH_TO_LOW -> {
+                    sortRadioGroup.check(R.id.rbPriceHighToLow)
+                }
+                RATING_LOW_TO_HIGH -> {
+                    sortRadioGroup.check(R.id.rbRatingLowToHigh)
+                }
+                RATING_HIGH_TO_LOW -> {
+                    sortRadioGroup.check(R.id.rbRatingHighToLow)
+                }
+                else ->{
+
+                }
             }
         }
 
         sortRadioGroup.setOnCheckedChangeListener { _, checkedId ->
             Log.i("ProdBottomSheetSort","checkedId - $checkedId")
             when(checkedId){
-                R.id.rbPriceHighToLow -> productListViewModel.sortProductList(PRICE_HIGH_TO_LOW)
-                R.id.rbPriceLowToHigh -> productListViewModel.sortProductList(PRICE_LOW_TO_HIGH)
-                 R.id.rbRatingHighToLow -> productListViewModel.sortProductList(RATING_HIGH_TO_LOW)
-                R.id.rbRatingLowToHigh -> productListViewModel.sortProductList(RATING_LOW_TO_HIGH)
+                R.id.rbPriceHighToLow ->{
+                    productListViewModel.applySort(PRICE_HIGH_TO_LOW)
+                    SharedPrefUtil.changeSortType(requireActivity(), PRICE_HIGH_TO_LOW.toString())
+                }
+                R.id.rbPriceLowToHigh ->{
+                    productListViewModel.applySort(PRICE_LOW_TO_HIGH)
+                    SharedPrefUtil.changeSortType(requireActivity(), PRICE_LOW_TO_HIGH.toString())
+                }
+                 R.id.rbRatingHighToLow -> {
+                     productListViewModel.applySort(RATING_HIGH_TO_LOW)
+                     SharedPrefUtil.changeSortType(requireActivity(), RATING_HIGH_TO_LOW.toString())
+                 }
+                R.id.rbRatingLowToHigh -> {
+                    productListViewModel.applySort(RATING_LOW_TO_HIGH)
+                    SharedPrefUtil.changeSortType(requireActivity(), RATING_LOW_TO_HIGH.toString())
+                }
             }
             dismiss()
         }

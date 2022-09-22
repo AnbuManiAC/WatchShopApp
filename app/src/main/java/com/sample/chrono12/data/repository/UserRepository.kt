@@ -1,6 +1,8 @@
 package com.sample.chrono12.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.sample.chrono12.data.dao.UserDao
 import com.sample.chrono12.data.entities.*
 import com.sample.chrono12.data.entities.relations.*
@@ -15,6 +17,10 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
 
     suspend fun createUser(user: User): Long = withContext(Dispatchers.IO) {
         userDao.createUser(user)
+    }
+
+    suspend fun addProfilePicture(imagePath: String, userId: Int) = withContext(Dispatchers.IO){
+        userDao.addProfilePicture(imagePath, userId)
     }
 
     suspend fun isExistingEmail(emailId: String): Int = withContext(Dispatchers.IO) {
@@ -73,9 +79,28 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
     suspend fun updateQuantity(productId: Int, userId: Int, quantity: Int) =
         userDao.updateQuantity(productId, userId, quantity)
 
+    suspend fun updateStockCount(productId: Int, stockCount: Int) = withContext(Dispatchers.IO){
+        userDao.updateStockCount(productId, stockCount)
+    }
+
     //Suggestion
-    suspend fun getSuggestions(userId: Int): List<SearchSuggestion> = withContext(Dispatchers.IO) {
+    suspend fun getSearchHistory(userId: Int): List<SearchSuggestion> = withContext(Dispatchers.IO){
         userDao.getSearchHistory(userId)
+    }
+
+    suspend fun getSearchSuggestion(searchQuery: List<String>, userId: Int): List<SearchSuggestion> = withContext(Dispatchers.IO){
+        userDao.getSuggestions(generateSuggestionQuery(searchQuery, userId))
+    }
+
+    private fun generateSuggestionQuery(query: List<String>, userId: Int): SupportSQLiteQuery {
+        var queryText = "SELECT * FROM SearchSuggestion WHERE (suggestion LIKE \'${query[0]}\'"
+        val args = arrayListOf<String>()
+        query.drop(1).forEach { searchStringPart ->
+            args.add(searchStringPart)
+            queryText += " OR suggestion LIKE ?"
+        }
+        queryText += ") AND (userId is Null OR userId = $userId) ORDER BY timestamp DESC"
+        return SimpleSQLiteQuery(queryText, args.toArray())
     }
 
     suspend fun insertSuggestion(suggestion: SearchSuggestion) = withContext(Dispatchers.IO) {

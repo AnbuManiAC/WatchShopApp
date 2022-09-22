@@ -1,27 +1,26 @@
 package com.sample.chrono12.viewmodels
 
-import android.annotation.SuppressLint
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import com.sample.chrono12.data.entities.Order
+import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.data.entities.ProductOrdered
 import com.sample.chrono12.data.entities.relations.OrderedProductInfo
 import com.sample.chrono12.data.models.OrderInfo
-import com.sample.chrono12.data.models.OrderStatus
+import com.sample.chrono12.data.models.RandomNumber
 import com.sample.chrono12.data.repository.UserRepository
 import com.sample.chrono12.utils.OrderStatusUpdater
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import java.time.Duration
+import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class OrderViewModel @Inject constructor(
@@ -74,16 +73,47 @@ class OrderViewModel @Inject constructor(
 
     fun getOrderedProductInfo(): LiveData<List<OrderedProductInfo>> = orderedProductInfoList
 
-    fun initOrderStatusUpdate(orderId: Int, bulkOrderId: Int, isBulkOrder: Boolean, workManager: WorkManager) {
+    fun initOrderStatusUpdate(
+        orderId: Int,
+        bulkOrderId: Int,
+        isBulkOrder: Boolean,
+        workManager: WorkManager
+    ) {
+        val workData1 = workDataOf(
+            "orderId" to orderId,
+            "bulkOrderId" to bulkOrderId,
+            "isBulkOrder" to isBulkOrder,
+            "orderStatus" to "IN TRANSIT"
+        )
+        val workData2 = workDataOf(
+            "orderId" to orderId,
+            "bulkOrderId" to bulkOrderId,
+            "isBulkOrder" to isBulkOrder,
+            "orderStatus" to "DELIVERED"
+        )
         val workRequest1 = OneTimeWorkRequestBuilder<OrderStatusUpdater>()
-            .setInputData(workDataOf("orderId" to orderId, "bulkOrderId" to bulkOrderId, "isBulkOrder" to isBulkOrder, "orderStatus" to "IN TRANSIT"))
+            .setInputData(workData1)
+//            .setInitialDelay(
+//                Random.nextInt(RandomNumber.LOW.value, RandomNumber.HIGH.value).toLong(),
+//                TimeUnit.MINUTES
+//            )
             .setInitialDelay(10000, TimeUnit.MILLISECONDS)
             .build()
         val workRequest2 = OneTimeWorkRequestBuilder<OrderStatusUpdater>()
-            .setInputData(workDataOf("orderId" to orderId, "bulkOrderId" to bulkOrderId, "isBulkOrder" to isBulkOrder, "orderStatus" to "DELIVERED"))
+            .setInputData(workData2)
+//            .setInitialDelay(
+//                Random.nextInt(RandomNumber.LOW.value, RandomNumber.HIGH.value).toLong(),
+//                TimeUnit.MINUTES
+//            )
             .setInitialDelay(10000, TimeUnit.MILLISECONDS)
             .build()
         workManager.beginWith(workRequest1).then(workRequest2).enqueue()
+    }
+
+    fun updateProductStock(productId: Int, stockCount: Int) {
+        viewModelScope.launch {
+            userRepository.updateStockCount(productId, stockCount)
+        }
     }
 
 }

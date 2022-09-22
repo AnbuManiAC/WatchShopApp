@@ -11,6 +11,7 @@ import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavDeepLinkBuilder
 import com.sample.chrono12.R
 import com.sample.chrono12.ui.activity.HomeActivity
@@ -77,5 +78,6 @@ class NotificationUtil(val context: Context) {
             editor.apply()
         }
         return notificationId
+//        return SharedPrefUtil.getNotificationId(context as FragmentActivity)
     }
 }

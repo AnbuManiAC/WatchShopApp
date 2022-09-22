@@ -8,6 +8,7 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -28,6 +29,7 @@ import com.sample.chrono12.data.models.OrderStatus
 import com.sample.chrono12.databinding.FragmentOrderConfirmationBinding
 import com.sample.chrono12.ui.adapter.AddressAdapter
 import com.sample.chrono12.ui.adapter.CartAdapter
+import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.OrderViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
@@ -48,9 +50,10 @@ class OrderConfirmationFragment : Fragment() {
     private lateinit var addressAdapter: AddressAdapter
     private lateinit var addressGroupWithAddress: AddressGroupWithAddress
     private lateinit var cartWithProductInfo: List<CartWithProductInfo>
-    private  var originalPrice: Int = 0
+    private var originalPrice: Int = 0
     private var currentPrice: Int = 0
     private var orderCount: Int = 0
+    private var productCount: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,63 +74,105 @@ class OrderConfirmationFragment : Fragment() {
 
     private fun setupConfirmOrder() {
         binding.btnConfirmOrder.setOnClickListener {
-            val sharedPref = requireActivity().getSharedPreferences(
-                getString(R.string.user_pref),
-                Context.MODE_PRIVATE
-            )
-            var bulkOrderId = sharedPref.getInt(getString(R.string.bulk_order_id), 0)
-            bulkOrderId+=1
-            var orderId = 0
-            val editor = sharedPref?.edit()
-            editor?.let {
-                editor.putInt(getString(R.string.bulk_order_id), bulkOrderId)
-                editor.apply()
-            }
-            lifecycleScope.launch {
-                addressGroupWithAddress.addressList.forEach {
-                    val order = Order(
-                        bulkOrderId = bulkOrderId,
-                        userId = userViewModel.getLoggedInUser().toInt(),
-                        timestamp = Calendar.getInstance().timeInMillis,
-                        actualTotal = originalPrice.toFloat(),
-                        totalPrice = currentPrice.toFloat(),
-                        addressInfo = getAddressString(it),
-                        orderStatus = OrderStatus.ORDERED.toString()
-                    )
-                    orderId = orderViewModel.insertOrder(order)
-                    cartWithProductInfo.forEach {
-                        val productOrdered = ProductOrdered(
-                            orderId = orderId,
-                            productId = it.cart.productId,
-                            quantity = it.cart.quantity
-                        )
-                        orderViewModel.insertProductOrdered(productOrdered)
+            binding.cvError.visibility = View.GONE
+            val isBulkOrder = addressGroupWithAddress.addressList.size > 1
+            if (isBulkOrder) {
+                val orderCount = addressGroupWithAddress.addressList.size
+                val cartWithProducts = mutableListOf<CartWithProductInfo>()
+                cartWithProductInfo.forEach {
+                    val product = it.productWithBrandAndImagesList.productWithBrand.product
+                    if (product.stockCount < orderCount*it.cart.quantity) {
+                        cartWithProducts.add(it)
                     }
-                    val isBulkOrder = addressGroupWithAddress.addressList.size>1
-                    orderViewModel.initOrderStatusUpdate(orderId, bulkOrderId, isBulkOrder, WorkManager.getInstance(requireContext()))
                 }
+                if (cartWithProducts.isNotEmpty()) {
+                    var errorMsg = ""
+                    cartWithProducts.forEach {
+                        val requiredStock = it.cart.quantity*orderCount
+                        val availableStock = it.productWithBrandAndImagesList.productWithBrand.product.stockCount
+                        errorMsg = errorMsg+ "${it.productWithBrandAndImagesList.productWithBrand.product.name}" +
+                                "\nRequired quantity: $requiredStock\nAvailable quantity: $availableStock\n"
+                    }
+                    errorMsg += "Kindly go back and make changes in the product quantity or address group to continue"
+                    binding.cvError.visibility = View.VISIBLE
+                    binding.tvError.text = errorMsg
+                } else {
+                    checkOut()
+                }
+            } else {
+                checkOut()
+            }
+        }
+    }
 
-                cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
-                findNavController().navigate(
-                    OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(bulkOrderId, orderId)
+    private fun checkOut() {
+        val bulkOrderId = SharedPrefUtil.getBulkOrderId(requireActivity())
+        var orderId = 0
+        val orderCount = addressGroupWithAddress.addressList.size
+        val isBulkOrder = orderCount>1
+        lifecycleScope.launch {
+            addressGroupWithAddress.addressList.forEach {
+                val order = Order(
+                    bulkOrderId = bulkOrderId,
+                    userId = userViewModel.getLoggedInUser().toInt(),
+                    timestamp = Calendar.getInstance().timeInMillis,
+                    actualTotal = originalPrice.toFloat(),
+                    totalPrice = currentPrice.toFloat(),
+                    addressInfo = getAddressString(it),
+                    orderStatus = OrderStatus.ORDERED.toString()
+                )
+                orderId = orderViewModel.insertOrder(order)
+                cartWithProductInfo.forEach {
+                    val productOrdered = ProductOrdered(
+                        orderId = orderId,
+                        productId = it.cart.productId,
+                        quantity = it.cart.quantity
+                    )
+                    orderViewModel.insertProductOrdered(productOrdered)
+                }
+                orderViewModel.initOrderStatusUpdate(
+                    orderId,
+                    bulkOrderId,
+                    isBulkOrder,
+                    WorkManager.getInstance(requireContext())
                 )
             }
-
+//            cartWithProductInfo.forEach {
+//                val product = it.productWithBrandAndImagesList.productWithBrand.product
+//                val updatedStockCount = product.stockCount - (orderCount*it.cart.quantity)
+//                orderViewModel.updateProductStock(it.productWithBrandAndImagesList.productWithBrand.product.productId, updatedStockCount)
+//            }
+            cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
+            findNavController().navigate(
+                OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(
+                    bulkOrderId,
+                    orderId
+                )
+            )
         }
     }
 
     private fun setupPriceDetails() {
 
+        cartViewModel.getTotalProductCount().observe(viewLifecycleOwner) { productCount ->
+            this.productCount = productCount
+            binding.tvTotalOriginalPrice.text =
+                getString(R.string.price_detail, orderCount * productCount)
+        }
+
         cartViewModel.getTotalOriginPrice().observe(viewLifecycleOwner) { originalPrice ->
             this.originalPrice = originalPrice
-            binding.tvTotalOriginalPriceInRps.text = getString(R.string.price, originalPrice*orderCount)
+            binding.tvTotalOriginalPriceInRps.text =
+                getString(R.string.price, originalPrice * orderCount)
         }
         cartViewModel.getTotalCurrentPrice().observe(viewLifecycleOwner) { currentPrice ->
             this.currentPrice = currentPrice
-            binding.tvTotalCurrentPriceInRps.text = getString(R.string.price, currentPrice*orderCount)
+            binding.tvTotalCurrentPriceInRps.text =
+                getString(R.string.price, currentPrice * orderCount)
         }
         cartViewModel.getTotalDiscount().observe(viewLifecycleOwner) { totalDiscount ->
-            binding.tvDiscountInRps.text = getString(R.string.discount_price, totalDiscount*orderCount)
+            binding.tvDiscountInRps.text =
+                getString(R.string.discount_price, totalDiscount * orderCount)
         }
     }
 
@@ -180,6 +225,7 @@ class OrderConfirmationFragment : Fragment() {
         cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
                 cartWithProductInfo = it
+                productCount = it.size
                 val cartAdapter = CartAdapter(
                     cartWithProductInfo,
                     {
@@ -195,8 +241,6 @@ class OrderConfirmationFragment : Fragment() {
                 cartViewModel.initPriceCalculating(cartWithProductInfo)
                 cartAdapter.setHideDeleteButton(true)
                 binding.rvProducts.adapter = cartAdapter
-                binding.tvTotalOriginalPrice.text =
-                    "Price (${it.size} item${if (it.size > 1) "s" else ""})"
             }
     }
 

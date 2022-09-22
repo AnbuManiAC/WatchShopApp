@@ -23,11 +23,19 @@ class ProductListViewModel @Inject constructor(
     private val categoryList = MutableLiveData<List<Category>>()
     private val subCategoryList = MutableLiveData<List<SubCategory>>()
     private val brandList = MutableLiveData<List<ProductBrand>>()
-    private val watchList = MutableLiveData<List<ProductWithBrandAndImages>>()
+    private val _watchList = MutableLiveData<List<ProductWithBrandAndImages>>()
+    val watchList: LiveData<List<ProductWithBrandAndImages>>
+        get() = _watchList
+
+    private val _topRatedWatchList = MutableLiveData<List<ProductWithBrandAndImages>>()
+    val topRatedWatchList: LiveData<List<ProductWithBrandAndImages>>
+        get() = _topRatedWatchList
 
     private var productListTitle: String? = null
 
-    private var sortType: SortType? = null
+    private val _sortType =  MutableLiveData<SortType>()
+    val sortType: LiveData<SortType>
+    get() = _sortType
 
     private val _searchStatus = MutableLiveData<Int>()
     val searchStatus: LiveData<Int>
@@ -37,42 +45,51 @@ class ProductListViewModel @Inject constructor(
         setCategory()
         setSubCategory()
         setBrand()
+        _sortType.value = RATING_HIGH_TO_LOW
         _searchStatus.value = SEARCH_NOT_INITIATED
     }
 
-    fun clearSortType() {
-        sortType = null
+
+    private fun setSortType(sortType: SortType) {
+        _sortType.value = sortType
     }
 
-    fun getSortType(): SortType? = sortType
-
-    fun sortProductList(sortType: SortType) {
+    private fun sortProductList(
+        watchList: List<ProductWithBrandAndImages>,
+        sortType: SortType
+    ): List<ProductWithBrandAndImages> {
+        val sortResult : List<ProductWithBrandAndImages>
         when (sortType) {
             PRICE_LOW_TO_HIGH -> {
-                watchList.value = watchList.value?.sortedBy {
+                sortResult = watchList.sortedBy {
                     it.productWithBrand.product.currentPrice
                 }
-                this.sortType = PRICE_LOW_TO_HIGH
+                setSortType(PRICE_LOW_TO_HIGH)
             }
             PRICE_HIGH_TO_LOW -> {
-                watchList.value = watchList.value?.sortedByDescending {
+                sortResult = watchList.sortedByDescending {
                     it.productWithBrand.product.currentPrice
                 }
-                this.sortType = PRICE_HIGH_TO_LOW
+                setSortType(PRICE_HIGH_TO_LOW)
             }
             RATING_LOW_TO_HIGH -> {
-                watchList.value = watchList.value?.sortedBy {
+                sortResult = watchList.sortedBy {
                     it.productWithBrand.product.totalRating
                 }
-                this.sortType = RATING_LOW_TO_HIGH
+                setSortType(RATING_LOW_TO_HIGH)
             }
             RATING_HIGH_TO_LOW -> {
-                watchList.value = watchList.value?.sortedByDescending {
+                sortResult = watchList.sortedByDescending {
                     it.productWithBrand.product.totalRating
                 }
-                this.sortType = RATING_HIGH_TO_LOW
+                setSortType(RATING_HIGH_TO_LOW)
             }
         }
+        return sortResult
+    }
+
+    fun applySort(sortType: SortType) {
+        _watchList.value = sortProductList(_watchList.value!!, sortType)
     }
 
     fun setSearchStatus() {
@@ -95,35 +112,46 @@ class ProductListViewModel @Inject constructor(
 
     fun getBrand(): LiveData<List<ProductBrand>> = brandList
 
-    fun setSubcategoryWithProductList(subCategoryId: Int) {
+    fun setSubcategoryWithProductList(subCategoryId: Int, sortType: SortType) {
         viewModelScope.launch {
-            watchList.postValue(
-                watchRepository.getSubCategoryWithProduct(
-                    subCategoryId
-                ).productWithBrandAndImagesList
-            )
-        }
-    }
-
-    fun setBrandWithProductList(brandId: Int) {
-        viewModelScope.launch {
-            watchList.postValue(
-                watchRepository.getBrandWithProductAndImages(
-                    brandId
+            _watchList.postValue(
+                sortProductList(
+                    watchRepository.getSubCategoryWithProduct(
+                        subCategoryId
+                    ).productWithBrandAndImagesList, sortType
                 )
             )
         }
     }
 
-    fun getSubcategoryWithProductList(): LiveData<List<ProductWithBrandAndImages>> = watchList
-
-    fun getBrandWithProductList(): LiveData<List<ProductWithBrandAndImages>> = watchList
-
-    fun setTopRatedWatches(count: Int) {
-        viewModelScope.launch { watchList.postValue(watchRepository.getTopRatedWatches(count)) }
+    fun setBrandWithProductList(brandId: Int, sortType: SortType) {
+        viewModelScope.launch {
+            _watchList.postValue(
+                sortProductList(
+                    watchRepository.getBrandWithProductAndImages(
+                        brandId
+                    ), sortType
+                )
+            )
+        }
     }
 
-    fun getTopRatedWatches(): LiveData<List<ProductWithBrandAndImages>> = watchList
+    fun setAllWatches(sortType: SortType) {
+        viewModelScope.launch {
+            _watchList.postValue(
+                sortProductList(
+                    watchRepository.getAllWatches(),
+                    sortType
+                )
+            )
+        }
+    }
+
+    fun setTopRatedWatches(count: Int) {
+        viewModelScope.launch {
+            _topRatedWatchList.postValue(watchRepository.getTopRatedWatches(count))
+        }
+    }
 
     fun setProductListTitle(title: String) {
         productListTitle = title
@@ -131,32 +159,27 @@ class ProductListViewModel @Inject constructor(
 
     fun getProductListTitle(): String = productListTitle.toString()
 
-    fun setAllWatches() {
-        viewModelScope.launch { watchList.postValue(watchRepository.getAllWatches()) }
-    }
 
-    fun getAllWatches(): LiveData<List<ProductWithBrandAndImages>> = watchList
-
-    private fun setSearchResult(list: List<ProductWithBrandAndImages>) {
-        watchList.value = list
+    private fun setSearchResult(list: List<ProductWithBrandAndImages>, sortType: SortType) {
+        _watchList.value = sortProductList(list, sortType)
         _searchStatus.value = SEARCH_COMPLETED
     }
 
     fun getSearchResult(): LiveData<List<ProductWithBrandAndImages>> {
-        return watchList
+        return _watchList
     }
 
-    fun setProductsWithBrandAndImagesByQuery(searchQuery: String) = viewModelScope.launch {
+    fun setProductsWithBrandAndImagesByQuery(searchQuery: String, sortType: SortType) = viewModelScope.launch {
         productListTitle = searchQuery
         _searchStatus.value = SEARCH_INITIATED
         val searchList = getQueryAsList(searchQuery)
         watchRepository.getProductWithBrandAndImagesByQuery(searchList).also {
-            setSearchResult(it)
+            setSearchResult(it, sortType)
         }
     }
 
     private fun getQueryAsList(query: String): List<String> {
-        val list = query.split(" ", ",", ", ", " ,","'")
+        val list = query.split(" ", ",", ", ", " ,", "'")
         val searchQuery = ArrayList<String>()
         list.forEach {
             searchQuery.add("%$it%")
@@ -222,7 +245,7 @@ class ProductListViewModel @Inject constructor(
                 }
                 filterResult = filterResultSet.toList()
             }
-            watchList.postValue(filterResult)
+            _watchList.postValue(filterResult)
         }
 
     }

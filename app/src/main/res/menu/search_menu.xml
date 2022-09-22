@@ -5,6 +5,9 @@
     <item android:id="@+id/searchFragment"
         android:title="Search"
         android:icon="@drawable/ic_search"
+        
+        android:iconTint="@color/white"
         app:actionViewClass="androidx.appcompat.widget.SearchView"
-        app:showAsAction="always|collapseActionView"/>
+        app:showAsAction="collapseActionView"/>
+
 </menu>

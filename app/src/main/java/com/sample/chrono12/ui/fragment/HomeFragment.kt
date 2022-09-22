@@ -51,7 +51,7 @@ class HomeFragment : Fragment() {
             setupBrandsAdapter(it)
         }
 
-        mProductListViewModel.getTopRatedWatches().observe(viewLifecycleOwner){
+        mProductListViewModel.topRatedWatchList.observe(viewLifecycleOwner){
             setupTopWatchesAdapter(it)
         }
 
@@ -90,7 +90,7 @@ class HomeFragment : Fragment() {
             mProductListViewModel.setProductListTitle(subCategory.name+"es")
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
-            filterViewModel.addSelectedFilter(subCategory.subCategoryId)
+            filterViewModel.setAppliedFilterIds(subCategory.subCategoryId)
             Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(subCategoryId = subCategory.subCategoryId))
         }
         binding.rvCategories.apply {
@@ -107,7 +107,7 @@ class HomeFragment : Fragment() {
             mProductListViewModel.setProductListTitle(brand.brandName+" Watches")
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
-            filterViewModel.addSelectedFilter(getKey(this.brands,brand.brandName))
+            filterViewModel.setAppliedFilterIds(getKey(this.brands,brand.brandName))
             Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(brandId = brand.brandId))
         }
         binding.rvBrands.apply {

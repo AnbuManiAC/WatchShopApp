@@ -9,9 +9,12 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
+import com.sample.chrono12.data.models.SortType
+import com.sample.chrono12.data.models.SortType.*
 import com.sample.chrono12.databinding.FragmentProductListBinding
 import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.ProductListAdapter
+import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +29,23 @@ class ProductListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (navArgs.subCategoryId > 0) {
+            productListViewModel.setSubcategoryWithProductList(navArgs.subCategoryId, getSortType())
+        } else if (navArgs.brandId > 0) {
+            productListViewModel.setBrandWithProductList(navArgs.brandId, getSortType())
+        } else if (navArgs.fromAllWatches) {
+            productListViewModel.setAllWatches(getSortType())
+        }
+    }
+
+    private fun getSortType(): SortType {
+        return when (SharedPrefUtil.getSortType(requireActivity())) {
+            PRICE_LOW_TO_HIGH.toString() -> PRICE_LOW_TO_HIGH
+            PRICE_HIGH_TO_LOW.toString() -> PRICE_HIGH_TO_LOW
+            RATING_HIGH_TO_LOW.toString() -> RATING_HIGH_TO_LOW
+            RATING_LOW_TO_HIGH.toString() -> RATING_LOW_TO_HIGH
+            else -> RATING_HIGH_TO_LOW
+        }
     }
 
     override fun onCreateView(
@@ -33,15 +53,6 @@ class ProductListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         setHasOptionsMenu(true)
-
-        if (navArgs.subCategoryId > 0) {
-            productListViewModel.setSubcategoryWithProductList(navArgs.subCategoryId)
-        } else if (navArgs.brandId > 0) {
-            productListViewModel.setBrandWithProductList(navArgs.brandId)
-        } else if(navArgs.fromAllWatches){
-            productListViewModel.setAllWatches()
-        }
-
 
         binding = FragmentProductListBinding.inflate(layoutInflater)
         return binding.root
@@ -51,43 +62,13 @@ class ProductListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
 
-
-        if(navArgs.subCategoryId>0){
-            productListViewModel.getSubcategoryWithProductList()
-                .observe(viewLifecycleOwner) { productList ->
-                    productList?.let {
-                        setProductCountTv(it.size)
-                        setupProductListAdapter(productList)
-                    }
-                }
-        }
-        else if(navArgs.brandId>0){
-            productListViewModel.getBrandWithProductList()
-                .observe(viewLifecycleOwner) { productList ->
-                    productList?.let {
-                        setProductCountTv(it.size)
-                        setupProductListAdapter(productList)
-                    }
-                }
-        }
-
-        else if(navArgs.fromAllWatches){
-            productListViewModel.getAllWatches().observe(viewLifecycleOwner) { productsList ->
-                productsList?.let {
-                    setProductCountTv(it.size)
-                    setupProductListAdapter(productsList)
-                }
-            }
-        }
-
-        else{
-            productListViewModel.getSearchResult().observe(viewLifecycleOwner) { productList ->
+        productListViewModel.watchList
+            .observe(viewLifecycleOwner) { productList ->
                 productList?.let {
                     setProductCountTv(it.size)
                     setupProductListAdapter(productList)
                 }
             }
-        }
 
         setupSortButtonListener()
         setupFilterButtonListener()
@@ -95,6 +76,16 @@ class ProductListFragment : Fragment() {
     }
 
     private fun setupFilterButtonListener() {
+        filterViewModel.filterCount.observe(viewLifecycleOwner) { filterCount ->
+            filterCount?.let {
+                if(filterCount>=1){
+                    binding.btnFilter.text = resources.getString(R.string.filter_button_text, filterCount)
+                }else{
+                    binding.btnFilter.text = resources.getString(R.string.filter)
+
+                }
+            }
+        }
         binding.btnFilter.setOnClickListener {
             Navigation.findNavController(requireView())
                 .navigate(ProductListFragmentDirections.actionProductListFragmentToFilterFragment())
@@ -102,14 +93,22 @@ class ProductListFragment : Fragment() {
     }
 
     private fun setupSortButtonListener() {
+        productListViewModel.sortType.observe(viewLifecycleOwner) { sortType ->
+            if (sortType == PRICE_HIGH_TO_LOW || sortType == PRICE_LOW_TO_HIGH) {
+                binding.btnSort.text = resources.getString(R.string.sort_button_text, "Price")
+            }
+            if (sortType == RATING_HIGH_TO_LOW || sortType == RATING_LOW_TO_HIGH) {
+                binding.btnSort.text = resources.getString(R.string.sort_button_text, "Rating")
+            }
+        }
         binding.btnSort.setOnClickListener {
             Navigation.findNavController(requireView())
                 .navigate(ProductListFragmentDirections.actionProductListFragmentToSortDialog())
         }
     }
 
-    private fun setProductCountTv(count: Int){
-        binding.tvProductDetail.text = "Products($count)"
+    private fun setProductCountTv(count: Int) {
+        binding.tvProductDetail.text = resources.getString(R.string.product_count, count)
     }
 
     private fun setupProductListAdapter(productWithBrandAndImagesList: List<ProductWithBrandAndImages>) {
@@ -151,7 +150,6 @@ class ProductListFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        productListViewModel.clearSortType()
     }
 
 }

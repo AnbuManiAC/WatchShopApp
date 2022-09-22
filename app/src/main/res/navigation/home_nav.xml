@@ -188,6 +188,9 @@
         <action
             android:id="@+id/action_profileFragment_to_deleteSearchDialog"
             app:destination="@id/deleteSearchDialog" />
+        <action
+            android:id="@+id/action_profileFragment_to_profilePictureDialog"
+            app:destination="@id/profilePictureDialog" />
 
     </fragment>
 
@@ -394,5 +397,10 @@
         android:name="com.sample.chrono12.ui.fragment.dialog.DeleteSearchDialog"
         android:label="fragment_delete_search_dialog"
         tools:layout="@layout/fragment_delete_search_dialog" />
+    <dialog
+        android:id="@+id/profilePictureDialog"
+        android:name="com.sample.chrono12.ui.fragment.dialog.ProfilePictureDialog"
+        android:label="fragment_profile_picture_dialog"
+        tools:layout="@layout/fragment_profile_picture_dialog" />
 
 </navigation>

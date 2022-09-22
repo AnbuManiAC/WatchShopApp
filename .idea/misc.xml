@@ -12,10 +12,12 @@
         <entry key="app/src/main/res/drawable/add_to_cart_btn_selected.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/add_to_cart_btn_unselected.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/cart_quantity_layout_border.xml" value="0.1035" />
+        <entry key="app/src/main/res/drawable/cursor_primary.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/default_border.xml" value="0.251" />
         <entry key="app/src/main/res/drawable/fav_btn_bg.xml" value="0.251" />
         <entry key="app/src/main/res/drawable/ic_add.xml" value="0.1245" />
         <entry key="app/src/main/res/drawable/ic_add_to_cart.xml" value="0.237" />
+        <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.146" />
         <entry key="app/src/main/res/drawable/ic_clear.xml" value="0.124" />
         <entry key="app/src/main/res/drawable/ic_delete.xml" value="0.124" />
         <entry key="app/src/main/res/drawable/ic_empty_cart_svg.xml" value="0.12834368896484383" />
@@ -32,6 +34,7 @@
         <entry key="app/src/main/res/drawable/ic_no_data_svg.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/ic_no_result_found.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_order_confirmed.xml" value="0.1525" />
+        <entry key="app/src/main/res/drawable/ic_profile_picture.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_shopping_bag.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_sign_out.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_undraw_no_data.xml" value="0.1345" />
@@ -46,7 +49,7 @@
         <entry key="app/src/main/res/layout/address_rv_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/business_registration.xml" value="0.33" />
         <entry key="app/src/main/res/layout/cart_rv_item.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/categories_rv_item.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/categories_rv_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/filter_rv_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/filter_value_rv_item.xml" value="0.22857142857142856" />
         <entry key="app/src/main/res/layout/fragment_address.xml" value="0.375" />
@@ -68,6 +71,7 @@
         <entry key="app/src/main/res/layout/fragment_product.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_product_list.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_profile_picture_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_sort_dialog.xml" value="0.2859375" />
@@ -83,6 +87,7 @@
         <entry key="app/src/main/res/layout/order_history_rv_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/product_details_rv_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/product_rv_item.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/profile_picture_alert_dialog.xml" value="0.23072916666666668" />
         <entry key="app/src/main/res/layout/signup.xml" value="0.25" />
         <entry key="app/src/main/res/layout/state_name_item.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/layout/suggestion_rv_item.xml" value="0.25" />
@@ -95,7 +100,7 @@
         <entry key="app/src/main/res/menu/menu.xml" value="0.22" />
         <entry key="app/src/main/res/menu/search_cart_menu.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/menu/search_fav_menu.xml" value="0.21388888888888888" />
-        <entry key="app/src/main/res/menu/search_menu.xml" value="0.30416666666666664" />
+        <entry key="app/src/main/res/menu/search_menu.xml" value="0.1" />
         <entry key="app/src/main/res/menu/search_wishlist_cart_menu.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/menu/search_wishlist_menu.xml" value="0.30416666666666664" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_app_icon.xml" value="0.1395" />

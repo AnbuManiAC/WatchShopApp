@@ -13,6 +13,7 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.databinding.FragmentLogInBinding
+import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.UserViewModel
 
 class LogInFragment : Fragment() {
@@ -35,15 +36,16 @@ class LogInFragment : Fragment() {
             field?.let {
                 deliverFieldMessage(it)
                 if (field.response == Response.SUCCESS) {
-                    val sharedPref = requireActivity().getSharedPreferences(
-                        getString(R.string.user_pref),
-                        Context.MODE_PRIVATE
-                    )
-                    val editor = sharedPref?.edit()
-                    editor?.let {
-                        editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
-                        editor.apply()
-                    }
+//                    val sharedPref = requireActivity().getSharedPreferences(
+//                        getString(R.string.user_pref),
+//                        Context.MODE_PRIVATE
+//                    )
+//                    val editor = sharedPref?.edit()
+//                    editor?.let {
+//                        editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
+//                        editor.apply()
+//                    }
+                    SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
                     Navigation.findNavController(view).popBackStack(R.id.logInFragment, true)
                 }
             }

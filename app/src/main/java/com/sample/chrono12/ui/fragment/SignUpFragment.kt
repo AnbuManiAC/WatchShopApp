@@ -1,6 +1,7 @@
 package com.sample.chrono12.ui.fragment
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
@@ -24,6 +25,7 @@ import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserField.*
 import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.databinding.FragmentSignUpBinding
+import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.UserViewModel
 
 class SignUpFragment : Fragment() {
@@ -69,13 +71,13 @@ class SignUpFragment : Fragment() {
             field?.let {
                 deliverFieldMessage(it)
                 if(field.response == Response.SUCCESS){
-                    val sharedPref = activity?.getSharedPreferences(getString(R.string.user_pref), Context.MODE_PRIVATE)
-                    val editor = sharedPref?.edit()
-                    editor?.let {
-                        editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
-                        editor.putInt(getString(R.string.bulk_order_id), 0)
-                        editor.apply()
-                    }
+//                    val sharedPref = requireActivity().getSharedPreferences(getString(R.string.user_pref), Context.MODE_PRIVATE)
+//                    val editor = sharedPref?.edit()
+//                    editor?.let {
+//                        editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
+//                        editor.apply()
+//                    }
+                    SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
                     userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))
                     Navigation.findNavController(requireView()).popBackStack(R.id.signUpFragment, true)
                 }

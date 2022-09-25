@@ -64,6 +64,11 @@
     <string name="not_a_mobile">Invalid mobile number</string>
     <string name="not_an_email">Invalid email address</string>
     <string name="field_cant_be_empty">This field can\'t be empty</string>
+    <string name="address_group_name_already_exists">Address group name already exists</string>
+    <string name="to_use_this_feature_you_need_to_allow_chrono12_to_access_your_camera_and_storage_you_can_update_this_permission_is_settings">To use this feature ,you need to allow Chrono12 to access your CAMERA and STORAGE .You can update this permission in Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="go_to_settings">Go To Settings</string>
+    <string name="to_use_this_feature_you_need_to_allow_chrono12_to_access_your_storage_you_can_update_this_permission_in_settings">To use this feature ,you need to allow Chrono12 to access your STORAGE .You can update this permission in Settings</string>
 
     <string-array name="india_states">
         <item>Andaman and Nicobar Islands</item>

@@ -175,8 +175,12 @@ class AddressFragment : Fragment() {
                     userViewModel.insertIntoAddressAndGroupCrossRef(it, navArgs.addressGroupName)
                 }
             findNavController().navigateUp()
+//            findNavController().navigate(AddressFragmentDirections.actionAddressFragmentToAddressGroupDetailFragment(addressGroupId = navArgs.addressGroupId, addressGroupName = navArgs.addressGroupName))
             return true
         }
         return super.onOptionsItemSelected(item)
     }
+
+
+
 }

@@ -29,15 +29,16 @@ class UserViewModel @Inject constructor(
     private var userField = MutableLiveData<UserField>()
     private val _suggestions = MutableLiveData<List<SearchSuggestion>>()
     val suggestion: LiveData<List<SearchSuggestion>>
-    get() = _suggestions
+        get() = _suggestions
 
     private val address = MutableLiveData<Address>()
     private var addressId = MutableLiveData<Int>()
     private var addressGroupId = MutableLiveData<Int>()
+    private var addressGroupName = MutableLiveData<String>()
     private val addressIds = MutableLiveData<List<Int>>()
     private var profileSettingAction = MutableLiveData<ProfileSettingAction>()
 
-    fun setProfileSettingAction(action: ProfileSettingAction){
+    fun setProfileSettingAction(action: ProfileSettingAction) {
         profileSettingAction.value = action
     }
 
@@ -90,7 +91,8 @@ class UserViewModel @Inject constructor(
                 val userId = userRepository.getUserId(emailId)
                 setLoggedInUser(userId)
                 userField.value = UserField.ALL.also { userField ->
-                    userField.response = Response.SUCCESS.also { it.message = "Logged in successfully" }
+                    userField.response =
+                        Response.SUCCESS.also { it.message = "Logged in successfully" }
                 }
             } else {
                 userField.value = UserField.PASSWORD.also { userField ->
@@ -106,18 +108,18 @@ class UserViewModel @Inject constructor(
 
     fun initiateSignUp(user: User) = viewModelScope.launch {
         if (!isExistingEmail(user.email)) {
-            if(isExistingMobileNumber(user.mobileNumber)){
+            if (isExistingMobileNumber(user.mobileNumber)) {
                 userField.value = UserField.MOBILE.also { userField ->
-                    userField.response = Response.FAILURE.also { it.message = "Mobile Number already Exists" }
+                    userField.response =
+                        Response.FAILURE.also { it.message = "Mobile Number already Exists" }
                 }
-            }
-            else{
+            } else {
                 createUser(user)
             }
-        }
-        else{
+        } else {
             userField.value = UserField.EMAIL.also { userField ->
-                userField.response = Response.FAILURE.also { it.message = "Email id already Exists" }
+                userField.response =
+                    Response.FAILURE.also { it.message = "Email id already Exists" }
             }
         }
     }
@@ -156,9 +158,14 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun updateSearchSuggestion(searchString: String){
+    fun updateSearchSuggestion(searchString: String) {
         viewModelScope.launch {
-            _suggestions.postValue(userRepository.getSearchSuggestion(getQueryAsList(searchString), loggedInUser.toInt()))
+            _suggestions.postValue(
+                userRepository.getSearchSuggestion(
+                    getQueryAsList(searchString),
+                    loggedInUser.toInt()
+                )
+            )
         }
     }
 
@@ -223,6 +230,10 @@ class UserViewModel @Inject constructor(
 
     fun getAddressGroupId(): LiveData<Int> = addressGroupId
 
+    fun getAddressGroupName(userId: Int, addressGroupId: Int): LiveData<String> =
+        userRepository.getAddressGroupName(userId, addressGroupId)
+
+
     fun insertAddress(address: Address, addressGroupName: String) {
         viewModelScope.launch {
             val id = userRepository.insertAddress(address)
@@ -234,12 +245,22 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun insertIntoAddressGroup(addressGroup: AddressGroup) {
-        viewModelScope.launch {
-            val id = userRepository.insertAddressGroup(addressGroup)
-            addressGroupId.postValue(id.toInt())
-        }
+    fun setAddressGroupId(id:Int){
+        addressGroupId.value = id
     }
+
+    suspend fun insertIntoAddressGroup(addressGroup: AddressGroup): Int  {
+        val id = userRepository.insertAddressGroup(addressGroup)
+        setAddressGroupId(id.toInt())
+        return id.toInt()
+    }
+
+
+
+
+    suspend fun checkForAddressGroupExistence(groupName: String) =
+        userRepository.isExistingAddressGroup(groupName, getLoggedInUser().toInt()) == 1
+
 
     fun updateAddressGroupName(addressGroupId: Int, groupName: String) {
         viewModelScope.launch {
@@ -272,7 +293,7 @@ class UserViewModel @Inject constructor(
         viewModelScope.launch { userRepository.deleteAddress(addressId) }
     }
 
-    fun deleteSearchHistory(userId: Int){
+    fun deleteSearchHistory(userId: Int) {
         viewModelScope.launch {
             userRepository.deleteSearchHistory(userId)
         }

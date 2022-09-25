@@ -1,29 +1,20 @@
 package com.sample.chrono12.ui.fragment
 
 import android.app.AlertDialog
-import android.os.Binder
-import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.widget.doOnTextChanged
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sample.chrono12.R
-import com.sample.chrono12.data.entities.AddressGroup
-import com.sample.chrono12.databinding.FragmentAddressGroupBinding
 import com.sample.chrono12.databinding.FragmentAddressGroupDetailBinding
 import com.sample.chrono12.ui.adapter.AddressAdapter
 import com.sample.chrono12.viewmodels.UserViewModel
+
 
 class AddressGroupDetailFragment : Fragment() {
 
@@ -36,7 +27,7 @@ class AddressGroupDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAddressGroupDetailBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -44,113 +35,57 @@ class AddressGroupDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (navArgs.addressGroupId > 0 && navArgs.addressGroupName!="default") {
-            addressGroupId = navArgs.addressGroupId
-            addressGroupName = navArgs.addressGroupName
+        if (navArgs.addressGroupId > 0 && navArgs.addressGroupName != "default") {
+            this.addressGroupId = navArgs.addressGroupId
             setupAdapter(navArgs.addressGroupId)
-            binding.etGroupName.setText(addressGroupName)
-        } else {
-            addressGroupName = binding.etGroupName.text.toString()
-            binding.rvGroupAddresses.visibility = View.GONE
-            binding.tvAddresses.visibility = View.GONE
         }
-        setupGroupNameEt()
-        setupSaveEditButton()
+        setupEditButton()
         setupAddNewAddressButton()
         setupAddFromExistingButton()
+        setupAddressGroupName()
     }
 
-    private fun setupSaveEditButton() {
-        binding.btnSaveEditGroupName.setOnCheckedChangeListener { button, isChecked ->
-            if (isChecked) {
-                binding.etGroupName.clearFocus()
-                binding.etGroupName.isFocusableInTouchMode = false
-                binding.etGroupName.isFocusable = false
-                addAddressGroup(binding.etGroupName.text.toString())
-            }
-            else{
-                binding.etGroupName.isFocusableInTouchMode = true
-                binding.etGroupName.isFocusable = true
-                binding.etGroupName.requestFocus()
+    private fun setupAddressGroupName() {
+        userViewModel.getAddressGroupName(userViewModel.getLoggedInUser().toInt(), addressGroupId).observe(viewLifecycleOwner) { addressGroupName ->
+            addressGroupName?.let {
+                this.addressGroupName = addressGroupName
+                binding.tvGroupName.text = addressGroupName
             }
         }
     }
 
-    private fun setupGroupNameEt() {
-        val groupNameEt = binding.etGroupName
-        if(groupNameEt.text.isEmpty()){
-            groupNameEt.requestFocus()
-            binding.btnSaveEditGroupName.isEnabled = false
-            binding.btnAddNewAddress.isEnabled = false
-            binding.btnAddFromExisting.isEnabled = false
-        }
-        else{
-            groupNameEt.clearFocus()
-            binding.btnSaveEditGroupName.isChecked = true
-            binding.btnSaveEditGroupName.isEnabled = true
-            binding.btnSaveEditGroupName.isEnabled = true
-            binding.btnAddNewAddress.isEnabled = true
-            groupNameEt.isFocusableInTouchMode = false
-            groupNameEt.isFocusable = false
-        }
-        groupNameEt.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-            }
-
-            override fun onTextChanged(text: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                if(text.toString().trim().isEmpty()){
-                    binding.btnSaveEditGroupName.isEnabled = false
-                    binding.btnAddNewAddress.isEnabled = false
-                    binding.btnAddFromExisting.isEnabled = false
-                } else{
-                        binding.btnSaveEditGroupName.isEnabled = true
-                        binding.btnAddNewAddress.isEnabled = true
-                        binding.btnAddFromExisting.isEnabled = true
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-
-            }
-
-        })
-    }
-
-    private fun addAddressGroup(groupName: String) {
-        if(addressGroupId>0){
-            userViewModel.updateAddressGroupName(addressGroupId, groupName)
-        } else{
-            userViewModel.insertIntoAddressGroup(
-                AddressGroup(
-                    userId = userViewModel.getLoggedInUser().toInt(),
-                    groupName = groupName
+    private fun setupEditButton() {
+        binding.btnEditGroupName.setOnClickListener {
+            findNavController().navigate(
+                AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToCreateAddressGroupDialog(
+                    navArgs.addressGroupId,
+                    navArgs.addressGroupName
                 )
             )
-           userViewModel.getAddressGroupId().observe(viewLifecycleOwner){
-               it?.let {
-                   addressGroupId = it
-               }
-            }
         }
-
-        this.addressGroupName = groupName
-
     }
-
 
 
     private fun setupAddFromExistingButton() {
         binding.btnAddFromExisting.setOnClickListener {
             Navigation.findNavController(requireView())
-                .navigate(AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToAddressFragment(addressGroupName = addressGroupName, addFromExisting = true))
+                .navigate(
+                    AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToAddressFragment(
+                        addressGroupName = addressGroupName,
+                        addFromExisting = true
+                    )
+                )
         }
     }
 
     private fun setupAddNewAddressButton() {
         binding.btnAddNewAddress.setOnClickListener {
             Navigation.findNavController(requireView())
-                .navigate(AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(addressGroupName = addressGroupName))
+                .navigate(
+                    AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(
+                        addressGroupName = addressGroupName
+                    )
+                )
         }
     }
 
@@ -163,23 +98,27 @@ class AddressGroupDetailFragment : Fragment() {
         userViewModel.getAddressGroupWithAddresses(
             userViewModel.getLoggedInUser().toInt(),
             addressGroupId
-        ).observe(viewLifecycleOwner) {
-            it?.let {
+        ).observe(viewLifecycleOwner) { addressGroup ->
+            addressGroup?.let {
                 binding.rvGroupAddresses.layoutManager = LinearLayoutManager(requireContext())
-                with(binding.tvAddresses) {
-                    visibility = View.VISIBLE
-                    text = "Addresses(" + it.addressList.size + ")"
-                }
-                val addressIds = mutableListOf<Int>()
-                it.addressList.forEach { addressIds.add(it.addressId) }
-                userViewModel.setAddressIds(addressIds)
-                with(adapter){
-                    setData(it)
-                    notifyDataSetChanged()
-                }
-                with(binding.rvGroupAddresses) {
-                    this.adapter = adapter
-                    visibility = View.VISIBLE
+                if (addressGroup.addressList.isNotEmpty()) {
+                    with(binding.tvAddresses) {
+                        visibility = View.VISIBLE
+                        text = "Addresses(" + addressGroup.addressList.size + ")"
+                    }
+                    val addressIds = mutableListOf<Int>()
+                    addressGroup.addressList.forEach { address ->
+                        addressIds.add(address.addressId)
+                    }
+                    userViewModel.setAddressIds(addressIds)
+                    with(adapter) {
+                        setData(addressGroup)
+                        notifyDataSetChanged()
+                    }
+                    with(binding.rvGroupAddresses) {
+                        this.adapter = adapter
+                        visibility = View.VISIBLE
+                    }
                 }
             }
         }
@@ -209,7 +148,10 @@ class AddressGroupDetailFragment : Fragment() {
 
             override fun onClickEdit(addressId: Int) {
                 Navigation.findNavController(requireView()).navigate(
-                    AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(addressId, addressGroupName)
+                    AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(
+                        addressId,
+                        addressGroupName
+                    )
                 )
 
             }
@@ -221,4 +163,5 @@ class AddressGroupDetailFragment : Fragment() {
         userViewModel.clearAddressIds()
         super.onDestroy()
     }
+
 }

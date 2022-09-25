@@ -44,17 +44,19 @@
         <entry key="app/src/main/res/drawable/selected_border.xml" value="0.251" />
         <entry key="app/src/main/res/drawable/shadow_bg.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/add_address_group_name.xml" value="0.17417417417417416" />
         <entry key="app/src/main/res/layout/address_group_rv_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/address_order_info_rv_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/address_rv_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/business_registration.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/camera_permission_dialog.xml" value="0.30416666666666664" />
         <entry key="app/src/main/res/layout/cart_rv_item.xml" value="0.335" />
         <entry key="app/src/main/res/layout/categories_rv_item.xml" value="0.25" />
         <entry key="app/src/main/res/layout/filter_rv_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/filter_value_rv_item.xml" value="0.22857142857142856" />
-        <entry key="app/src/main/res/layout/fragment_address.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/fragment_address.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_address_group.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_address_group_detail.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_address_group_detail.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_choose_address_type.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_delete_search_dialog.xml" value="0.1" />
@@ -76,6 +78,7 @@
         <entry key="app/src/main/res/layout/fragment_sign_up.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_sort_dialog.xml" value="0.2859375" />
         <entry key="app/src/main/res/layout/fragment_wishlist.xml" value="0.3129528985507246" />
+        <entry key="app/src/main/res/layout/gallery_permission_dialog.xml" value="0.30416666666666664" />
         <entry key="app/src/main/res/layout/image_slider_item.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/layout/image_thumbnail_item.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/layout/login.xml" value="0.33" />

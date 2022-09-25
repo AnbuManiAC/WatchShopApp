@@ -191,6 +191,12 @@
         <action
             android:id="@+id/action_profileFragment_to_profilePictureDialog"
             app:destination="@id/profilePictureDialog" />
+        <action
+            android:id="@+id/action_profileFragment_to_cameraPermissionDialog"
+            app:destination="@id/cameraPermissionDialog" />
+        <action
+            android:id="@+id/action_profileFragment_to_galleryPermissionDialog"
+            app:destination="@id/galleryPermissionDialog" />
 
     </fragment>
 
@@ -243,6 +249,14 @@
             android:id="@+id/action_addressFragment_to_orderConfirmationFragment"
             app:destination="@id/orderConfirmationFragment"
             app:popUpTo="@id/cartFragment"/>
+        <action
+            android:id="@+id/action_addressFragment_to_addressGroupDetailFragment"
+            app:destination="@id/addressGroupDetailFragment"
+            app:popUpTo="@id/addressGroupDetailFragment"
+            app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_addressFragment_to_createAddressGroupDialog"
+            app:destination="@id/createAddressGroupDialog" />
     </fragment>
     <fragment
         android:id="@+id/newAddressFragment"
@@ -256,6 +270,11 @@
             android:name="addressGroupName"
             android:defaultValue="default"
             app:argType="string"/>
+        <action
+            android:id="@+id/action_newAddressFragment_to_addressGroupDetailFragment"
+            app:destination="@id/addressGroupDetailFragment"
+            app:popUpTo="@id/addressGroupDetailFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/addressGroupFragment"
@@ -276,6 +295,9 @@
             android:id="@+id/action_addressGroupFragment_to_orderConfirmationFragment"
             app:destination="@id/orderConfirmationFragment"
             app:popUpTo="@id/cartFragment"/>
+        <action
+            android:id="@+id/action_addressGroupFragment_to_createAddressGroupDialog"
+            app:destination="@id/createAddressGroupDialog" />
     </fragment>
     <fragment
         android:id="@+id/addressGroupDetailFragment"
@@ -296,6 +318,9 @@
         <action
             android:id="@+id/action_addressGroupDetailFragment_to_newAddressFragment"
             app:destination="@id/newAddressFragment" />
+        <action
+            android:id="@+id/action_addressGroupDetailFragment_to_createAddressGroupDialog"
+            app:destination="@id/createAddressGroupDialog" />
     </fragment>
     <dialog
         android:id="@+id/chooseAddressTypeFragment"
@@ -402,5 +427,29 @@
         android:name="com.sample.chrono12.ui.fragment.dialog.ProfilePictureDialog"
         android:label="fragment_profile_picture_dialog"
         tools:layout="@layout/fragment_profile_picture_dialog" />
+    <dialog
+        android:id="@+id/createAddressGroupDialog"
+        android:name="com.sample.chrono12.ui.fragment.dialog.CreateAddressGroupDialog"
+        android:label="CreateAddressGroupDialog" >
+        <argument
+            android:name="addressGroupId"
+            android:defaultValue="0"
+            app:argType="integer"/>
+        <argument
+            android:name="addressGroupName"
+            android:defaultValue=""
+            app:argType="string"/>
+        <action
+            android:id="@+id/action_createAddressGroupDialog_to_addressGroupDetailFragment"
+            app:destination="@id/addressGroupDetailFragment" />
+    </dialog>
+    <dialog
+        android:id="@+id/cameraPermissionDialog"
+        android:name="com.sample.chrono12.ui.fragment.dialog.CameraPermissionDialog"
+        android:label="CameraPermissionDialog" />
+    <dialog
+        android:id="@+id/galleryPermissionDialog"
+        android:name="com.sample.chrono12.ui.fragment.dialog.GalleryPermissionDialog"
+        android:label="GalleryPermissionDialog" />
 
 </navigation>

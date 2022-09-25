@@ -31,12 +31,13 @@ class OrderViewModel @Inject constructor(
     private val orderDetailList = MutableLiveData<List<Order>>()
     private val orderedProductInfoList = MutableLiveData<List<OrderedProductInfo>>()
 
-    suspend fun insertOrder(order: Order): Int {
-        val orderId = viewModelScope.async(Dispatchers.IO) {
-            return@async userRepository.insertOrder(order)
-        }
-        return orderId.await().toInt()
-    }
+    suspend fun insertOrder(order: Order): Int  =
+            userRepository.insertOrder(order).toInt()
+//        val orderId = viewModelScope.async(Dispatchers.IO) {
+//            return@async userRepository.insertOrder(order)
+//        }
+//        return orderId.await().toInt()
+//    }
 
     fun insertProductOrdered(productOrdered: ProductOrdered) {
         viewModelScope.launch { userRepository.insertProductOrdered(productOrdered) }

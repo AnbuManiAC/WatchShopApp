@@ -220,7 +220,7 @@ class NewAddressFragment : Fragment() {
             clearFocus()
             if (checkInput()) {
                 addUserAddress()
-                findNavController().navigateUp()
+                    findNavController().navigateUp()
             }
             return true
         }

@@ -138,8 +138,14 @@ interface UserDao {
     @Query("SELECT addressGroupId FROM AddressGroup where userId =:userId AND groupName =:groupName")
     suspend fun getAddressGroupId(userId: Int, groupName: String): Int
 
+    @Query("SELECT groupName FROM AddressGroup where userId =:userId AND addressGroupId = :addressGroupId")
+    fun getAddressGroupName(userId: Int, addressGroupId: Int): LiveData<String>
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertIntoAddressGroup(addressGroup: AddressGroup): Long
+
+    @Query("SELECT EXISTS(SELECT 1 FROM AddressGroup WHERE userId = :userId and groupName = :groupName)")
+    suspend fun isExistingAddressGroup(groupName: String, userId: Int): Int
 
     @Query("UPDATE AddressGroup SET groupName = :groupName WHERE addressGroupId = :addressGroupId")
     suspend fun updateAddressGroupName(addressGroupId: Int, groupName: String)

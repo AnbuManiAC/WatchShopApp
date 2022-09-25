@@ -36,7 +36,7 @@ class AddressGroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.fabAddAddress.setOnClickListener{
-            Navigation.findNavController(requireView()).navigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToAddressGroupDetailFragment())
+            Navigation.findNavController(requireView()).navigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToCreateAddressGroupDialog())
         }
         setupAddressGroupAdapter()
         if(navArgs.chooseGroup) setupChooseGroupButton()

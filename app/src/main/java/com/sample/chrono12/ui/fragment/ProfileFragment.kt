@@ -12,11 +12,12 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.ProfileSettingAction
 import com.sample.chrono12.databinding.FragmentProfileBinding
@@ -26,8 +27,8 @@ import java.util.*
 
 class ProfileFragment : Fragment() {
 
-    lateinit var bindingProfile: FragmentProfileBinding
-    lateinit var bindingLoginPrompt: LoginPromptBinding
+    private lateinit var bindingProfile: FragmentProfileBinding
+    private lateinit var bindingLoginPrompt: LoginPromptBinding
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private var isUserLoggedIn = false
 
@@ -35,7 +36,7 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
         return if (isUserLoggedIn) {
@@ -78,7 +79,7 @@ class ProfileFragment : Fragment() {
                     }
                     userViewModel.setProfileSettingAction(ProfileSettingAction.NO_ACTION)
                 }
-                ProfileSettingAction.NO_ACTION -> {}
+                else -> {}
             }
         }
 
@@ -103,10 +104,19 @@ class ProfileFragment : Fragment() {
         val cameraPermission: Int =
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
         val galleryWritePermission: Int =
-            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (cameraPermission == PackageManager.PERMISSION_DENIED && galleryWritePermission == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+//        if (cameraPermission == PackageManager.PERMISSION_DENIED && galleryWritePermission == PackageManager.PERMISSION_DENIED) {
+//            requestPermissions(
+//                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), 20
+//            )
+//            return false
+//        }
+        if (cameraPermission == PackageManager.PERMISSION_DENIED) {
             requestPermissions(
-                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), 20
+                arrayOf(Manifest.permission.CAMERA), 20
             )
             return false
         }
@@ -118,15 +128,27 @@ class ProfileFragment : Fragment() {
             bindingProfile.tvUserName.text = user.name
             bindingProfile.tvEmail.text = user.email
             bindingProfile.tvMobileNumber.text = user.mobile
-            if(user.image.isNullOrEmpty()){
-                bindingProfile.ivProfilePicture.setImageDrawable(resources.getDrawable(R.drawable.ic_profile_picture, null))
-            } else{
+            if (user.image.isNullOrEmpty()) {
+                bindingProfile.ivProfilePicture.setImageDrawable(
+                    ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.ic_profile_picture,
+                        null
+                    )
+                )
+            } else {
                 try {
                     val bitmap = BitmapFactory.decodeFile(user.image)
                     bindingProfile.ivProfilePicture.setImageBitmap(bitmap)
-                }catch (e: Exception){
+                } catch (e: Exception) {
                     Log.d("ProfilePicture", "${e.cause} and ${e.message}")
-                    bindingProfile.ivProfilePicture.setImageDrawable(resources.getDrawable(R.drawable.ic_profile_picture, null))
+                    bindingProfile.ivProfilePicture.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_profile_picture,
+                            null
+                        )
+                    )
                 }
             }
         }
@@ -198,12 +220,22 @@ class ProfileFragment : Fragment() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 20 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-            takePictureFromCamera()
-        } else if (requestCode == 30 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            takePictureFromGallery()
-        } else Toast.makeText(requireActivity(), "Permission not Granted", Toast.LENGTH_SHORT)
-            .show()
+        if (requestCode == 20) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                takePictureFromCamera()
+            } else {
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog()
+                )
+            }
+        } else if (requestCode == 30) {
+            if (requestCode == 30 && grantResults[0] == PackageManager.PERMISSION_GRANTED) takePictureFromGallery()
+            else {
+                findNavController().navigate(
+                    ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog()
+                )
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -264,13 +296,16 @@ class ProfileFragment : Fragment() {
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
         values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000)
         values.put(MediaStore.Images.Media.DATE_TAKEN, System.currentTimeMillis())
-        val uri = requireContext().contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        val uri = requireContext().contentResolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            values
+        )
         val imageOut = requireContext().contentResolver.openOutputStream(uri!!)
         try {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, imageOut)
         } finally {
             imageOut!!.close()
         }
-        return  getPathFromUri(uri)
+        return getPathFromUri(uri)
     }
 }

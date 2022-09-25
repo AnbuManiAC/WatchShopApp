@@ -16,6 +16,7 @@ import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.google.android.material.textfield.TextInputLayout
 import com.sample.chrono12.R
@@ -27,6 +28,7 @@ import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.databinding.FragmentSignUpBinding
 import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.UserViewModel
+import kotlinx.coroutines.launch
 
 class SignUpFragment : Fragment() {
 
@@ -78,8 +80,11 @@ class SignUpFragment : Fragment() {
 //                        editor.apply()
 //                    }
                     SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
-                    userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))
+                    lifecycleScope.launch{
+                        userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))
+                    }
                     Navigation.findNavController(requireView()).popBackStack(R.id.signUpFragment, true)
+
                 }
             }
         }

@@ -11,13 +11,7 @@
     <string name="log_in">Log In</string>
     <string name="don_t_have_an_account">"Don\'t have an account? "</string>
     <string name="sign_up">Sign Up</string>
-    <string name="legal_name_of_business">Legal Name of Business</string>
-    <string name="gstin">GSTIN</string>
     <string name="submit">Submit</string>
-    <string name="type_of_business">Type of Business</string>
-    <string name="type_of_entity">Type of Entity</string>
-    <string name="business_terms_conditions">I certify that I am the owner of the business and all documents submitted here in relation to the business is valid, accurate and complete</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="category_name">Category Name</string>
     <string name="category_image">Category image</string>
@@ -69,6 +63,11 @@
     <string name="cancel">Cancel</string>
     <string name="go_to_settings">Go To Settings</string>
     <string name="to_use_this_feature_you_need_to_allow_chrono12_to_access_your_storage_you_can_update_this_permission_in_settings">To use this feature ,you need to allow Chrono12 to access your STORAGE .You can update this permission in Settings</string>
+    <string name="no_internet">No Internet Connection. Images may not load properly.</string>
+    <string name="internet_is_back">Internet Connection Available. Images will be loaded soon.</string>
+    <string name="okay">Okay</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
 
     <string-array name="india_states">
         <item>Andaman and Nicobar Islands</item>

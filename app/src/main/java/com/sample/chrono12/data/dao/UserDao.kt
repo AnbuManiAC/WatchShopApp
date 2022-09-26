@@ -35,6 +35,9 @@ interface UserDao {
     @Query("SELECT * FROM User WHERE userId = :userId")
     suspend fun getUser(userId: Long): User
 
+    @Query("UPDATE User SET image = Null where userId = :userId")
+    suspend fun deleteProfilePicture(userId: Int)
+
     //User Wishlist
     @Insert
     suspend fun insertIntoWishList(wishList: WishList): Long

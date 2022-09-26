@@ -17,10 +17,12 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.ActivityMainBinding
 import com.sample.chrono12.ui.fragment.FilterFragment
 import com.sample.chrono12.ui.fragment.HomeFragment
+import com.sample.chrono12.utils.ConnectivityObserver
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
@@ -44,6 +46,7 @@ class HomeActivity : AppCompatActivity() {
 
         setupSharedPref()
         setupUser()
+        setupNetworkConnectionMonitor()
         bottomNav = binding.bottomNav
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerHome) as NavHostFragment
@@ -58,6 +61,24 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
+    private fun setupNetworkConnectionMonitor() {
+        val connectionLiveData = ConnectivityObserver(this)
+        connectionLiveData.observe(this) { hasInternet ->
+            if (hasInternet) {
+                Snackbar.make(
+                    findViewById(R.id.snackBarLayout),
+                    R.string.internet_is_back, Snackbar.LENGTH_SHORT
+                ).show()
+            } else {
+                Snackbar.make(
+                    findViewById(R.id.snackBarLayout),
+                    R.string.no_internet, Snackbar.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+
     private fun setupUser() {
         val sharedPref = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE)
         val userId = sharedPref?.getLong(getString(R.string.user_id), 0)
@@ -67,7 +88,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun onNavDestinationChangedListener() =
-        NavController.OnDestinationChangedListener { controller, destination, _ ->
+        NavController.OnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.homeFragment -> showBottomBar()
                 R.id.cartFragment -> showBottomBar()
@@ -99,9 +120,10 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(drawableIcon)
     }
 
-    private fun setupSharedPref(){
-        val sharedPreference = this.getSharedPreferences(getString(R.string.user_pref) , Context.MODE_PRIVATE)
-        if(sharedPreference.getLong(getString(R.string.user_id), -1) == -1L){
+    private fun setupSharedPref() {
+        val sharedPreference =
+            this.getSharedPreferences(getString(R.string.user_pref), Context.MODE_PRIVATE)
+        if (sharedPreference.getLong(getString(R.string.user_id), -1) == -1L) {
             val editor = sharedPreference?.edit()
             editor?.let { editor ->
                 editor.putLong(getString(R.string.user_id), 0)

@@ -83,6 +83,13 @@ class UserViewModel @Inject constructor(
         }
     }
 
+    fun deleteProfilePicture(userId: Int) {
+        viewModelScope.launch {
+            userRepository.deleteProfilePicture(userId)
+            setUserDetails(userId.toLong())
+        }
+    }
+
     fun getUserDetails(): LiveData<UserDetails> = userDetails
 
     fun authenticateUser(emailId: String, password: String) = viewModelScope.launch {

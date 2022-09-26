@@ -1,6 +1,7 @@
 package com.sample.chrono12.ui.fragment
 
 import android.Manifest
+import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.sample.chrono12.R
-import com.sample.chrono12.data.models.ProfileSettingAction
+import com.sample.chrono12.data.models.ProfileSettingAction.*
 import com.sample.chrono12.databinding.FragmentProfileBinding
 import com.sample.chrono12.databinding.LoginPromptBinding
 import com.sample.chrono12.viewmodels.UserViewModel
@@ -31,6 +32,7 @@ class ProfileFragment : Fragment() {
     private lateinit var bindingLoginPrompt: LoginPromptBinding
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private var isUserLoggedIn = false
+    private var hasProfilePicture = false
 
 
     override fun onCreateView(
@@ -60,24 +62,37 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setupProfilePicture() {
-        bindingProfile.cvProfilePicture.setOnClickListener {
+        bindingProfile.btnProfilePicture.setOnClickListener {
             Navigation.findNavController(requireView()).navigate(
-                ProfileFragmentDirections.actionProfileFragmentToProfilePictureDialog()
+                ProfileFragmentDirections.actionProfileFragmentToProfilePictureDialog(hasProfilePicture)
             )
         }
         userViewModel.getProfileSettingAction().observe(viewLifecycleOwner) { action ->
             when (action) {
-                ProfileSettingAction.TAKE_PHOTO -> {
+                TAKE_PHOTO -> {
                     if (checkAndRequestCameraPermissions()) {
                         takePictureFromCamera()
                     }
-                    userViewModel.setProfileSettingAction(ProfileSettingAction.NO_ACTION)
+                    userViewModel.setProfileSettingAction(NO_ACTION)
                 }
-                ProfileSettingAction.CHOOSE_FROM_GALLERY -> {
+                CHOOSE_FROM_GALLERY -> {
                     if (checkAndRequestGalleryPermissions()) {
                         takePictureFromGallery()
                     }
-                    userViewModel.setProfileSettingAction(ProfileSettingAction.NO_ACTION)
+                    userViewModel.setProfileSettingAction(NO_ACTION)
+                }
+                DELETE -> {
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.setTitle("Remove profile picture")
+                        .setPositiveButton("Remove") { _, _ ->
+                            userViewModel.deleteProfilePicture(userViewModel.getLoggedInUser().toInt())
+                        }
+                        .setNegativeButton("Cancel") { _, _ ->
+
+                        }
+                        .setCancelable(false)
+                    builder.create().show()
+                    userViewModel.setProfileSettingAction(NO_ACTION)
                 }
                 else -> {}
             }
@@ -103,11 +118,11 @@ class ProfileFragment : Fragment() {
     private fun checkAndRequestCameraPermissions(): Boolean {
         val cameraPermission: Int =
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-        val galleryWritePermission: Int =
-            ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
+//        val galleryWritePermission: Int =
+//            ActivityCompat.checkSelfPermission(
+//                requireContext(),
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE
+//            )
 //        if (cameraPermission == PackageManager.PERMISSION_DENIED && galleryWritePermission == PackageManager.PERMISSION_DENIED) {
 //            requestPermissions(
 //                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), 20
@@ -136,10 +151,12 @@ class ProfileFragment : Fragment() {
                         null
                     )
                 )
+                hasProfilePicture = false
             } else {
-                try {
+                hasProfilePicture = try {
                     val bitmap = BitmapFactory.decodeFile(user.image)
                     bindingProfile.ivProfilePicture.setImageBitmap(bitmap)
+                    true
                 } catch (e: Exception) {
                     Log.d("ProfilePicture", "${e.cause} and ${e.message}")
                     bindingProfile.ivProfilePicture.setImageDrawable(
@@ -149,6 +166,7 @@ class ProfileFragment : Fragment() {
                             null
                         )
                     )
+                    false
                 }
             }
         }

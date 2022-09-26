@@ -44,6 +44,10 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
         userDao.getUser(userId)
     }
 
+    suspend fun deleteProfilePicture(userId: Int) = withContext(Dispatchers.IO) {
+        userDao.deleteProfilePicture(userId)
+    }
+
     suspend fun insertIntoWishList(wishList: WishList): Long = withContext(Dispatchers.IO) {
         userDao.insertIntoWishList(wishList)
     }

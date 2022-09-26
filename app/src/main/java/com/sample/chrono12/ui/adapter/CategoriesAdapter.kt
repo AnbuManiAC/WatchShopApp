@@ -5,9 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sample.chrono12.R
+import com.sample.chrono12.data.entities.SearchSuggestion
 import com.sample.chrono12.data.entities.SubCategory
 import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.AddressOrderInfoRvItemBinding
@@ -16,9 +18,10 @@ import com.sample.chrono12.databinding.CategoriesRvItemBinding
 import com.sample.chrono12.utils.ImageUtil
 
 class CategoriesAdapter(
-    private val categories: List<SubCategory>,
     private val onClickListener: OnClickCategory
 ): RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>()  {
+
+    private lateinit var categories: MutableList<SubCategory>
 
     inner class CategoryViewHolder(val binding: CategoriesRvItemBinding): RecyclerView.ViewHolder(binding.root){
         private val tvCategoryName = binding.tvCategoryName
@@ -42,7 +45,6 @@ class CategoriesAdapter(
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-
         holder.bind(categories[position])
     }
 
@@ -52,5 +54,38 @@ class CategoriesAdapter(
 
     fun interface OnClickCategory{
         fun onClick(category: SubCategory)
+    }
+
+    class DiffUtilCallback(private val oldList: List<SubCategory>, private val newList: List<SubCategory>) :
+        DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            return oldItem.subCategoryId == newItem.subCategoryId
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+
+            return oldItem.hashCode() == newItem.hashCode()
+        }
+    }
+
+    fun setData(data: List<SubCategory>) {
+        this.categories = data.toMutableList()
+    }
+
+    fun setNewData(newData: List<SubCategory>) {
+        val diffCallback = DiffUtilCallback(categories, newData)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        categories.clear()
+        categories.addAll(newData)
+        diffResult.dispatchUpdatesTo(this)
     }
 }

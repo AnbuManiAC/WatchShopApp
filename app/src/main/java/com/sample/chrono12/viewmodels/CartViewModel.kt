@@ -8,6 +8,8 @@ import com.sample.chrono12.data.entities.Cart
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
 import com.sample.chrono12.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -28,6 +30,9 @@ class CartViewModel @Inject constructor(
 
     private fun setTotalOriginalPrice(price: Int) {
         totalOriginalPrice.value = price
+        viewModelScope.async{
+            delay(1000)
+        }
     }
 
     private fun setTotalCurrentPrice(price: Int) {

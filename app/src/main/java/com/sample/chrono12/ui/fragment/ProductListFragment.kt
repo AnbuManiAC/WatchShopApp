@@ -8,7 +8,6 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
-import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.data.models.SortType.*
 import com.sample.chrono12.databinding.FragmentProductListBinding
@@ -38,22 +37,11 @@ class ProductListFragment : Fragment() {
         }
     }
 
-    private fun getSortType(): SortType {
-        return when (SharedPrefUtil.getSortType(requireActivity())) {
-            PRICE_LOW_TO_HIGH.toString() -> PRICE_LOW_TO_HIGH
-            PRICE_HIGH_TO_LOW.toString() -> PRICE_HIGH_TO_LOW
-            RATING_HIGH_TO_LOW.toString() -> RATING_HIGH_TO_LOW
-            RATING_LOW_TO_HIGH.toString() -> RATING_LOW_TO_HIGH
-            else -> RATING_HIGH_TO_LOW
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
-
         binding = FragmentProductListBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -62,14 +50,7 @@ class ProductListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
 
-        productListViewModel.watchList
-            .observe(viewLifecycleOwner) { productList ->
-                productList?.let {
-                    setProductCountTv(it.size)
-                    setupProductListAdapter(productList)
-                }
-            }
-
+        setupProductListAdapter()
         setupSortButtonListener()
         setupFilterButtonListener()
 
@@ -111,16 +92,34 @@ class ProductListFragment : Fragment() {
         binding.tvProductDetail.text = resources.getString(R.string.product_count, count)
     }
 
-    private fun setupProductListAdapter(productWithBrandAndImagesList: List<ProductWithBrandAndImages>) {
+    private fun setupProductListAdapter() {
 
-        val adapter = ProductListAdapter(productWithBrandAndImagesList) { product ->
+        val adapter = ProductListAdapter{ product ->
             Navigation.findNavController(requireView()).navigate(
                 ProductListFragmentDirections.actionProductListFragmentToProductFragment(product.productId)
             )
         }
+        adapter.setData(mutableListOf())
         binding.rvProductList.apply {
-            this.adapter = adapter
             layoutManager = LinearLayoutManager(activity)
+            this.adapter = adapter
+        }
+        productListViewModel.watchList
+            .observe(viewLifecycleOwner) { productList ->
+                productList?.let {
+                    setProductCountTv(it.size)
+                    adapter.setNewData(it)
+                }
+            }
+    }
+
+    private fun getSortType(): SortType {
+        return when (SharedPrefUtil.getSortType(requireActivity())) {
+            PRICE_LOW_TO_HIGH.toString() -> PRICE_LOW_TO_HIGH
+            PRICE_HIGH_TO_LOW.toString() -> PRICE_HIGH_TO_LOW
+            RATING_HIGH_TO_LOW.toString() -> RATING_HIGH_TO_LOW
+            RATING_LOW_TO_HIGH.toString() -> RATING_LOW_TO_HIGH
+            else -> RATING_HIGH_TO_LOW
         }
     }
 
@@ -128,9 +127,6 @@ class ProductListFragment : Fragment() {
         inflater.inflate(R.menu.search_wishlist_menu, menu)
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -146,10 +142,6 @@ class ProductListFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
 }

@@ -44,7 +44,6 @@
                     app:layout_constraintBottom_toBottomOf="parent">
 
                     <ImageView
-                        android:padding="@dimen/padding_small"
                         android:id="@+id/ivProfilePicture"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"

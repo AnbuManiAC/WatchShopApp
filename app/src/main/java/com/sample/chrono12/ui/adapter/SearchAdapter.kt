@@ -84,20 +84,16 @@ class SuggestionAdapter(
     class DiffUtilCallback(private val oldList: List<SearchSuggestion>, private val newList: List<SearchSuggestion>) :
         DiffUtil.Callback() {
 
-        // old size
         override fun getOldListSize(): Int = oldList.size
 
-        // new list size
         override fun getNewListSize(): Int = newList.size
 
-        // if items are same
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
             return oldItem.searchSuggestionId == newItem.searchSuggestionId
         }
 
-        // check if contents are same
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
@@ -110,7 +106,6 @@ class SuggestionAdapter(
         this.suggestions = data.toMutableList()
     }
 
-    // add new data
     fun setNewData(newData: List<SearchSuggestion>) {
         val diffCallback = DiffUtilCallback(suggestions, newData)
         val diffResult = DiffUtil.calculateDiff(diffCallback)

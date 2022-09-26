@@ -24,7 +24,6 @@ object ImageUtil {
         }
     }
 
-
     fun loadImage(url: String, imageview: ImageView, imageKey: ImageKey = ImageKey.SMALL) {
 
         if (getBitmapFromMemoryCache(url+imageKey) != null) {

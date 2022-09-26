@@ -7,9 +7,11 @@
     tools:context=".ui.fragment.HomeFragment">
 
     <androidx.core.widget.NestedScrollView
+        android:fillViewport="true"
         android:id="@+id/svHome"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -17,7 +19,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/tvCategories"
@@ -37,6 +39,7 @@
                 android:layout_height="0dp"
                 android:paddingStart="@dimen/padding_small"
                 android:paddingEnd="@dimen/padding_small"
+                android:nestedScrollingEnabled="false"
                 android:clipToPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -61,6 +64,7 @@
                 android:layout_height="0dp"
                 android:paddingStart="@dimen/padding_small"
                 android:paddingEnd="@dimen/padding_small"
+                android:nestedScrollingEnabled="false"
                 android:clipToPadding="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -79,6 +83,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rvBrands" />
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvTopWatches"
                 android:layout_width="match_parent"
@@ -87,27 +92,24 @@
                 android:layout_marginEnd="@dimen/margin_small"
                 android:nestedScrollingEnabled="false"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTopWatches" />
-
 
             <Button
                 android:id="@+id/tvAllWatches"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/padding_small"
                 android:layout_marginBottom="@dimen/padding_small"
                 android:clickable="true"
-                android:drawableRight="@drawable/ic_small_right_arrow"
-                android:drawableTint="@color/primaryColor"
                 android:focusable="true"
-                android:gravity="center"
                 android:minHeight="48dp"
                 android:text="Browse All Watches"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
                 android:textColor="@color/primaryColor"
                 android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/rvTopWatches" />

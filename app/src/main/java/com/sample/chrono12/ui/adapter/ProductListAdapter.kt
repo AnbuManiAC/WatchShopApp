@@ -5,18 +5,22 @@ import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sample.chrono12.data.entities.Product
+import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.ProductRvItemBinding
 import com.sample.chrono12.utils.ImageUtil
 
 class ProductListAdapter(
-    private val productWithBrandAndImagesList: List<ProductWithBrandAndImages>,
     private val onClickListener: OnClickProduct
 ) : RecyclerView.Adapter<ProductListAdapter.ProductListViewHolder>() {
+
+    private lateinit var products: MutableList<ProductWithBrandAndImages>
+
 
     inner class ProductListViewHolder(val binding: ProductRvItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -63,14 +67,47 @@ class ProductListAdapter(
     }
 
     override fun onBindViewHolder(holder: ProductListViewHolder, position: Int) {
-        holder.bind(productWithBrandAndImagesList[position])
+        holder.bind(products[position])
     }
 
     override fun getItemCount(): Int {
-        return productWithBrandAndImagesList.size
+        return products.size
     }
 
     fun interface OnClickProduct {
         fun onClick(product: Product)
+    }
+
+    class DiffUtilCallback(private val oldList: List<ProductWithBrandAndImages>, private val newList: List<ProductWithBrandAndImages>) :
+        DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            return oldItem.productWithBrand.product.productId == newItem.productWithBrand.product.productId
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+
+            return oldItem.hashCode() == newItem.hashCode()
+        }
+    }
+
+    fun setData(data: List<ProductWithBrandAndImages>) {
+        this.products = data.toMutableList()
+    }
+
+    fun setNewData(newData: List<ProductWithBrandAndImages>) {
+        val diffCallback = DiffUtilCallback(products, newData)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        products.clear()
+        products.addAll(newData)
+        diffResult.dispatchUpdatesTo(this)
     }
 }

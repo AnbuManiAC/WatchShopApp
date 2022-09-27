@@ -16,10 +16,6 @@ class FilterValuesAdapter(val filterCheckedListener: OnFilterCheckedListener) :
         filterValues = filterValuesMap
     }
 
-    fun clearCheckBox() {
-        selectedFilterIds = emptySet()
-    }
-
     inner class FilterValueViewModel(val binding: FilterValueRvItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val tvFilterValue = binding.cbFilterValue

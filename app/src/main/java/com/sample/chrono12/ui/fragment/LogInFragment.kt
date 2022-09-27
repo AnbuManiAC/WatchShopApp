@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserField
@@ -46,7 +47,8 @@ class LogInFragment : Fragment() {
 //                        editor.apply()
 //                    }
                     SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
-                    Navigation.findNavController(view).popBackStack(R.id.logInFragment, true)
+                    if(findNavController().currentDestination?.id == R.id.logInFragment)
+                        findNavController().popBackStack(R.id.logInFragment, true)
                 }
             }
         }
@@ -55,7 +57,8 @@ class LogInFragment : Fragment() {
         binding.toSignup.setOnClickListener {
             userViewModel.clearUserFieldInfo()
             cancelErrors()
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.logInFragment)
+                findNavController()
                 .navigate(LogInFragmentDirections.actionLogInFragmentToSignUpFragment())
         }
         binding.btnLogin.setOnClickListener {

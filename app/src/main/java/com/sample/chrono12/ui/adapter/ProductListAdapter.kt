@@ -21,7 +21,6 @@ class ProductListAdapter(
 
     private lateinit var products: MutableList<ProductWithBrandAndImages>
 
-
     inner class ProductListViewHolder(val binding: ProductRvItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         private val itemName = binding.tvItemProductName
@@ -37,8 +36,6 @@ class ProductListAdapter(
             val image = productWithBrandAndImages.images[0].imageUrl
             binding.root.setOnClickListener { onClickListener.onClick(product) }
             ImageUtil.loadImage(image, itemImage, ImageKey.MEDIUM)
-//            itemImage.load(image)
-
             itemName.text = product.name
             itemBrand.text = brand.brandName
             itemCurrentPrice.text = "₹" + product.currentPrice.toInt().toString()

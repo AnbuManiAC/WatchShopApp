@@ -46,7 +46,6 @@ class HomeActivity : AppCompatActivity() {
 
         setupSharedPref()
         setupUser()
-        setupNetworkConnectionMonitor()
         bottomNav = binding.bottomNav
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerHome) as NavHostFragment
@@ -58,7 +57,11 @@ class HomeActivity : AppCompatActivity() {
             AppBarConfiguration(setOf(R.id.homeFragment, R.id.cartFragment, R.id.profileFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
 
+    }
 
+    override fun onResume() {
+        super.onResume()
+        setupNetworkConnectionMonitor()
     }
 
     private fun setupNetworkConnectionMonitor() {
@@ -69,10 +72,11 @@ class HomeActivity : AppCompatActivity() {
                     findViewById(R.id.snackBarLayout),
                     R.string.internet_is_back, Snackbar.LENGTH_SHORT
                 ).show()
-            } else {
+            }
+            else {
                 Snackbar.make(
                     findViewById(R.id.snackBarLayout),
-                    R.string.no_internet, Snackbar.LENGTH_SHORT
+                    R.string.no_internet, Snackbar.LENGTH_LONG
                 ).show()
             }
         }
@@ -83,7 +87,7 @@ class HomeActivity : AppCompatActivity() {
         val sharedPref = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE)
         val userId = sharedPref?.getLong(getString(R.string.user_id), 0)
         userId?.let {
-            if (it != 0L) userViewModel.setLoggedInUser(userId)
+            if (it != 0L) userViewModel.setLoggedInUser(it)
         }
     }
 

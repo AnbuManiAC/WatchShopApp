@@ -1,6 +1,5 @@
 package com.sample.chrono12.ui.fragment.dialog
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,11 +11,9 @@ import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import com.sample.chrono12.databinding.GalleryPermissionDialogBinding
 
-class GalleryPermissionDialog: DialogFragment() {
+class GalleryPermissionDialog : DialogFragment() {
 
     private lateinit var binding: GalleryPermissionDialogBinding
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,

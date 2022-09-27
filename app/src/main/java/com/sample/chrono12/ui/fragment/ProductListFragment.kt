@@ -5,8 +5,10 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.data.models.SortType.*
@@ -42,13 +44,13 @@ class ProductListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         setHasOptionsMenu(true)
+        (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
         binding = FragmentProductListBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
 
         setupProductListAdapter()
         setupSortButtonListener()
@@ -59,17 +61,19 @@ class ProductListFragment : Fragment() {
     private fun setupFilterButtonListener() {
         filterViewModel.filterCount.observe(viewLifecycleOwner) { filterCount ->
             filterCount?.let {
-                if(filterCount>=1){
-                    binding.btnFilter.text = resources.getString(R.string.filter_button_text, filterCount)
-                }else{
+                if (filterCount >= 1) {
+                    binding.btnFilter.text =
+                        resources.getString(R.string.filter_button_text, filterCount)
+                } else {
                     binding.btnFilter.text = resources.getString(R.string.filter)
 
                 }
             }
         }
         binding.btnFilter.setOnClickListener {
-            Navigation.findNavController(requireView())
-                .navigate(ProductListFragmentDirections.actionProductListFragmentToFilterFragment())
+            if (findNavController().currentDestination?.id == R.id.productListFragment)
+                findNavController()
+                    .navigate(ProductListFragmentDirections.actionProductListFragmentToFilterFragment())
         }
     }
 
@@ -83,8 +87,9 @@ class ProductListFragment : Fragment() {
             }
         }
         binding.btnSort.setOnClickListener {
-            Navigation.findNavController(requireView())
-                .navigate(ProductListFragmentDirections.actionProductListFragmentToSortDialog())
+            if (findNavController().currentDestination?.id == R.id.productListFragment)
+                findNavController().navigate(ProductListFragmentDirections.actionProductListFragmentToSortDialog())
+            (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
         }
     }
 
@@ -94,14 +99,16 @@ class ProductListFragment : Fragment() {
 
     private fun setupProductListAdapter() {
 
-        val adapter = ProductListAdapter{ product ->
-            Navigation.findNavController(requireView()).navigate(
-                ProductListFragmentDirections.actionProductListFragmentToProductFragment(product.productId)
-            )
+        val adapter = ProductListAdapter { product ->
+            if (findNavController().currentDestination?.id == R.id.productListFragment)
+                findNavController().navigate(
+                    ProductListFragmentDirections.actionProductListFragmentToProductFragment(product.productId)
+                )
         }
         adapter.setData(mutableListOf())
+        val linearLayoutManager = LinearLayoutManager(requireActivity())
         binding.rvProductList.apply {
-            layoutManager = LinearLayoutManager(activity)
+            layoutManager = linearLayoutManager
             this.adapter = adapter
         }
         productListViewModel.watchList
@@ -109,6 +116,7 @@ class ProductListFragment : Fragment() {
                 productList?.let {
                     setProductCountTv(it.size)
                     adapter.setNewData(it)
+                    linearLayoutManager.scrollToPosition(0)
                 }
             }
     }
@@ -131,13 +139,15 @@ class ProductListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.wishlistFragment -> {
-                Navigation.findNavController(requireView())
-                    .navigate(ProductListFragmentDirections.actionProductListFragmentToWishlistFragment())
+                if (findNavController().currentDestination?.id == R.id.productListFragment)
+                    findNavController()
+                        .navigate(ProductListFragmentDirections.actionProductListFragmentToWishlistFragment())
                 true
             }
             R.id.searchFragment -> {
-                Navigation.findNavController(requireView())
-                    .navigate(ProductListFragmentDirections.actionProductListFragmentToSearchFragment())
+                if (findNavController().currentDestination?.id == R.id.productListFragment)
+                    findNavController()
+                        .navigate(ProductListFragmentDirections.actionProductListFragmentToSearchFragment())
                 true
             }
             else -> super.onOptionsItemSelected(item)

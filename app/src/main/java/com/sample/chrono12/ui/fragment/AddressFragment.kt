@@ -39,12 +39,8 @@ class AddressFragment : Fragment() {
         } else {
             binding.fabAddAddress.visibility = View.VISIBLE
             binding.fabAddAddress.setOnClickListener {
-                Navigation.findNavController(requireView())
-                    .navigate(
-                        AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(
-                            addressGroupName = "default"
-                        )
-                    )
+                if(findNavController().currentDestination?.id == R.id.addressFragment)
+                    findNavController().navigate(AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(addressGroupName = "default"))
             }
         }
         setupAddressAdapter()
@@ -57,7 +53,8 @@ class AddressFragment : Fragment() {
             if(addressAdapter.getSelectedAddressId().second>0){
                 val groupId = addressAdapter.getSelectedAddressId().first
                 val addressId = addressAdapter.getSelectedAddressId().second
-                findNavController().navigate(AddressFragmentDirections.actionAddressFragmentToOrderConfirmationFragment(groupId, addressId))
+                if(findNavController().currentDestination?.id == R.id.addressFragment)
+                    findNavController().navigate(AddressFragmentDirections.actionAddressFragmentToOrderConfirmationFragment(groupId, addressId))
             }
         }
     }
@@ -158,9 +155,8 @@ class AddressFragment : Fragment() {
             }
 
             override fun onClickEdit(addressId: Int) {
-                Navigation.findNavController(requireView()).navigate(
-                    AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(addressId)
-                )
+                if(findNavController().currentDestination?.id == R.id.addressFragment)
+                    findNavController().navigate(AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(addressId))
             }
 
         }
@@ -174,7 +170,7 @@ class AddressFragment : Fragment() {
                 addressAdapter.getSelectedIds().forEach {
                     userViewModel.insertIntoAddressAndGroupCrossRef(it, navArgs.addressGroupName)
                 }
-            findNavController().navigateUp()
+            if(findNavController().currentDestination?.id == R.id.addressFragment) findNavController().navigateUp()
 //            findNavController().navigate(AddressFragmentDirections.actionAddressFragmentToAddressGroupDetailFragment(addressGroupId = navArgs.addressGroupId, addressGroupName = navArgs.addressGroupName))
             return true
         }

@@ -32,7 +32,7 @@ class SortDialog : BottomSheetDialogFragment() {
         val sortRadioGroup = binding.rgSort
 
         productListViewModel.sortType.let { sortType ->
-            when(sortType.value){
+            when (sortType.value) {
                 PRICE_LOW_TO_HIGH -> {
                     sortRadioGroup.check(R.id.rbPriceLowToHigh)
                 }
@@ -45,27 +45,27 @@ class SortDialog : BottomSheetDialogFragment() {
                 RATING_HIGH_TO_LOW -> {
                     sortRadioGroup.check(R.id.rbRatingHighToLow)
                 }
-                else ->{
+                else -> {
 
                 }
             }
         }
 
         sortRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            Log.i("ProdBottomSheetSort","checkedId - $checkedId")
-            when(checkedId){
-                R.id.rbPriceHighToLow ->{
+            Log.i("ProdBottomSheetSort", "checkedId - $checkedId")
+            when (checkedId) {
+                R.id.rbPriceHighToLow -> {
                     productListViewModel.applySort(PRICE_HIGH_TO_LOW)
                     SharedPrefUtil.changeSortType(requireActivity(), PRICE_HIGH_TO_LOW.toString())
                 }
-                R.id.rbPriceLowToHigh ->{
+                R.id.rbPriceLowToHigh -> {
                     productListViewModel.applySort(PRICE_LOW_TO_HIGH)
                     SharedPrefUtil.changeSortType(requireActivity(), PRICE_LOW_TO_HIGH.toString())
                 }
-                 R.id.rbRatingHighToLow -> {
-                     productListViewModel.applySort(RATING_HIGH_TO_LOW)
-                     SharedPrefUtil.changeSortType(requireActivity(), RATING_HIGH_TO_LOW.toString())
-                 }
+                R.id.rbRatingHighToLow -> {
+                    productListViewModel.applySort(RATING_HIGH_TO_LOW)
+                    SharedPrefUtil.changeSortType(requireActivity(), RATING_HIGH_TO_LOW.toString())
+                }
                 R.id.rbRatingLowToHigh -> {
                     productListViewModel.applySort(RATING_LOW_TO_HIGH)
                     SharedPrefUtil.changeSortType(requireActivity(), RATING_LOW_TO_HIGH.toString())

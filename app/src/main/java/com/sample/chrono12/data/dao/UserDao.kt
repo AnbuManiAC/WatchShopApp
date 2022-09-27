@@ -13,7 +13,7 @@ import java.io.Flushable
 @Dao
 interface UserDao {
 
-    //Signup, Signin
+    //Signup, Sign in
     @Insert
     suspend fun createUser(user: User): Long
 

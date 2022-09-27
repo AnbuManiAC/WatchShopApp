@@ -41,6 +41,10 @@ class ProductListViewModel @Inject constructor(
     val searchStatus: LiveData<Int>
         get() = _searchStatus
 
+    private var _searchText : String = ""
+    val searchText: String
+        get() = _searchText
+
     init {
         setCategory()
         setSubCategory()
@@ -169,7 +173,12 @@ class ProductListViewModel @Inject constructor(
         return _watchList
     }
 
+    fun setSearchText(searchText: String){
+        _searchText = searchText
+    }
+
     fun setProductsWithBrandAndImagesByQuery(searchQuery: String, sortType: SortType) = viewModelScope.launch {
+        setSearchText(searchQuery)
         productListTitle = searchQuery
         _searchStatus.value = SEARCH_INITIATED
         val searchList = getQueryAsList(searchQuery)

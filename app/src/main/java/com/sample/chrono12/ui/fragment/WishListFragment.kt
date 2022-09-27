@@ -69,20 +69,36 @@ class WishListFragment : Fragment() {
     private fun setupLoginPrompt() {
         loginPromptBinding.ivMissingCart.setImageResource(R.drawable.missing_wishlist)
         loginPromptBinding.tvContinueShopping.setOnClickListener {
-            Navigation.findNavController(requireView()).navigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
+            if(findNavController().currentDestination?.id == R.id.wishlistFragment)
+                findNavController()
+                .navigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
         }
         loginPromptBinding.btnLogIn.setOnClickListener {
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.wishlistFragment)
+                findNavController()
                 .navigate(WishListFragmentDirections.actionWishlistFragmentToLogInFragment())
         }
     }
 
     private fun setupWishList() {
 
+        val adapter = WishListAdapter(
+            {
+                if(findNavController().currentDestination?.id == R.id.wishlistFragment)
+                    findNavController().navigate(
+                    WishListFragmentDirections.actionWishlistFragmentToProductFragment(it.productId)
+                )
+            },
+            getOnClickDeleteListener(),
+            getOnClickAddToCartListener()
+        )
+        adapter.setData(mutableListOf())
         val rvWishList = fragmentWishListBinding.rvWishlist
         rvWishList.layoutManager = LinearLayoutManager(activity)
+        rvWishList.adapter = adapter
         fragmentWishListBinding.btnGoHome.setOnClickListener {
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.wishlistFragment)
+                findNavController()
                 .navigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
         }
         wishListViewModel.getWishListItems(userViewModel.getLoggedInUser().toInt())
@@ -99,17 +115,7 @@ class WishListFragment : Fragment() {
                     fragmentWishListBinding.tvEmptyCartDesc.visibility = View.GONE
                     fragmentWishListBinding.btnGoHome.visibility = View.GONE
                 }
-                val adapter = WishListAdapter(
-                    it,
-                    {
-                        Navigation.findNavController(requireView()).navigate(
-                            WishListFragmentDirections.actionWishlistFragmentToProductFragment(it.productId)
-                        )
-                    },
-                    getOnClickDeleteListener(),
-                    getOnClickAddToCartListener()
-                )
-                rvWishList.adapter = adapter
+                adapter.setNewData(it)
             }
     }
 
@@ -144,7 +150,8 @@ class WishListFragment : Fragment() {
                         userViewModel.getLoggedInUser().toInt()
                     )
                     if (isInCart) {
-                        Navigation.findNavController(requireView())
+                        if(findNavController().currentDestination?.id == R.id.wishlistFragment)
+                            findNavController()
                             .navigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
                     } else {
                         cartViewModel.addProductToUserCart(
@@ -172,8 +179,8 @@ class WishListFragment : Fragment() {
             override fun onDelete(productId: Int) {
                 val userId = userViewModel.getLoggedInUser().toInt()
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Are you sure you want to delete this product from Wishlist?")
-                    .setPositiveButton("Delete") { _, _ ->
+                builder.setTitle("Are you sure you want to Remove this product from Wishlist?")
+                    .setPositiveButton("Remove") { _, _ ->
                         wishListViewModel.removeProductFromUserWishList(productId, userId)
                     }
                     .setNegativeButton("Cancel") { _, _ ->
@@ -191,11 +198,13 @@ class WishListFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.searchFragment -> {
-                findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToSearchFragment())
+                if (findNavController().currentDestination?.id == R.id.wishlistFragment)
+                    findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToSearchFragment())
                 true
             }
             R.id.cartFragment -> {
-                findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
+                if (findNavController().currentDestination?.id == R.id.wishlistFragment)
+                    findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
                 true
             }
             else -> super.onOptionsItemSelected(item)

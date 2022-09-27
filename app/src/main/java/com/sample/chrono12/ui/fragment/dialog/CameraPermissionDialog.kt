@@ -12,7 +12,7 @@ import androidx.fragment.app.DialogFragment
 import com.sample.chrono12.databinding.CameraPermissionDialogBinding
 
 
-class CameraPermissionDialog: DialogFragment() {
+class CameraPermissionDialog : DialogFragment() {
 
     private lateinit var binding: CameraPermissionDialogBinding
 

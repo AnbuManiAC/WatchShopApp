@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Index
 import com.sample.chrono12.R
@@ -60,7 +61,8 @@ class OrderHistoryFragment : Fragment() {
     private val onOrderClickListener =
         object : OrderHistoryAdapter.OnClickOrder {
         override fun onClick(bulkOrderId: Int, orderId: Int) {
-            Navigation.findNavController(requireView()).navigate(
+            if(findNavController().currentDestination?.id == R.id.orderHistoryFragment)
+                findNavController().navigate(
                 OrderHistoryFragmentDirections.actionOrderHistoryFragmentToOrderDetailFragment(bulkOrderId, orderId)
             )
         }

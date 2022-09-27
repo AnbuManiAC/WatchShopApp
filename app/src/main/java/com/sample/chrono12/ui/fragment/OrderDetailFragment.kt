@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
@@ -106,7 +107,8 @@ class OrderDetailFragment : Fragment() {
 
     private fun setupProductAdapter() {
         val adapter = ProductOrderedAdapter(){ product ->
-            Navigation.findNavController(requireView()).navigate(
+            if(findNavController().currentDestination?.id == R.id.orderDetailFragment)
+                findNavController().navigate(
                 OrderDetailFragmentDirections.actionOrderDetailFragmentToProductFragment(product.productId)
             )}
         binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())

@@ -18,6 +18,7 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.AddressGroup
@@ -64,7 +65,8 @@ class SignUpFragment : Fragment() {
 
 
         binding.toLogIn.setOnClickListener{
-            Navigation.findNavController(requireView()).navigate(SignUpFragmentDirections.actionSignUpFragmentToLogInFragment())
+            if(findNavController().currentDestination?.id == R.id.signUpFragment)
+                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToLogInFragment())
         }
     }
 
@@ -83,7 +85,8 @@ class SignUpFragment : Fragment() {
                     lifecycleScope.launch{
                         userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))
                     }
-                    Navigation.findNavController(requireView()).popBackStack(R.id.signUpFragment, true)
+                    if(findNavController().currentDestination?.id == R.id.signUpFragment)
+                        findNavController().popBackStack(R.id.signUpFragment, true)
 
                 }
             }

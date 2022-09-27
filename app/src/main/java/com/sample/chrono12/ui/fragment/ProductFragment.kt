@@ -9,7 +9,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -62,10 +61,10 @@ class ProductFragment : Fragment() {
             checkIsProductInUserWishList(it.productWithBrand.product.productId)
             checkIsProductInUserCart(it.productWithBrand.product.productId)
         }
-        productViewModel.getIsProductInUserWishList().observe(viewLifecycleOwner){ isChecked ->
+        productViewModel.getIsProductInUserWishList().observe(viewLifecycleOwner) { isChecked ->
             binding.favBtn.isChecked = isChecked
         }
-        productViewModel.getIsProductInUserCart().observe(viewLifecycleOwner){ isInCart ->
+        productViewModel.getIsProductInUserCart().observe(viewLifecycleOwner) { isInCart ->
             setUpAddToCartButtonListener(isInCart)
             setUpAddToCartButton(isInCart)
         }
@@ -76,59 +75,68 @@ class ProductFragment : Fragment() {
     }
 
     private fun checkIsProductInUserWishList(productId: Int) {
-        lifecycleScope.launch{
-            val isProductInUserWishList = wishListViewModel.isProductInUserWishList(productId, userViewModel.getLoggedInUser().toInt())
+        lifecycleScope.launch {
+            val isProductInUserWishList = wishListViewModel.isProductInUserWishList(
+                productId,
+                userViewModel.getLoggedInUser().toInt()
+            )
             productViewModel.setIsProductInUserWishList(isProductInUserWishList).also {
                 setupWishListToggleListener()
             }
         }
     }
+
     private fun checkIsProductInUserCart(productId: Int) {
-        lifecycleScope.launch{
-            val isProductInUserCart = cartViewModel.isProductInUserCart(productId, userViewModel.getLoggedInUser().toInt())
+        lifecycleScope.launch {
+            val isProductInUserCart = cartViewModel.isProductInUserCart(
+                productId,
+                userViewModel.getLoggedInUser().toInt()
+            )
             productViewModel.setIsProductInUserCart(isProductInUserCart)
         }
     }
 
     private fun setupWishListToggleListener() {
-        binding.favBtn.setOnCheckedChangeListener{ button, isChecked ->
-            if(userViewModel.getIsUserLoggedIn()){
+        binding.favBtn.setOnCheckedChangeListener { button, isChecked ->
+            if (userViewModel.getIsUserLoggedIn()) {
                 editUserWishList(isChecked)
-            }
-            else{
+            } else {
                 button.isChecked = false
-                Navigation.findNavController(requireView()).navigate(ProductFragmentDirections.actionProductFragmentToLogInFragment())
+                Toast.makeText(requireContext(), "Login to add to wishlist", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
     }
 
     private fun setUpAddToCartButtonListener(isInUserCart: Boolean) {
         binding.btnAddToCart.setOnClickListener {
-            if(userViewModel.getIsUserLoggedIn()){
-                if(isInUserCart){
-                    findNavController().navigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
-                } else{
+            if (userViewModel.getIsUserLoggedIn()) {
+                if (isInUserCart) {
+                    if (findNavController().currentDestination?.id == R.id.productFragment)
+                        findNavController().navigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
+                } else {
                     val userId = userViewModel.getLoggedInUser().toInt()
-                    val productId = productViewModel.getProduct().value!!.productWithBrand.product.productId
+                    val productId =
+                        productViewModel.getProduct().value!!.productWithBrand.product.productId
                     val cart = Cart(userId = userId, productId = productId)
                     cartViewModel.addProductToUserCart(cart)
                     productViewModel.setIsProductInUserCart(!isInUserCart)
                 }
-            }else{
+            } else {
                 Toast.makeText(requireContext(), "Login to add to cart", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
     private fun setUpAddToCartButton(isInUserCart: Boolean) {
-        if (isInUserCart){
-            with(binding.btnAddToCart){
-                icon = ResourcesCompat.getDrawable(resources,R.drawable.ic_goto_cart,null)
+        if (isInUserCart) {
+            with(binding.btnAddToCart) {
+                icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_goto_cart, null)
                 text = getString(R.string.go_to_cart)
             }
-        }else{
-            with(binding.btnAddToCart){
-                icon = ResourcesCompat.getDrawable(resources,R.drawable.ic_add_to_cart,null)
+        } else {
+            with(binding.btnAddToCart) {
+                icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_add_to_cart, null)
                 text = getString(R.string.add_to_cart)
             }
         }
@@ -138,12 +146,17 @@ class ProductFragment : Fragment() {
         val productId = productViewModel.getProduct().value!!.productWithBrand.product.productId
         val userId = userViewModel.getLoggedInUser().toInt()
         val wishList = WishList(productId = productId, userId = userId)
-        if(isChecked){
+        if (isChecked) {
             wishListViewModel.addProductToUserWishList(wishList)
-            Toast.makeText(requireContext(), "Added to Wishlist Successfully", Toast.LENGTH_SHORT).show()
-        }else{
-            Toast.makeText(requireContext(), "Removed from Wishlist Successfully", Toast.LENGTH_SHORT).show()
-            wishListViewModel.removeProductFromUserWishList(productId , userId)
+            Toast.makeText(requireContext(), "Added to Wishlist Successfully", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Removed from Wishlist Successfully",
+                Toast.LENGTH_SHORT
+            ).show()
+            wishListViewModel.removeProductFromUserWishList(productId, userId)
         }
         productViewModel.setIsProductInUserWishList(isChecked)
     }
@@ -154,10 +167,10 @@ class ProductFragment : Fragment() {
         binding.tvBrandName.text = productWithBrand.brand.brandName
         binding.tvCurrentPrice.text = "₹" + productWithBrand.product.currentPrice.toInt().toString()
         binding.rbRating.rating = productWithBrand.product.totalRating!!
-        if(productWithBrand.product.originalPrice==productWithBrand.product.currentPrice){
+        if (productWithBrand.product.originalPrice == productWithBrand.product.currentPrice) {
             binding.tvOriginalPrice.visibility = View.GONE
             binding.tvOffPercent.visibility = View.GONE
-        } else{
+        } else {
             binding.tvOriginalPrice.apply {
                 text = "₹" + productWithBrand.product.originalPrice.toInt().toString()
                 paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -167,10 +180,10 @@ class ProductFragment : Fragment() {
         }
         if (productWithBrand.product.stockCount <= 10) {
             binding.tvStockAlert.apply {
-                if(productWithBrand.product.stockCount==0){
+                if (productWithBrand.product.stockCount == 0) {
                     text = "Currently out of stock"
                     binding.btnAddToCart.visibility = View.GONE
-                } else{
+                } else {
                     text = "Only ${productWithBrand.product.stockCount} left in stock - Order soon."
                 }
                 visibility = View.VISIBLE
@@ -178,7 +191,6 @@ class ProductFragment : Fragment() {
         }
 
     }
-
 
 
     private fun setupImageAdapters(productImage: List<ProductImage>) {
@@ -216,20 +228,23 @@ class ProductFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
-            R.id.searchFragment ->{
-                findNavController().navigate(ProductFragmentDirections.actionProductFragmentToSearchFragment())
+        return when (item.itemId) {
+            R.id.searchFragment -> {
+                if (findNavController().currentDestination?.id == R.id.productFragment)
+                    findNavController().navigate(ProductFragmentDirections.actionProductFragmentToSearchFragment())
                 true
             }
-            R.id.wishlistFragment ->{
-                findNavController().navigate(ProductFragmentDirections.actionProductFragmentToWishlistFragment())
+            R.id.wishlistFragment -> {
+                if (findNavController().currentDestination?.id == R.id.productFragment)
+                    findNavController().navigate(ProductFragmentDirections.actionProductFragmentToWishlistFragment())
                 true
             }
-            R.id.cartFragment ->{
-                findNavController().navigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
+            R.id.cartFragment -> {
+                if (findNavController().currentDestination?.id == R.id.productFragment)
+                    findNavController().navigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
                 true
             }
-            else-> super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
 
     }

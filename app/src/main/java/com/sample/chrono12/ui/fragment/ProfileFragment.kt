@@ -63,8 +63,11 @@ class ProfileFragment : Fragment() {
 
     private fun setupProfilePicture() {
         bindingProfile.btnProfilePicture.setOnClickListener {
-            Navigation.findNavController(requireView()).navigate(
-                ProfileFragmentDirections.actionProfileFragmentToProfilePictureDialog(hasProfilePicture)
+            if(findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController().navigate(
+                ProfileFragmentDirections.actionProfileFragmentToProfilePictureDialog(
+                    hasProfilePicture
+                )
             )
         }
         userViewModel.getProfileSettingAction().observe(viewLifecycleOwner) { action ->
@@ -85,7 +88,9 @@ class ProfileFragment : Fragment() {
                     val builder = AlertDialog.Builder(requireContext())
                     builder.setTitle("Remove profile picture")
                         .setPositiveButton("Remove") { _, _ ->
-                            userViewModel.deleteProfilePicture(userViewModel.getLoggedInUser().toInt())
+                            userViewModel.deleteProfilePicture(
+                                userViewModel.getLoggedInUser().toInt()
+                            )
                         }
                         .setNegativeButton("Cancel") { _, _ ->
 
@@ -119,22 +124,15 @@ class ProfileFragment : Fragment() {
         val cameraPermission: Int =
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
 //        val galleryWritePermission: Int =
-//            ActivityCompat.checkSelfPermission(
-//                requireContext(),
-//                Manifest.permission.WRITE_EXTERNAL_STORAGE
-//            )
-//        if (cameraPermission == PackageManager.PERMISSION_DENIED && galleryWritePermission == PackageManager.PERMISSION_DENIED) {
-//            requestPermissions(
-//                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), 20
-//            )
-//            return false
-//        }
+//            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
         if (cameraPermission == PackageManager.PERMISSION_DENIED) {
             requestPermissions(
                 arrayOf(Manifest.permission.CAMERA), 20
             )
             return false
         }
+
         return true
     }
 
@@ -171,39 +169,47 @@ class ProfileFragment : Fragment() {
             }
         }
         bindingProfile.myWishList.setOnClickListener {
-            Navigation.findNavController(requireView())
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToWishlistFragment())
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToWishlistFragment())
         }
         bindingProfile.myOrders.setOnClickListener {
-            Navigation.findNavController(requireView())
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToOrderHistoryFragment())
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToOrderHistoryFragment())
         }
         bindingProfile.myAddress.setOnClickListener {
-            Navigation.findNavController(requireView())
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToAddressFragment())
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToAddressFragment())
         }
         bindingProfile.myAddressGroup.setOnClickListener {
-            Navigation.findNavController(requireView())
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToAddressGroupFragment())
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToAddressGroupFragment())
         }
         bindingProfile.deleteSearchHistory.setOnClickListener {
-            Navigation.findNavController(requireView())
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToDeleteSearchDialog())
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToDeleteSearchDialog())
         }
 
         bindingProfile.signOut.setOnClickListener {
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
                 .navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
         }
     }
 
     private fun setupLoginPrompt() {
         bindingLoginPrompt.btnLogIn.setOnClickListener {
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
                 .navigate(ProfileFragmentDirections.actionProfileFragmentToLogInFragment())
         }
         bindingLoginPrompt.toSignup.setOnClickListener {
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
                 .navigate(ProfileFragmentDirections.actionProfileFragmentToSignUpFragment())
         }
     }
@@ -214,7 +220,8 @@ class ProfileFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.logout) {
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.profileFragment)
+                findNavController()
                 .navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
             return true
         }
@@ -242,14 +249,16 @@ class ProfileFragment : Fragment() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 takePictureFromCamera()
             } else {
-                findNavController().navigate(
+                if(findNavController().currentDestination?.id == R.id.profileFragment)
+                    findNavController().navigate(
                     ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog()
                 )
             }
         } else if (requestCode == 30) {
             if (requestCode == 30 && grantResults[0] == PackageManager.PERMISSION_GRANTED) takePictureFromGallery()
             else {
-                findNavController().navigate(
+                if(findNavController().currentDestination?.id == R.id.profileFragment)
+                    findNavController().navigate(
                     ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog()
                 )
             }

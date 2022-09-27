@@ -1,19 +1,12 @@
 package com.sample.chrono12.ui.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.ProductBrand
-import com.sample.chrono12.data.entities.SubCategory
 import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.CategoriesRvItemBinding
-import com.sample.chrono12.databinding.GalleryPermissionDialogBinding
 import com.sample.chrono12.utils.ImageUtil
 
 class BrandsAdapter(

@@ -19,7 +19,7 @@ class ProfilePictureDialog : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentProfilePictureDialogBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -27,7 +27,7 @@ class ProfilePictureDialog : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if(navArgs.hasPicture){
+        if (navArgs.hasPicture) {
             binding.btnDelete.visibility = View.VISIBLE
         }
 

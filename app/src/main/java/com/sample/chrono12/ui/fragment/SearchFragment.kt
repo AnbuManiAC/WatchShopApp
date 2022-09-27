@@ -8,7 +8,9 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.widget.SearchView
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -48,28 +50,32 @@ class SearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        userViewModel.setSearchHistory()
+        setupSuggestionAdapter()
         productListViewModel.searchStatus.observe(viewLifecycleOwner) { status ->
             when (status) {
                 SEARCH_COMPLETED -> {
                     val list = productListViewModel.getSearchResult().value
                     if (list.isNullOrEmpty()) {
                         changeSearchImageAndTextVisibility(View.VISIBLE)
+                        binding.rvSearchSuggestions.visibility = View.GONE
                         productListViewModel.setSearchStatus()
                     } else if (list.isNotEmpty()) {
                         changeSearchImageAndTextVisibility(View.GONE)
                         productListViewModel.setSearchStatus()
-                        findNavController()
+                        if(findNavController().currentDestination?.id == R.id.searchFragment)
+                            findNavController()
                             .navigate(SearchFragmentDirections.actionSearchFragmentToProductListFragment())
                     }
                 }
                 else -> {}
             }
         }
-        userViewModel.setSearchHistory()
-        setupSuggestionAdapter()
+
     }
 
-    private fun changeSearchImageAndTextVisibility(visibility: Int){
+
+    private fun changeSearchImageAndTextVisibility(visibility: Int) {
         binding.ivSearch.visibility = visibility
         binding.tvSearchInfo.visibility = visibility
     }
@@ -83,16 +89,14 @@ class SearchFragment : Fragment() {
             if (suggestions.isEmpty()) {
                 binding.rvSearchSuggestions.visibility = View.GONE
                 return@observe
-            } else{
+            } else {
                 val mutableSuggestions = ArrayList<SearchSuggestion>(suggestions)
-                binding.rvSearchSuggestions.visibility = View.VISIBLE
                 adapter.setNewData(mutableSuggestions)
             }
 
         }
 
     }
-
 
 
     private fun getSortType(): SortType {
@@ -113,20 +117,21 @@ class SearchFragment : Fragment() {
                 searchView.clearFocus()
                 hideInput()
                 if (query == null) return false
-                productListViewModel.setProductsWithBrandAndImagesByQuery(query, getSortType()).also {
-                    userViewModel.insertSuggestion(query, Calendar.getInstance().timeInMillis)
-                }
+                productListViewModel.setProductsWithBrandAndImagesByQuery(query, getSortType())
+                    .also {
+                        userViewModel.insertSuggestion(query, Calendar.getInstance().timeInMillis)
+                    }
                 return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                if(newText.isNullOrEmpty()) {
+                if (newText.isNullOrEmpty()) {
                     userViewModel.setSearchHistory()
-                }else{
+                } else {
                     userViewModel.updateSearchSuggestion(newText)
                 }
                 changeSearchImageAndTextVisibility(View.GONE)
-//                binding.rvSearchSuggestions.visibility = View.VISIBLE
+                binding.rvSearchSuggestions.visibility = View.VISIBLE
                 return true
             }
 
@@ -171,11 +176,17 @@ class SearchFragment : Fragment() {
         searchView.setOnQueryTextListener(getSearchQueryListener)
 
         val searchText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
+
+        searchText.setText(productListViewModel.searchText)
+        searchText.setSelection(productListViewModel.searchText.length)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            searchText.textCursorDrawable = resources.getDrawable(R.drawable.cursor_primary, null)
+            searchText.textCursorDrawable = ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.cursor_primary,
+                null
+            )
         }
-
-
 
         searchItem.setOnActionExpandListener(
             object : MenuItem.OnActionExpandListener {

@@ -6,10 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FragmentChooseAddressTypeBinding
-import com.sample.chrono12.ui.fragment.AddressGroupDetailFragmentDirections
 
 
 class ChooseAddressTypeDialog : DialogFragment() {
@@ -41,13 +40,23 @@ class ChooseAddressTypeDialog : DialogFragment() {
             dismiss()
         }
         binding.btnSelect.setOnClickListener {
-            when(binding.rgChooseAddressType.checkedRadioButtonId){
-                binding.rbFromAddresses.id -> findNavController().navigate(
-                    ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressFragment(chooseAddress = true)
-                )
-                binding.rbFromAddressGroups.id -> findNavController().navigate(
-                    ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressGroupFragment(chooseGroup = true)
-                )
+            when (binding.rgChooseAddressType.checkedRadioButtonId) {
+                binding.rbFromAddresses.id -> {
+                    if (findNavController().currentDestination?.id == R.id.chooseAddressTypeFragment)
+                        findNavController().navigate(
+                            ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressFragment(
+                                chooseAddress = true
+                            )
+                        )
+                }
+                binding.rbFromAddressGroups.id -> {
+                    if (findNavController().currentDestination?.id == R.id.chooseAddressTypeFragment)
+                        findNavController().navigate(
+                            ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressGroupFragment(
+                                chooseGroup = true
+                            )
+                        )
+                }
             }
 
         }

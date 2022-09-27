@@ -12,8 +12,8 @@ class ProductDetailsAdapter(
 ): RecyclerView.Adapter<ProductDetailsAdapter.DetailViewHolder>() {
 
     inner class DetailViewHolder(private val binding: ProductDetailsRvItemBinding): RecyclerView.ViewHolder(binding.root){
-        val tvDetailContent = binding.tvDetailContent
-        val tvDetailTitle = binding.tvDetailTitle
+        private val tvDetailContent = binding.tvDetailContent
+        private val tvDetailTitle = binding.tvDetailTitle
         fun bind(productDetail: ProductDetail){
             tvDetailTitle.text = productDetail.title
             tvDetailContent.text = productDetail.content

@@ -98,7 +98,6 @@
     <fragment
         android:id="@+id/searchFragment"
         android:name="com.sample.chrono12.ui.fragment.SearchFragment"
-        android:label="Search"
         tools:layout="@layout/fragment_search">
         <action
             android:id="@+id/action_searchFragment_to_cartFragment"
@@ -116,9 +115,9 @@
             app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_searchFragment_to_productListFragment"
-            app:destination="@id/productListFragment"
-            app:popUpTo="@id/searchFragment"
+            app:popUpTo="@id/productListFragment"
             app:popUpToInclusive="true"
+            app:destination="@id/productListFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -213,7 +212,6 @@
     <fragment
         android:id="@+id/productListFragment"
         android:name="com.sample.chrono12.ui.fragment.ProductListFragment"
-        android:label="Product List"
         tools:layout="@layout/fragment_product_list" >
         <argument
             android:name="subCategoryId"
@@ -237,8 +235,6 @@
         <action
             android:id="@+id/action_productListFragment_to_searchFragment"
             app:destination="@id/searchFragment"
-            app:popUpTo="@id/productListFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -395,7 +391,7 @@
     <fragment
         android:id="@+id/addressFragment"
         android:name="com.sample.chrono12.ui.fragment.AddressFragment"
-        android:label="Address"
+        android:label="Addresses"
         tools:layout="@layout/fragment_address" >
         <argument
             android:name="addressGroupName"
@@ -444,7 +440,7 @@
     <fragment
         android:id="@+id/newAddressFragment"
         android:name="com.sample.chrono12.ui.fragment.NewAddressFragment"
-        android:label="New Address">
+       >
         <argument
             android:name="addressId"
             android:defaultValue="0"
@@ -466,7 +462,7 @@
     <fragment
         android:id="@+id/addressGroupFragment"
         android:name="com.sample.chrono12.ui.fragment.AddressGroupFragment"
-        android:label="Address Group"
+        android:label="Address Groups"
         tools:layout="@layout/fragment_address_group" >
         <argument
             android:name="chooseGroup"
@@ -505,7 +501,7 @@
     <fragment
         android:id="@+id/addressGroupDetailFragment"
         android:name="com.sample.chrono12.ui.fragment.AddressGroupDetailFragment"
-        android:label="New Address Group"
+        android:label="Address Group"
         tools:layout="@layout/fragment_address_group_detail">
         <argument
             android:name="addressGroupId"

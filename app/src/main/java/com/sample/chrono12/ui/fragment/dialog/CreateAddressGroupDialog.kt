@@ -22,11 +22,6 @@ class CreateAddressGroupDialog : DialogFragment() {
     private val navArgs by navArgs<CreateAddressGroupDialogArgs>()
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
 
-    override fun onResume() {
-        super.onResume()
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,9 +40,9 @@ class CreateAddressGroupDialog : DialogFragment() {
         dialog!!.window!!.attributes = params as WindowManager.LayoutParams
         dialog!!.setCanceledOnTouchOutside(false)
 
-        if (navArgs.addressGroupId>0){
-            binding.title.text = "Address Group"
-            binding.tilAddressGroupName.hint = "Edit Group Name"
+        if (navArgs.addressGroupId > 0) {
+            binding.title.text = resources.getString(R.string.address_group)
+            binding.tilAddressGroupName.hint = resources.getString(R.string.edit_group_name)
         }
 
         val etGroupName = binding.tilEtAddressGroupName
@@ -55,6 +50,7 @@ class CreateAddressGroupDialog : DialogFragment() {
         dialog!!.window!!.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
 
         etGroupName.setText(navArgs.addressGroupName)
+        etGroupName.setSelection(navArgs.addressGroupName.length)
         etGroupName.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 etGroupNameLayout.error = null
@@ -97,12 +93,13 @@ class CreateAddressGroupDialog : DialogFragment() {
                         groupName = groupName
                     )
                 )
-                findNavController().navigate(
-                    CreateAddressGroupDialogDirections.actionCreateAddressGroupDialogToAddressGroupDetailFragment(
-                        addressGroupName = groupName,
-                        addressGroupId = groupId
+                if (findNavController().currentDestination?.id == R.id.createAddressGroupDialog)
+                    findNavController().navigate(
+                        CreateAddressGroupDialogDirections.actionCreateAddressGroupDialogToAddressGroupDetailFragment(
+                            addressGroupName = groupName,
+                            addressGroupId = groupId
+                        )
                     )
-                )
             }
         }
     }

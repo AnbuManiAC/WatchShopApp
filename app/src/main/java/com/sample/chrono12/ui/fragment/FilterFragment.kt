@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FragmentFilterBinding
 import com.sample.chrono12.ui.adapter.FilterAdapter
 import com.sample.chrono12.ui.adapter.FilterValuesAdapter
@@ -104,11 +105,13 @@ class FilterFragment : Fragment() {
             filterViewModel.setAppliedFilterIds(filterViewModel.selectedFilterIds)
             if(filterViewModel.isClearClicked) filterViewModel.clearSelectedFilterIds()
             setFilter()
-            findNavController().navigate(FilterFragmentDirections.actionFilterFragmentToProductListFragment())
+//            findNavController().navigate(FilterFragmentDirections.actionFilterFragmentToProductListFragment())
+            if(findNavController().currentDestination?.id == R.id.filterFragment)
+                findNavController().navigateUp()
         }
     }
 
-    fun setFilter(){
+    private fun setFilter(){
         val filterInput = filterViewModel.appliedFilterIds
         val genderInput = filterInput.filter { it in 1..3 }
         val dialShapeInput = filterInput.filter { it in 4..6 }

@@ -12,6 +12,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.FragmentAddressGroupBinding
 import com.sample.chrono12.ui.adapter.AddressGroupAdapter
@@ -36,7 +37,8 @@ class AddressGroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.fabAddAddress.setOnClickListener{
-            Navigation.findNavController(requireView()).navigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToCreateAddressGroupDialog())
+            if(findNavController().currentDestination?.id == R.id.addressGroupFragment)
+                findNavController().navigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToCreateAddressGroupDialog())
         }
         setupAddressGroupAdapter()
         if(navArgs.chooseGroup) setupChooseGroupButton()
@@ -47,7 +49,8 @@ class AddressGroupFragment : Fragment() {
         binding.btnSelectGroup.setOnClickListener {
             val groupId = addressGroupAdapter.getSelectedGroupId()
             if(groupId>0){
-                findNavController().navigate(
+                if(findNavController().currentDestination?.id == R.id.addressGroupFragment)
+                    findNavController().navigate(
                     AddressGroupFragmentDirections.actionAddressGroupFragmentToOrderConfirmationFragment(addressGroupId = groupId)
                 )
             }
@@ -100,7 +103,8 @@ class AddressGroupFragment : Fragment() {
     private fun getOnGroupClickListener() =
         object : AddressGroupAdapter.OnClickAddressGroup {
             override fun onClick(addressGroupWithAddress: AddressGroupWithAddress) {
-                Navigation.findNavController(requireView()).navigate(
+                if(findNavController().currentDestination?.id == R.id.addressGroupFragment)
+                    findNavController().navigate(
                     AddressGroupFragmentDirections.actionAddressGroupFragmentToAddressGroupDetailFragment(
                         addressGroupWithAddress.addressGroup.addressGroupId, addressGroupWithAddress.addressGroup.groupName
                     )

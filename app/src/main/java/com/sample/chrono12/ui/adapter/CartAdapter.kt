@@ -4,24 +4,27 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
+import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
 import com.sample.chrono12.databinding.CartRvItemBinding
 
 class CartAdapter(
-    private val cartWithProductInfoList: List<CartWithProductInfo>,
     val onProductClickListener: ProductListAdapter.OnClickProduct,
     val onDeleteClickListener: OnClickDelete,
     val onQuantityClickListener: OnClickQuantity
 
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
+    private lateinit var cartWithProductInfoList: MutableList<CartWithProductInfo>
+
     private var hideDeleteButton = false
-    fun setHideDeleteButton(status: Boolean){
+    fun setHideDeleteButton(status: Boolean) {
         hideDeleteButton = status
     }
 
@@ -60,35 +63,37 @@ class CartAdapter(
                     "${((product.originalPrice - product.currentPrice) / product.originalPrice * 100).toInt()}% Off"
             }
 
-            if(hideDeleteButton) binding.btnDelete.visibility = View.GONE
+            if (hideDeleteButton) binding.btnDelete.visibility = View.GONE
 
         }
 
         fun bindProductQuantity(product: Product, quantity: Int) {
             productQuantity.text = quantity.toString()
-            if(productQuantity.text.toString().toInt()==1){
+            if (productQuantity.text.toString().toInt() == 1) {
                 btnQuantityMinus.alpha = 0.7F
                 btnQuantityMinus.isEnabled = false
             }
-            btnQuantityMinus.setOnClickListener{
+            btnQuantityMinus.setOnClickListener {
                 val currentValue = productQuantity.text.toString().toInt()
                 if (onQuantityClickListener.onClickMinus(
                         product,
                         currentValue
-                )){
-                    productQuantity.text = (currentValue-1).toString()
+                    )
+                ) {
+                    productQuantity.text = (currentValue - 1).toString()
 
-                }else{
+                } else {
                     btnQuantityMinus.alpha = 0.7F
                     btnQuantityMinus.isEnabled = false
                 }
             }
-            btnQuantityPlus.setOnClickListener{
+            btnQuantityPlus.setOnClickListener {
                 val currentValue = productQuantity.text.toString().toInt()
-                if(onQuantityClickListener.onClickPlus(
+                if (onQuantityClickListener.onClickPlus(
                         product,
                         quantity
-                )){
+                    )
+                ) {
                     productQuantity.text = (currentValue + 1).toString()
                 }
             }
@@ -129,6 +134,42 @@ class CartAdapter(
     interface OnClickQuantity {
         fun onClickPlus(product: Product, quantity: Int): Boolean
         fun onClickMinus(product: Product, quantity: Int): Boolean
+    }
+
+    class DiffUtilCallback(
+        private val oldList: List<CartWithProductInfo>,
+        private val newList: List<CartWithProductInfo>
+    ) :
+        DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            return oldItem.cart.cartId == newItem.cart.cartId
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+
+            return oldItem.hashCode() == newItem.hashCode()
+        }
+    }
+
+    fun setData(data: List<CartWithProductInfo>) {
+        this.cartWithProductInfoList = data.toMutableList()
+    }
+
+    fun setNewData(newData: List<CartWithProductInfo>) {
+        val diffCallback = DiffUtilCallback(cartWithProductInfoList, newData)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        cartWithProductInfoList.clear()
+        cartWithProductInfoList.addAll(newData)
+        diffResult.dispatchUpdatesTo(this)
     }
 
 }

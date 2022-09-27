@@ -35,6 +35,7 @@ class NewAddressFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setUpFocusChangeListeners()
         if (navArgs.addressId > 0) {
+            (requireActivity() as HomeActivity).setActionBarTitle("Address")
             userViewModel.getAddress().observe(viewLifecycleOwner) { address ->
                 val doorAndStreet = address.addressLine1.split("___")
                 with(binding) {
@@ -48,6 +49,8 @@ class NewAddressFragment : Fragment() {
                     tilEtMobile.setText(address.contactNumber.toString())
                 }
             }
+        }else{
+            (requireActivity() as HomeActivity).setActionBarTitle("New Address")
         }
         setupStatesDropDownAdapter()
     }
@@ -220,6 +223,7 @@ class NewAddressFragment : Fragment() {
             clearFocus()
             if (checkInput()) {
                 addUserAddress()
+                if(findNavController().currentDestination?.id == R.id.newAddressFragment)
                     findNavController().navigateUp()
             }
             return true

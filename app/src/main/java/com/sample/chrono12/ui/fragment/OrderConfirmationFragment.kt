@@ -81,17 +81,19 @@ class OrderConfirmationFragment : Fragment() {
                 val cartWithProducts = mutableListOf<CartWithProductInfo>()
                 cartWithProductInfo.forEach {
                     val product = it.productWithBrandAndImagesList.productWithBrand.product
-                    if (product.stockCount < orderCount*it.cart.quantity) {
+                    if (product.stockCount < orderCount * it.cart.quantity) {
                         cartWithProducts.add(it)
                     }
                 }
                 if (cartWithProducts.isNotEmpty()) {
                     var errorMsg = ""
                     cartWithProducts.forEach {
-                        val requiredStock = it.cart.quantity*orderCount
-                        val availableStock = it.productWithBrandAndImagesList.productWithBrand.product.stockCount
-                        errorMsg = errorMsg+ "${it.productWithBrandAndImagesList.productWithBrand.product.name}" +
-                                "\nRequired quantity: $requiredStock\nAvailable quantity: $availableStock\n"
+                        val requiredStock = it.cart.quantity * orderCount
+                        val availableStock =
+                            it.productWithBrandAndImagesList.productWithBrand.product.stockCount
+                        errorMsg =
+                            errorMsg + "${it.productWithBrandAndImagesList.productWithBrand.product.name}" +
+                                    "\nRequired quantity: $requiredStock\nAvailable quantity: $availableStock\n"
                     }
                     errorMsg += "Kindly go back and make changes in the product quantity or address group to continue"
                     binding.cvError.visibility = View.VISIBLE
@@ -109,7 +111,7 @@ class OrderConfirmationFragment : Fragment() {
         val bulkOrderId = SharedPrefUtil.getBulkOrderId(requireActivity())
         var orderId = 0
         val orderCount = addressGroupWithAddress.addressList.size
-        val isBulkOrder = orderCount>1
+        val isBulkOrder = orderCount > 1
         lifecycleScope.launch {
             addressGroupWithAddress.addressList.forEach {
                 val order = Order(
@@ -143,7 +145,8 @@ class OrderConfirmationFragment : Fragment() {
 //                orderViewModel.updateProductStock(it.productWithBrandAndImagesList.productWithBrand.product.productId, updatedStockCount)
 //            }
             cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
-            findNavController().navigate(
+            if(findNavController().currentDestination?.id == R.id.orderConfirmationFragment)
+                findNavController().navigate(
                 OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(
                     bulkOrderId,
                     orderId
@@ -221,23 +224,26 @@ class OrderConfirmationFragment : Fragment() {
     }
 
     private fun setupProductsAdapter() {
+        val cartAdapter = CartAdapter(
+            {
+                if(findNavController().currentDestination?.id == R.id.orderConfirmationFragment)
+                    findNavController().navigate(
+                    OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToProductFragment(
+                        it.productId
+                    )
+                )
+            },
+            getOnDeleteClickListener(),
+            getOnQuantityClickListener()
+        )
+        cartAdapter.setData(mutableListOf())
         binding.rvProducts.layoutManager = LinearLayoutManager(requireActivity())
+        binding.rvProducts.adapter = cartAdapter
         cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
                 cartWithProductInfo = it
                 productCount = it.size
-                val cartAdapter = CartAdapter(
-                    cartWithProductInfo,
-                    {
-                        Navigation.findNavController(requireView()).navigate(
-                            OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToProductFragment(
-                                it.productId
-                            )
-                        )
-                    },
-                    getOnDeleteClickListener(),
-                    getOnQuantityClickListener()
-                )
+                cartAdapter.setNewData(cartWithProductInfo)
                 cartViewModel.initPriceCalculating(cartWithProductInfo)
                 cartAdapter.setHideDeleteButton(true)
                 binding.rvProducts.adapter = cartAdapter
@@ -282,7 +288,8 @@ class OrderConfirmationFragment : Fragment() {
             }
 
             override fun onClickEdit(addressId: Int) {
-                Navigation.findNavController(requireView()).navigate(
+                if(findNavController().currentDestination?.id == R.id.orderConfirmationFragment)
+                    findNavController().navigate(
                     OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToNewAddressFragment(
                         addressId
                     )

@@ -11,7 +11,9 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FragmentAddressGroupDetailBinding
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.AddressAdapter
 import com.sample.chrono12.viewmodels.UserViewModel
 
@@ -56,7 +58,8 @@ class AddressGroupDetailFragment : Fragment() {
 
     private fun setupEditButton() {
         binding.btnEditGroupName.setOnClickListener {
-            findNavController().navigate(
+            if(findNavController().currentDestination?.id == R.id.addressGroupDetailFragment)
+                findNavController().navigate(
                 AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToCreateAddressGroupDialog(
                     navArgs.addressGroupId,
                     navArgs.addressGroupName
@@ -68,7 +71,8 @@ class AddressGroupDetailFragment : Fragment() {
 
     private fun setupAddFromExistingButton() {
         binding.btnAddFromExisting.setOnClickListener {
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.addressGroupDetailFragment)
+                findNavController()
                 .navigate(
                     AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToAddressFragment(
                         addressGroupName = addressGroupName,
@@ -80,7 +84,8 @@ class AddressGroupDetailFragment : Fragment() {
 
     private fun setupAddNewAddressButton() {
         binding.btnAddNewAddress.setOnClickListener {
-            Navigation.findNavController(requireView())
+            if(findNavController().currentDestination?.id == R.id.addressGroupDetailFragment)
+                findNavController()
                 .navigate(
                     AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(
                         addressGroupName = addressGroupName
@@ -147,7 +152,8 @@ class AddressGroupDetailFragment : Fragment() {
             }
 
             override fun onClickEdit(addressId: Int) {
-                Navigation.findNavController(requireView()).navigate(
+                if(findNavController().currentDestination?.id == R.id.addressGroupDetailFragment)
+                    findNavController().navigate(
                     AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(
                         addressId,
                         addressGroupName

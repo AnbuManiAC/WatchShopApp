@@ -100,30 +100,27 @@ class AddressGroupDetailFragment : Fragment() {
             addFromExisting = false,
             chooseAddress = false
         )
+        adapter.setAddresses(listOf())
+        binding.rvGroupAddresses.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvGroupAddresses.adapter = adapter
         userViewModel.getAddressGroupWithAddresses(
             userViewModel.getLoggedInUser().toInt(),
             addressGroupId
-        ).observe(viewLifecycleOwner) { addressGroup ->
-            addressGroup?.let {
-                binding.rvGroupAddresses.layoutManager = LinearLayoutManager(requireContext())
-                if (addressGroup.addressList.isNotEmpty()) {
+        ).observe(viewLifecycleOwner) { addressGroupWithAddress ->
+            addressGroupWithAddress?.let {
+                if (addressGroupWithAddress.addressList.isNotEmpty()) {
                     with(binding.tvAddresses) {
                         visibility = View.VISIBLE
-                        text = "Addresses(" + addressGroup.addressList.size + ")"
+                        text = "Addresses(" + addressGroupWithAddress.addressList.size + ")"
                     }
                     val addressIds = mutableListOf<Int>()
-                    addressGroup.addressList.forEach { address ->
+                    addressGroupWithAddress.addressList.forEach { address ->
                         addressIds.add(address.addressId)
                     }
                     userViewModel.setAddressIds(addressIds)
-                    with(adapter) {
-                        setData(addressGroup)
-                        notifyDataSetChanged()
-                    }
-                    with(binding.rvGroupAddresses) {
-                        this.adapter = adapter
-                        visibility = View.VISIBLE
-                    }
+                    adapter.setAddressGroup(addressGroupWithAddress.addressGroup)
+                    adapter.setNewData(addressGroupWithAddress.addressList)
+                    binding.rvGroupAddresses.visibility = View.VISIBLE
                 }
             }
         }

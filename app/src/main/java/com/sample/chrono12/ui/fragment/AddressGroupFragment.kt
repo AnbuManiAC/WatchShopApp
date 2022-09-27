@@ -63,14 +63,13 @@ class AddressGroupFragment : Fragment() {
             getOnDeleteClickListener(),
             navArgs.chooseGroup
         )
+        addressGroupAdapter.setData(listOf())
         binding.rvAddressGroup.layoutManager = LinearLayoutManager(requireContext())
+        binding.rvAddressGroup.adapter = addressGroupAdapter
         userViewModel.getAddressGroupWithAddresses(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
-                it?.let { with(addressGroupAdapter){
-                    setData(it)
-                    notifyDataSetChanged()
-                }
-                    binding.rvAddressGroup.adapter = addressGroupAdapter
+                it?.let {
+                    addressGroupAdapter.setNewData(it)
                 }
                 if(it.isEmpty()){
                     binding.clNoDataFound.visibility = View.VISIBLE

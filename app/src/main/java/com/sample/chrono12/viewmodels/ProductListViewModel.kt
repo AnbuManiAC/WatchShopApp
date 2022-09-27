@@ -20,7 +20,6 @@ class ProductListViewModel @Inject constructor(
     private val watchRepository: WatchRepository
 ) : ViewModel() {
 
-    private val categoryList = MutableLiveData<List<Category>>()
     private val subCategoryList = MutableLiveData<List<SubCategory>>()
     private val brandList = MutableLiveData<List<ProductBrand>>()
     private val _watchList = MutableLiveData<List<ProductWithBrandAndImages>>()
@@ -46,9 +45,8 @@ class ProductListViewModel @Inject constructor(
         get() = _searchText
 
     init {
-        setCategory()
-        setSubCategory()
-        setBrand()
+//        setSubCategory()
+//        setBrand()
         _sortType.value = RATING_HIGH_TO_LOW
         _searchStatus.value = SEARCH_NOT_INITIATED
     }
@@ -100,15 +98,11 @@ class ProductListViewModel @Inject constructor(
         _searchStatus.value = SEARCH_NOT_INITIATED
     }
 
-    private fun setCategory() {
-        viewModelScope.launch { categoryList.postValue(watchRepository.getCategory()) }
-    }
-
-    private fun setSubCategory() {
+    fun setSubCategory() {
         viewModelScope.launch { subCategoryList.postValue(watchRepository.getSubcategory()) }
     }
 
-    private fun setBrand() {
+    fun setBrand() {
         viewModelScope.launch { brandList.postValue(watchRepository.getBrand()) }
     }
 

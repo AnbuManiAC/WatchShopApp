@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
@@ -25,18 +24,29 @@ class HomeFragment : Fragment() {
     private val mProductListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         setHasOptionsMenu(true)
+        mProductListViewModel.setSubCategory()
+        mProductListViewModel.setBrand()
         mProductListViewModel.setTopRatedWatches(10)
         binding = FragmentHomeBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         setupCategoriesAdapter()
         setupBrandsAdapter()
         setupAllWatchesButton()
         setupTopWatchesAdapter()
-        return binding.root
     }
 
     private fun setupAllWatchesButton() {
@@ -44,48 +54,61 @@ class HomeFragment : Fragment() {
             mProductListViewModel.setProductListTitle("All Watches")
             filterViewModel.clearSelectedFilterIds()
             filterViewModel.clearSelectedFilterPosition()
-            Navigation.findNavController(requireView()).navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(fromAllWatches = true))
+            if (findNavController().currentDestination?.id == R.id.homeFragment)
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToProductListFragment(
+                        fromAllWatches = true
+                    )
+                )
         }
     }
 
-    private fun setupCategoriesAdapter(){
-        val categoriesAdapter = CategoriesAdapter{ subCategory ->
-            mProductListViewModel.setProductListTitle(subCategory.name+"es")
+    private fun setupCategoriesAdapter() {
+        val categoriesAdapter = CategoriesAdapter(listOf()) { subCategory ->
+            mProductListViewModel.setProductListTitle(subCategory.name + "es")
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
             filterViewModel.setAppliedFilterIds(subCategory.subCategoryId)
-            if(findNavController().currentDestination?.id == R.id.homeFragment)
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(subCategoryId = subCategory.subCategoryId))
+            if (findNavController().currentDestination?.id == R.id.homeFragment)
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToProductListFragment(
+                        subCategoryId = subCategory.subCategoryId
+                    )
+                )
         }
-        categoriesAdapter.setData(mutableListOf())
         binding.rvCategories.apply {
-            layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = categoriesAdapter
-            Log.d("Skewing1","${System.currentTimeMillis()}")
+            Log.d("Skewing1", "${System.currentTimeMillis()}")
         }
-        mProductListViewModel.getSubCategory().observe(viewLifecycleOwner){
+        mProductListViewModel.getSubCategory().observe(viewLifecycleOwner) {
             it?.let {
                 categoriesAdapter.setNewData(it)
-                Log.d("Skewing2","${System.currentTimeMillis()}")
+                Log.d("Skewing2", "${System.currentTimeMillis()}")
             }
         }
     }
 
     private fun setupBrandsAdapter() {
-        val brandAdapter = BrandsAdapter{ brand ->
-            mProductListViewModel.setProductListTitle(brand.brandName+" Watches")
+        val brandAdapter = BrandsAdapter(listOf()) { brand ->
+            mProductListViewModel.setProductListTitle(brand.brandName + " Watches")
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
-            filterViewModel.setAppliedFilterIds(getKey(this.brands,brand.brandName))
-            if(findNavController().currentDestination?.id == R.id.homeFragment)
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(brandId = brand.brandId))
+            filterViewModel.setAppliedFilterIds(getKey(this.brands, brand.brandName))
+            if (findNavController().currentDestination?.id == R.id.homeFragment)
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToProductListFragment(
+                        brandId = brand.brandId
+                    )
+                )
         }
-        brandAdapter.setData(mutableListOf())
         binding.rvBrands.apply {
-            layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            layoutManager =
+                LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = brandAdapter
         }
-        mProductListViewModel.getBrand().observe(viewLifecycleOwner){
+        mProductListViewModel.getBrand().observe(viewLifecycleOwner) {
             it?.let {
                 brandAdapter.setNewData(it)
             }
@@ -93,16 +116,20 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupTopWatchesAdapter() {
-        val topWatchAdapter = ProductListAdapter{ product ->
-            if(findNavController().currentDestination?.id == R.id.homeFragment)
-                findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToProductFragment(product.productId))
+        val topWatchAdapter = ProductListAdapter { product ->
+            if (findNavController().currentDestination?.id == R.id.homeFragment)
+                findNavController().navigate(
+                    HomeFragmentDirections.actionHomeFragmentToProductFragment(
+                        product.productId
+                    )
+                )
         }
         topWatchAdapter.setData(mutableListOf())
         binding.rvTopWatches.apply {
             layoutManager = LinearLayoutManager(requireActivity())
             this.adapter = topWatchAdapter
         }
-        mProductListViewModel.topRatedWatchList.observe(viewLifecycleOwner){
+        mProductListViewModel.topRatedWatchList.observe(viewLifecycleOwner) {
             it?.let { topWatchAdapter.setNewData(it) }
         }
     }
@@ -112,15 +139,15 @@ class HomeFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId){
+        return when (item.itemId) {
             R.id.searchFragment -> {
                 mProductListViewModel.setSearchText("")
-                if(findNavController().currentDestination?.id == R.id.homeFragment)
+                if (findNavController().currentDestination?.id == R.id.homeFragment)
                     findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
                 true
             }
             R.id.wishlistFragment -> {
-                if(findNavController().currentDestination?.id == R.id.homeFragment)
+                if (findNavController().currentDestination?.id == R.id.homeFragment)
                     findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToWishlistFragment())
                 true
             }
@@ -138,6 +165,7 @@ class HomeFragment : Fragment() {
         17 to "Helix",
         18 to "Fossil"
     )
+
     private fun <K, V> getKey(hashMap: Map<K, V>, target: V): K {
         return hashMap.filter { target == it.value }.keys.first()
     }

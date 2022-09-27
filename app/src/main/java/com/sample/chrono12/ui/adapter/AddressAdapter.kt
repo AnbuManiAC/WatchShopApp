@@ -1,12 +1,12 @@
 package com.sample.chrono12.ui.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
+import com.sample.chrono12.data.entities.Address
+import com.sample.chrono12.data.entities.AddressGroup
 import com.sample.chrono12.databinding.AddressRvItemBinding
 
 
@@ -16,14 +16,12 @@ class AddressAdapter(
     private val chooseAddress: Boolean
 ) : RecyclerView.Adapter<AddressAdapter.AddressViewHolder>() {
 
-    private lateinit var addressGroupWithAddress: AddressGroupWithAddress
+    private lateinit var addressGroup: AddressGroup
+    private lateinit var addresses:  List<Address>
+
     private val selectedIds = mutableSetOf<Int>()
     private var selectedAddressAndGroupId = Pair(0,0)
     private var hideEditAndDeleteButton = false
-
-    fun setData(addressGroupWithAddress: AddressGroupWithAddress){
-        this.addressGroupWithAddress = addressGroupWithAddress
-    }
 
     fun setHideEditAndDeleteButton(status: Boolean){
         hideEditAndDeleteButton = status
@@ -39,14 +37,13 @@ class AddressAdapter(
         private val cityStatePincode = binding.tvAddressCityStateAndPincode
         private val landmark = binding.tvAddressLandmark
         private val mobile = binding.tvAddressMobile
-        fun bind(addressGroupWithAddress: AddressGroupWithAddress, position: Int) {
-            val address = addressGroupWithAddress.addressList[position]
+        fun bind(address: Address) {
             addressName.text = address.contactName
             doorAndStreet.text = address.addressLine1.split("___").joinToString(", ")
             landmark.text = address.addressLine2
             cityStatePincode.text = address.city + ", " + address.state + " - " + address.pincode
             mobile.text = "Mobile Number : " + address.contactNumber.toString()
-            if (addressGroupWithAddress.addressGroup.groupName == "default") {
+            if (addressGroup.groupName == "default") {
                 binding.btnRemoveAddress.text = "Delete"
             } else {
                 binding.btnRemoveAddress.text = "Remove"
@@ -59,16 +56,16 @@ class AddressAdapter(
             binding.btnRemoveAddress.setOnClickListener {
                 onAddressButtonClickListener.onClickRemove(
                     address.addressId,
-                    addressGroupWithAddress.addressGroup.addressGroupId,
-                    addressGroupWithAddress.addressGroup.groupName
+                   addressGroup.addressGroupId,
+                    addressGroup.groupName
                 )
             }
             if (addFromExisting) {
-                binding.cbSelect.setOnCheckedChangeListener { compoundButton, isChecked ->
+                binding.cbSelect.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) {
-                        selectedIds.add(addressGroupWithAddress.addressList[position].addressId)
+                        selectedIds.add(address.addressId)
                     } else {
-                        selectedIds.remove(addressGroupWithAddress.addressList[position].addressId)
+                        selectedIds.remove(address.addressId)
                     }
                 }
             }
@@ -77,7 +74,7 @@ class AddressAdapter(
                 binding.btnEditAddress.visibility = View.GONE
                 val rbSelectAddress = binding.rbChoose
                 val addressId = address.addressId
-                val groupId =addressGroupWithAddress.addressGroup.addressGroupId
+                val groupId = addressGroup.addressGroupId
                 rbSelectAddress.setOnClickListener {
                     selectedAddressAndGroupId = Pair(groupId, addressId)
                     notifyDataSetChanged()
@@ -118,16 +115,53 @@ class AddressAdapter(
     }
 
     override fun onBindViewHolder(holder: AddressViewHolder, position: Int) {
-        holder.bind(addressGroupWithAddress, position)
+        holder.bind(addresses[position])
 
     }
 
     override fun getItemCount(): Int {
-        return addressGroupWithAddress.addressList.size
+        return addresses.size
     }
 
     interface OnClickAddressButton {
         fun onClickRemove(addressId: Int, addressGroupId: Int, addressGroupName: String)
         fun onClickEdit(addressId: Int)
     }
+
+    class DiffUtilCallback(private val oldList: List<Address>, private val newList: List<Address>) :
+    DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            return oldItem.addressId == newItem.addressId
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+
+            return oldItem.hashCode() == newItem.hashCode()
+        }
+    }
+
+    fun setAddresses(addresses: List<Address>) {
+        this.addresses = addresses
+    }
+
+    fun setAddressGroup(addressGroup: AddressGroup){
+        this.addressGroup = addressGroup
+    }
+
+    fun setNewData(newData: List<Address>) {
+        val diffCallback = DiffUtilCallback(addresses, newData)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        addresses = newData
+        diffResult.dispatchUpdatesTo(this)
+    }
+
 }

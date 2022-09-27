@@ -125,6 +125,7 @@ class CartFragment : Fragment() {
                     fragmentCartBinding.layoutPriceOrder.visibility = View.GONE
                 }
                 adapter.setNewData(cartItems)
+//                fragmentCartBinding.rvCart.adapter = adapter
             }
     }
 

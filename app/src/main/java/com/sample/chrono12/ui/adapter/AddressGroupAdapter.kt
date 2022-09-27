@@ -3,8 +3,10 @@ package com.sample.chrono12.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
+import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.databinding.AddressGroupRvItemBinding
 import java.util.*
 
@@ -17,9 +19,6 @@ class AddressGroupAdapter(
     private lateinit var addressGroupList: List<AddressGroupWithAddress>
     private var selectedGroupId: Int = 0
 
-    fun setData(addressGroupList: List<AddressGroupWithAddress>){
-        this.addressGroupList = addressGroupList
-    }
     fun getSelectedGroupId() = selectedGroupId
 
     inner class AddressGroupViewHolder(val binding: AddressGroupRvItemBinding) :
@@ -76,6 +75,38 @@ class AddressGroupAdapter(
 
     interface OnClickDelete {
         fun onClick(addressGroupId: Int)
+    }
+
+    class DiffUtilCallback(private val oldList: List<AddressGroupWithAddress>, private val newList: List<AddressGroupWithAddress>) :
+        DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+            return oldItem.addressGroup.addressGroupId == newItem.addressGroup.addressGroupId
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            val oldItem = oldList[oldItemPosition]
+            val newItem = newList[newItemPosition]
+
+            return oldItem.hashCode() == newItem.hashCode()
+        }
+    }
+
+    fun setData(data: List<AddressGroupWithAddress>) {
+        this.addressGroupList = data
+    }
+
+    fun setNewData(newData: List<AddressGroupWithAddress>) {
+        val diffCallback = DiffUtilCallback(addressGroupList, newData)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        addressGroupList = newData
+        diffResult.dispatchUpdatesTo(this)
     }
 
 }

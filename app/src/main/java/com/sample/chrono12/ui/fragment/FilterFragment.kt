@@ -133,7 +133,7 @@ class FilterFragment : Fragment() {
 
     private fun setDataToFilterValueAdapter(filterValues: HashMap<Int, String>) {
         filterValuesAdapter.setData(filterValues)
-        filterValuesAdapter.setSelectedFilterIds(filterViewModel.appliedFilterIds)
+        filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
         filterValuesAdapter.notifyDataSetChanged()
     }
 
@@ -169,11 +169,11 @@ class FilterFragment : Fragment() {
 
     private fun setupFilterValueAdapter() {
         binding.rvFilterValues.layoutManager = LinearLayoutManager(requireContext())
+        filterViewModel.setSelectedFilterIds(filterViewModel.appliedFilterIds)
         filterValuesAdapter = FilterValuesAdapter{ filterId, isChecked ->
             filterViewModel.addDeleteSelectedFilter(filterId, isChecked)
+            filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
         }
-        filterViewModel.setSelectedFilterIds(filterViewModel.appliedFilterIds)
-        filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)
         binding.rvFilterValues.adapter = filterValuesAdapter
     }
 

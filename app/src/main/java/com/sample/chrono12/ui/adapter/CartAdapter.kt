@@ -69,7 +69,7 @@ class CartAdapter(
 
         fun bindProductQuantity(product: Product, quantity: Int) {
             productQuantity.text = quantity.toString()
-            if (productQuantity.text.toString().toInt() == 1) {
+            if (quantity == 1) {
                 btnQuantityMinus.alpha = 0.7F
                 btnQuantityMinus.isEnabled = false
             }
@@ -81,7 +81,10 @@ class CartAdapter(
                     )
                 ) {
                     productQuantity.text = (currentValue - 1).toString()
-
+                    if(currentValue-1==1){
+                        btnQuantityMinus.alpha = 0.7F
+                        btnQuantityMinus.isEnabled = false
+                    }
                 } else {
                     btnQuantityMinus.alpha = 0.7F
                     btnQuantityMinus.isEnabled = false
@@ -91,10 +94,12 @@ class CartAdapter(
                 val currentValue = productQuantity.text.toString().toInt()
                 if (onQuantityClickListener.onClickPlus(
                         product,
-                        quantity
+                        currentValue
                     )
                 ) {
                     productQuantity.text = (currentValue + 1).toString()
+                    btnQuantityMinus.alpha = 1F
+                    btnQuantityMinus.isEnabled = true
                 }
             }
             productQuantity.setOnClickListener(null)
@@ -156,7 +161,7 @@ class CartAdapter(
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
 
-            return oldItem.hashCode() == newItem.hashCode()
+            return oldItem.cart.cartId == newItem.cart.cartId
         }
     }
 

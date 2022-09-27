@@ -60,7 +60,7 @@
         <entry key="app/src/main/res/layout/categories_rv_item.xml" value="0.375" />
         <entry key="app/src/main/res/layout/filter_rv_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/filter_value_rv_item.xml" value="0.22857142857142856" />
-        <entry key="app/src/main/res/layout/fragment_address.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/fragment_address.xml" value="0.45740740740740743" />
         <entry key="app/src/main/res/layout/fragment_address_group.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_address_group_detail.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.335" />
@@ -68,7 +68,7 @@
         <entry key="app/src/main/res/layout/fragment_delete_search_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.3997406005859375" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_image_slide.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_log_in.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/fragment_new_address.xml" value="0.20614035087719298" />

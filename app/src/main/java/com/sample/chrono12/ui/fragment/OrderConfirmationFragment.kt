@@ -182,6 +182,8 @@ class OrderConfirmationFragment : Fragment() {
     private fun setupAddressAdapter() {
         binding.rvAddress.layoutManager = LinearLayoutManager(requireActivity())
         addressAdapter = AddressAdapter(getOnAddressButtonClickListener(), false, false)
+        addressAdapter.setAddresses(listOf())
+        binding.rvAddress.adapter = addressAdapter
         addressAdapter.setHideEditAndDeleteButton(true)
         if (navArgs.addressId > 0) {
             userViewModel.getAddressGroupWithAddressByAddressId(
@@ -199,11 +201,8 @@ class OrderConfirmationFragment : Fragment() {
                         addressList = addresses.toList()
                     )
                     orderCount = addressGroupWithAddress.addressList.size
-                    with(addressAdapter) {
-                        setData(addressGroupWithAddress)
-                        notifyDataSetChanged()
-                    }
-                    binding.rvAddress.adapter = addressAdapter
+                    addressAdapter.setAddressGroup(addressGroupWithAddress.addressGroup)
+                    addressAdapter.setNewData(addressGroupWithAddress.addressList)
                 }
 
         } else {
@@ -214,11 +213,8 @@ class OrderConfirmationFragment : Fragment() {
                 .observe(viewLifecycleOwner) {
                     addressGroupWithAddress = it
                     orderCount = addressGroupWithAddress.addressList.size
-                    with(addressAdapter) {
-                        setData(it)
-                        notifyDataSetChanged()
-                    }
-                    binding.rvAddress.adapter = addressAdapter
+                    addressAdapter.setAddressGroup(addressGroupWithAddress.addressGroup)
+                    addressAdapter.setNewData(addressGroupWithAddress.addressList)
                 }
         }
     }

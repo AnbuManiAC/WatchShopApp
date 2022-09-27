@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.data.models.SortType.*
@@ -117,6 +115,11 @@ class ProductListFragment : Fragment() {
                     setProductCountTv(it.size)
                     adapter.setNewData(it)
                     linearLayoutManager.scrollToPosition(0)
+                }
+                if(productList.isEmpty()){
+                    binding.clNoDataFound.visibility = View.VISIBLE
+                }else{
+                    binding.clNoDataFound.visibility = View.GONE
                 }
             }
     }

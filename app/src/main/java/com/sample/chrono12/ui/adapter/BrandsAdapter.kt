@@ -1,5 +1,6 @@
 package com.sample.chrono12.ui.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -10,11 +11,9 @@ import com.sample.chrono12.databinding.CategoriesRvItemBinding
 import com.sample.chrono12.utils.ImageUtil
 
 class BrandsAdapter(
+    private var brands: List<ProductBrand>,
     private val onClickListener: OnClickBrand
 ): RecyclerView.Adapter<BrandsAdapter.BrandViewHolder>()  {
-
-    private lateinit var brands: MutableList<ProductBrand>
-
 
     inner class BrandViewHolder(val binding: CategoriesRvItemBinding): RecyclerView.ViewHolder(binding.root){
         private val tvCategoryName = binding.tvCategoryName
@@ -38,6 +37,7 @@ class BrandsAdapter(
 
     override fun onBindViewHolder(holder: BrandViewHolder, position: Int) {
         holder.bind(brands[position])
+        Log.d("Skew","${System.currentTimeMillis()}")
     }
 
     override fun getItemCount(): Int {
@@ -70,15 +70,10 @@ class BrandsAdapter(
         }
     }
 
-    fun setData(data: List<ProductBrand>) {
-        this.brands = data.toMutableList()
-    }
-
     fun setNewData(newData: List<ProductBrand>) {
         val diffCallback = DiffUtilCallback(brands, newData)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        brands.clear()
-        brands.addAll(newData)
+        brands = newData
         diffResult.dispatchUpdatesTo(this)
     }
 }

@@ -69,6 +69,7 @@ object ImageUtil {
                             memoryCache.put(url+imageKey.toString(), bitmap)
                             Log.d("TAG", "Image set from loading url")
                             imageview.setImageBitmap(bitmap)
+                            imageview.setTag(666,true)
                         }
 
                     }

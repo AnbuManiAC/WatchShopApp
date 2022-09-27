@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
@@ -18,10 +19,10 @@ import com.sample.chrono12.databinding.CategoriesRvItemBinding
 import com.sample.chrono12.utils.ImageUtil
 
 class CategoriesAdapter(
+    private var categories: List<SubCategory>,
     private val onClickListener: OnClickCategory
 ): RecyclerView.Adapter<CategoriesAdapter.CategoryViewHolder>()  {
 
-    private lateinit var categories: MutableList<SubCategory>
 
     inner class CategoryViewHolder(val binding: CategoriesRvItemBinding): RecyclerView.ViewHolder(binding.root){
         private val tvCategoryName = binding.tvCategoryName
@@ -32,6 +33,7 @@ class CategoriesAdapter(
             tvCategoryName.text = category.name
 //            ivCategoryImage.load(category.imageUrl)
             ImageUtil.loadImage(category.imageUrl, ivCategoryImage, ImageKey.SMALL)
+//            ivCategoryImage.setImageDrawable(ResourcesCompat.getDrawable(binding.root.resources, R.drawable.ic_load,null))
         }
     }
 
@@ -77,15 +79,11 @@ class CategoriesAdapter(
         }
     }
 
-    fun setData(data: List<SubCategory>) {
-        this.categories = data.toMutableList()
-    }
 
     fun setNewData(newData: List<SubCategory>) {
         val diffCallback = DiffUtilCallback(categories, newData)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
-        categories.clear()
-        categories.addAll(newData)
+        categories = newData
         diffResult.dispatchUpdatesTo(this)
     }
 }

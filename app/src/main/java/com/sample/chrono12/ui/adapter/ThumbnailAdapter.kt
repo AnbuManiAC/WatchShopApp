@@ -1,20 +1,12 @@
 package com.sample.chrono12.ui.adapter
 
-
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.os.AsyncTask
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.ImageThumbnailItemBinding
 import com.sample.chrono12.utils.ImageUtil
-import java.io.InputStream
-import java.net.URL
 
 class ThumbnailAdapter(
     private val imageList: List<String>,

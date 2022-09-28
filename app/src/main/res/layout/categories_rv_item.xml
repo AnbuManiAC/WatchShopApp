@@ -26,7 +26,7 @@
             android:contentDescription="@string/category_image"
             android:foreground="?attr/selectableItemBackground"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_load"
+            android:src="@drawable/image_load"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

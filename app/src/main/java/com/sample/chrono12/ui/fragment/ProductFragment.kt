@@ -131,11 +131,13 @@ class ProductFragment : Fragment() {
     private fun setUpAddToCartButton(isInUserCart: Boolean) {
         if (isInUserCart) {
             with(binding.btnAddToCart) {
+                backgroundTintList = resources.getColorStateList(R.color.goldenYellow, null)
                 icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_goto_cart, null)
                 text = getString(R.string.go_to_cart)
             }
         } else {
             with(binding.btnAddToCart) {
+                backgroundTintList = resources.getColorStateList(R.color.primaryColor, null)
                 icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_add_to_cart, null)
                 text = getString(R.string.add_to_cart)
             }

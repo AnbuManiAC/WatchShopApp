@@ -16,6 +16,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <TextView
             android:id="@+id/tvCategories"
             android:layout_width="match_parent"
@@ -88,14 +98,14 @@
             android:layout_marginStart="@dimen/padding_small"
             android:layout_marginEnd="@dimen/padding_small"
             android:nestedScrollingEnabled="false"
-            app:layout_constraintBottom_toTopOf="@id/tvAllWatches"
+            app:layout_constraintBottom_toTopOf="@id/btnAllWatches"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvTopWatches" />
 
         <Button
-            android:id="@+id/tvAllWatches"
+            android:id="@+id/btnAllWatches"
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,14 +113,16 @@
             android:clickable="true"
             android:focusable="true"
             android:minHeight="48dp"
+            android:textAllCaps="true"
             android:text="Browse All Watches"
+            android:drawableEnd="@drawable/ic_small_right_arrow"
+            android:drawableTint="@color/primaryColor"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             android:textColor="@color/primaryColor"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

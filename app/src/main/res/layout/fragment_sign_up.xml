@@ -167,7 +167,7 @@
             android:layout_height="wrap_content"
             android:text="@string/log_in"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            android:textColor="@color/primaryDarkColor"
+            android:textColor="@color/primaryColor"
             app:layout_constraintBottom_toBottomOf="@id/tv2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

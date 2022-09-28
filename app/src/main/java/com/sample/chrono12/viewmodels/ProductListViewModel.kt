@@ -20,6 +20,8 @@ class ProductListViewModel @Inject constructor(
     private val watchRepository: WatchRepository
 ) : ViewModel() {
 
+    var first = true
+
     private val subCategoryList = MutableLiveData<List<SubCategory>>()
     private val brandList = MutableLiveData<List<ProductBrand>>()
     private val _watchList = MutableLiveData<List<ProductWithBrandAndImages>>()

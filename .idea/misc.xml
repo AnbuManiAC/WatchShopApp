@@ -39,6 +39,7 @@
         <entry key="app/src/main/res/drawable/ic_profile_picture.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_shopping_bag.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_sign_out.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_small_right_arrow.xml" value="0.189" />
         <entry key="app/src/main/res/drawable/ic_undraw_no_data.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/layout_border.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/register_button.xml" value="0.1395" />
@@ -68,8 +69,8 @@
         <entry key="app/src/main/res/layout/fragment_delete_search_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_favorite.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/fragment_image_slide.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_image_slide.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_log_in.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/fragment_new_address.xml" value="0.20614035087719298" />
         <entry key="app/src/main/res/layout/fragment_order_confirmation.xml" value="0.25" />
@@ -85,6 +86,7 @@
         <entry key="app/src/main/res/layout/fragment_sort_dialog.xml" value="0.2859375" />
         <entry key="app/src/main/res/layout/fragment_wishlist.xml" value="0.3129528985507246" />
         <entry key="app/src/main/res/layout/gallery_permission_dialog.xml" value="0.30416666666666664" />
+        <entry key="app/src/main/res/layout/home_test.xml" value="0.25" />
         <entry key="app/src/main/res/layout/image_slider_item.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/layout/image_thumbnail_item.xml" value="0.3541666666666667" />
         <entry key="app/src/main/res/layout/login.xml" value="0.33" />

@@ -117,9 +117,11 @@ class ProductListFragment : Fragment() {
                     linearLayoutManager.scrollToPosition(0)
                 }
                 if(productList.isEmpty()){
-                    binding.clNoDataFound.visibility = View.VISIBLE
+                    binding.tvProductDetail.visibility = View.GONE
+                    binding.ivNoProductFound.visibility = View.VISIBLE
                 }else{
-                    binding.clNoDataFound.visibility = View.GONE
+                    binding.tvProductDetail.visibility = View.VISIBLE
+                    binding.ivNoProductFound.visibility = View.GONE
                 }
             }
     }

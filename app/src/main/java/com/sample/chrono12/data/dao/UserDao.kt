@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.sample.chrono12.data.entities.*
-import com.sample.chrono12.data.entities.relations.*
+import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
+import com.sample.chrono12.data.entities.relations.CartWithProductInfo
+import com.sample.chrono12.data.entities.relations.OrderedProductInfo
+import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
 import com.sample.chrono12.data.models.OrderInfo
-import com.sample.chrono12.data.models.OrderStatus
-import com.sample.chrono12.ui.adapter.AddressAdapter
-import java.io.Flushable
 
 @Dao
 interface UserDao {
@@ -49,7 +49,7 @@ interface UserDao {
     suspend fun isProductInUserWishList(productId: Int, userId: Int): Int
 
     @Transaction
-    @Query("SELECT * FROM WishList WHERE userId = :userId")
+    @Query("SELECT * FROM WishList WHERE userId = :userId ORDER BY wishListId DESC")
     fun getUserWishListItems(userId: Int): LiveData<List<WishListWithProductInfo>>
 
     //User Cart
@@ -63,7 +63,7 @@ interface UserDao {
     suspend fun isProductInUserCart(productId: Int, userId: Int): Int
 
     @Transaction
-    @Query("SELECT * FROM Cart WHERE userId = :userId")
+    @Query("SELECT * FROM Cart WHERE userId = :userId ORDER BY cartId DESC")
     fun getUserCartItems(userId: Int): LiveData<List<CartWithProductInfo>>
 
     @Query("UPDATE Cart SET quantity = :quantity where userId = :userId AND productId = :productId")
@@ -93,7 +93,7 @@ interface UserDao {
     suspend fun isSuggestionPresent(suggestion: String): Int
 
 
-    //Addresss
+    //Address
     @Query("SELECT * FROM AddressGroup WHERE userId =:userId AND groupName =:def")
     fun getUserAddresses(userId: Int, def: String = "default"): LiveData<AddressGroupWithAddress>
 
@@ -119,7 +119,7 @@ interface UserDao {
     fun deleteAddress(addressId: Int)
 
     //Address group
-    @Query("SELECT * FROM AddressGroup WHERE userId =:userId AND groupName!=:def")
+    @Query("SELECT * FROM AddressGroup WHERE userId =:userId AND groupName!=:def ORDER BY addressGroupId DESC")
     fun getAddressGroupWithAddresses(
         userId: Int,
         def: String = "default"
@@ -180,10 +180,10 @@ interface UserDao {
     @Query("select distinct bulkOrderId,orderId,timestamp, sum(actualTotal) as totalPrice, sum(totalPrice) as currentPrice,count() as orderCount,(select count() from ProductOrdered where ProductOrdered.orderId = `Order`.orderId) as productCount from `Order` where userId = :userId and bulkOrderId = :bulkOrderId group by bulkOrderId")
     suspend fun getOrderInfo(bulkOrderId: Int, userId: Int): OrderInfo
 
-    @Query("Select * FROM `Order` where bulkOrderId = :bulkOrderId and userId = :userId")
+    @Query("Select * FROM `Order` where bulkOrderId = :bulkOrderId and userId = :userId ORDER BY orderId ASC")
     suspend fun getOrderDetail(bulkOrderId: Int, userId: Int): List<Order>
 
-    @Query("SELECT * FROM ProductOrdered where orderId = :orderId")
+    @Query("SELECT * FROM ProductOrdered where orderId = :orderId ORDER BY productOrderedId ASC")
     suspend fun getOrderedProductInfo(orderId: Int): List<OrderedProductInfo>
 
     @Query("DELETE FROM SearchSuggestion WHERE userId = :userId")

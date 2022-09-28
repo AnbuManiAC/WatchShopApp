@@ -37,13 +37,13 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var userViewModel: UserViewModel
+    private val mProductListViewModel by lazy { ViewModelProvider(this)[ProductListViewModel::class.java] }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-
         setupSharedPref()
         setupUser()
         bottomNav = binding.bottomNav
@@ -56,6 +56,10 @@ class HomeActivity : AppCompatActivity() {
         appBarConfiguration =
             AppBarConfiguration(setOf(R.id.homeFragment, R.id.cartFragment, R.id.profileFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        mProductListViewModel.setSubCategory()
+        mProductListViewModel.setBrand()
+        mProductListViewModel.setTopRatedWatches(10)
 
     }
 

@@ -61,23 +61,23 @@ class CartFragment : Fragment() {
         loginPromptBinding.ivMissingCart.setImageResource(R.drawable.missing_cart)
         loginPromptBinding.btnLogIn.setOnClickListener {
             Log.d("cart", "In missing cart nav")
-            if(findNavController().currentDestination?.id == R.id.cartFragment)
+            if (findNavController().currentDestination?.id == R.id.cartFragment)
                 findNavController()
-                .navigate(CartFragmentDirections.actionCartFragmentToLogInFragment())
+                    .navigate(CartFragmentDirections.actionCartFragmentToLogInFragment())
         }
         loginPromptBinding.tvContinueShopping.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.cartFragment)
+            if (findNavController().currentDestination?.id == R.id.cartFragment)
                 findNavController()
-                .navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
+                    .navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
         }
     }
 
     private fun setupCart() {
         val adapter = CartAdapter(
             {
-                if(findNavController().currentDestination?.id == R.id.cartFragment)
+                if (findNavController().currentDestination?.id == R.id.cartFragment)
                     findNavController()
-                    .navigate(CartFragmentDirections.actionCartFragmentToProductFragment(it.productId))
+                        .navigate(CartFragmentDirections.actionCartFragmentToProductFragment(it.productId))
             },
             getOnDeleteClickListener(),
             getOnQuantityClickListener()
@@ -86,10 +86,10 @@ class CartFragment : Fragment() {
         fragmentCartBinding.rvCart.layoutManager = LinearLayoutManager(activity)
         fragmentCartBinding.rvCart.adapter = adapter
         fragmentCartBinding.btnPlaceOrder.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.cartFragment)
+            if (findNavController().currentDestination?.id == R.id.cartFragment)
                 findNavController().navigate(
-                CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment()
-            )
+                    CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment()
+                )
         }
         cartViewModel.getTotalCurrentPrice().observe(viewLifecycleOwner) {
             fragmentCartBinding.tvTotalCurrentPrice.text = getString(R.string.price, it)
@@ -102,9 +102,9 @@ class CartFragment : Fragment() {
 
         }
         fragmentCartBinding.btnGoHome.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.cartFragment)
+            if (findNavController().currentDestination?.id == R.id.cartFragment)
                 findNavController()
-                .navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
+                    .navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
         }
         cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) { cartItems ->
@@ -159,12 +159,16 @@ class CartFragment : Fragment() {
                 } else {
                     if (product.stockCount <= quantity) {
                         Snackbar.make(
-                            requireView(),
+                            fragmentCartBinding.snackBarLayout,
                             "Only $quantity units left",
                             Snackbar.LENGTH_SHORT
                         ).show()
                     } else {
-                        Snackbar.make(requireView(), "Max 5 units only", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(
+                            fragmentCartBinding.snackBarLayout,
+                            "Max 5 units only",
+                            Snackbar.LENGTH_SHORT
+                        )
                             .show()
                     }
                     false
@@ -189,12 +193,12 @@ class CartFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.searchFragment -> {
-                if(findNavController().currentDestination?.id == R.id.cartFragment)
+                if (findNavController().currentDestination?.id == R.id.cartFragment)
                     findNavController().navigate(CartFragmentDirections.actionCartFragmentToSearchFragment())
                 true
             }
             R.id.wishlistFragment -> {
-                if(findNavController().currentDestination?.id == R.id.cartFragment)
+                if (findNavController().currentDestination?.id == R.id.cartFragment)
                     findNavController().navigate(CartFragmentDirections.actionCartFragmentToWishlistFragment())
                 true
             }

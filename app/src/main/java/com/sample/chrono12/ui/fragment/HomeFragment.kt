@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
@@ -15,6 +16,8 @@ import com.sample.chrono12.ui.adapter.ProductListAdapter
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -24,33 +27,47 @@ class HomeFragment : Fragment() {
     private val mProductListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         setHasOptionsMenu(true)
-        mProductListViewModel.setSubCategory()
-        mProductListViewModel.setBrand()
-        mProductListViewModel.setTopRatedWatches(10)
         binding = FragmentHomeBinding.inflate(layoutInflater)
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         setupCategoriesAdapter()
         setupBrandsAdapter()
         setupAllWatchesButton()
         setupTopWatchesAdapter()
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(mProductListViewModel.first){
+            lifecycleScope.launch{
+                changeVisibility(View.GONE)
+                binding.progressBar.visibility = View.VISIBLE
+                delay(1000)
+                binding.progressBar.visibility = View.GONE
+                changeVisibility(View.VISIBLE)
+                mProductListViewModel.first = false
+            }
+        }
+    }
+
+    private fun changeVisibility(visibility: Int) {
+        binding.btnAllWatches.visibility = visibility
+        binding.rvCategories.visibility = visibility
+        binding.tvCategories.visibility = visibility
+        binding.rvBrands.visibility = visibility
+        binding.tvBrands.visibility = visibility
+        binding.rvTopWatches.visibility = visibility
+        binding.tvTopWatches.visibility = visibility
     }
 
     private fun setupAllWatchesButton() {
-        binding.tvAllWatches.setOnClickListener {
+        binding.btnAllWatches
+            .setOnClickListener {
             mProductListViewModel.setProductListTitle("All Watches")
             filterViewModel.clearSelectedFilterIds()
             filterViewModel.clearSelectedFilterPosition()

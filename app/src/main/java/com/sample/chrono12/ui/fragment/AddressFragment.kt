@@ -98,7 +98,7 @@ class AddressFragment : Fragment() {
                     addressAdapter.setAddressGroup(addressGroupWithAddress.addressGroup)
                     addressAdapter.setNewData(addressGroupWithAddress.addressList)
                 }
-                if (it.addressList.isEmpty()) {
+                if (it == null || it.addressList.isNullOrEmpty()) {
                     binding.clNoDataFound.visibility = View.VISIBLE
                 } else {
                     binding.clNoDataFound.visibility = View.GONE
@@ -108,10 +108,11 @@ class AddressFragment : Fragment() {
             userViewModel.getUserAddresses(userViewModel.getLoggedInUser().toInt())
                 .observe(viewLifecycleOwner) {
                     it?.let { addressWithAddressGroup ->
+                        binding.rvAddress.visibility = View.VISIBLE
                         addressAdapter.setAddressGroup(addressWithAddressGroup.addressGroup)
                         addressAdapter.setNewData(addressWithAddressGroup.addressList)
                     }
-                    if (it.addressList.isEmpty()) {
+                    if (it == null || it.addressList.isEmpty()) {
                         binding.clNoDataFound.visibility = View.VISIBLE
                         binding.btnSelectAddress.visibility = View.GONE
                     } else {

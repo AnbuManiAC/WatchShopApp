@@ -31,7 +31,7 @@ object ImageUtil {
             Log.d("TAG", "Image set from cache")
         } else {
             CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main) { imageview.setImageResource(R.drawable.ic_load) }
+                withContext(Dispatchers.Main) { imageview.setImageResource(R.drawable.image_load) }
                 val result: Deferred<Bitmap?> = async(Dispatchers.IO) {
                     val imageUrl = URL(url)
 

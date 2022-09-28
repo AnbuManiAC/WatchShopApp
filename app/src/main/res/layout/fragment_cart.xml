@@ -1,151 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.fragment.CartFragment">
 
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvCart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/rvCart"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_price_order"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/layout_price_order"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/ivEmptyCart"
         android:layout_width="200dp"
         android:layout_height="250dp"
-        android:id="@+id/ivEmptyCart"
         android:src="@drawable/ic_empty_cart_svg"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tvEmptyCart"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tvEmptyCart"/>
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
+        android:id="@+id/tvEmptyCart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvEmptyCart"
-        android:textStyle="bold"
         android:layout_margin="@dimen/margin_small"
         android:text="Your Cart is Empty"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/tvEmptyCartDesc"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivEmptyCart"
-        app:layout_constraintBottom_toTopOf="@id/tvEmptyCartDesc"/>
+        app:layout_constraintVertical_bias="0.5" />
 
     <TextView
+        android:id="@+id/tvEmptyCartDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvEmptyCartDesc"
         android:layout_margin="@dimen/margin_small"
-        android:textStyle="bold"
         android:gravity="center"
-        android:textColor="@color/ashGrey"
         android:text="Looks like you haven't added\n anything to your cart yet"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/ashGrey"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/btnGoHome"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvEmptyCart"
-        app:layout_constraintBottom_toTopOf="@id/btnGoHome"/>
+        app:layout_constraintVertical_bias="0.5" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGoHome"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btnGoHome"
-        app:cornerRadius="50dp"
         android:layout_margin="@dimen/margin_small"
-        android:text="Go Home"
-        android:textStyle="bold"
+        android:text="Continue Browsing"
         android:textAllCaps="false"
-        android:textColor="@color/white"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvEmptyCartDesc"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintVertical_bias="0.5" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/snackBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/layout_price_order"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/layout_price_order"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="3dp"
-                android:background="@drawable/shadow_bg"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/divider5"/>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_price_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <View
+            android:id="@+id/divider5"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/shadow_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:textColor="@color/ashBlack"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="@dimen/margin_small"
             android:id="@+id/tvTotalPrice"
-            android:text="Total Price"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvTotalPrice"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:textColor="@color/ashBlack"
-            android:layout_marginBottom="8dp"
             android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="8dp"
+            android:text="Total Price"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+            android:textColor="@color/ashBlack"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/tvTotalCurrentPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginBottom="8dp"
             android:text="2,10,200"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textColor="@color/ashBlack"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvTotalPrice" />
 
         <Button
+            android:id="@+id/btnPlaceOrder"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:text="Place Order"
-            android:id="@+id/btnPlaceOrder"
-            android:textColor="@color/white"
-            android:backgroundTint="@color/green"
             android:layout_margin="4dp"
-            app:layout_constraintStart_toEndOf="@id/guideline3"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="@color/green"
+            android:text="Place Order"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/guideline3"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/divider6"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/guideline3"
-            app:layout_constraintGuide_begin="0dp"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5"/>
+            app:layout_constraintGuide_begin="0dp"
+            app:layout_constraintGuide_percent="0.5" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

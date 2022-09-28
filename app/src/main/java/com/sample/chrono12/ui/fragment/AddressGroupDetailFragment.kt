@@ -108,19 +108,22 @@ class AddressGroupDetailFragment : Fragment() {
             addressGroupId
         ).observe(viewLifecycleOwner) { addressGroupWithAddress ->
             addressGroupWithAddress?.let {
+                val addressIds = mutableListOf<Int>()
+                addressGroupWithAddress.addressList.forEach { address ->
+                    addressIds.add(address.addressId)
+                }
+                userViewModel.setAddressIds(addressIds)
+                adapter.setAddressGroup(addressGroupWithAddress.addressGroup)
+                adapter.setNewData(addressGroupWithAddress.addressList)
                 if (addressGroupWithAddress.addressList.isNotEmpty()) {
                     with(binding.tvAddresses) {
                         visibility = View.VISIBLE
                         text = "Addresses(" + addressGroupWithAddress.addressList.size + ")"
                     }
-                    val addressIds = mutableListOf<Int>()
-                    addressGroupWithAddress.addressList.forEach { address ->
-                        addressIds.add(address.addressId)
-                    }
-                    userViewModel.setAddressIds(addressIds)
-                    adapter.setAddressGroup(addressGroupWithAddress.addressGroup)
-                    adapter.setNewData(addressGroupWithAddress.addressList)
                     binding.rvGroupAddresses.visibility = View.VISIBLE
+                } else{
+                    binding.rvGroupAddresses.visibility = View.GONE
+                    binding.tvAddresses.visibility = View.GONE
                 }
             }
         }
@@ -166,5 +169,4 @@ class AddressGroupDetailFragment : Fragment() {
         userViewModel.clearAddressIds()
         super.onDestroy()
     }
-
 }

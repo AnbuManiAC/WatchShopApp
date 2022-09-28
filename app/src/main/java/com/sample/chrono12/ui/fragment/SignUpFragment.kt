@@ -27,6 +27,7 @@ import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserField.*
 import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.databinding.FragmentSignUpBinding
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
@@ -86,7 +87,10 @@ class SignUpFragment : Fragment() {
                         userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))
                     }
                     if(findNavController().currentDestination?.id == R.id.signUpFragment)
+                    {
                         findNavController().popBackStack(R.id.signUpFragment, true)
+                        (requireActivity() as HomeActivity).enableCartBadge()
+                    }
 
                 }
             }

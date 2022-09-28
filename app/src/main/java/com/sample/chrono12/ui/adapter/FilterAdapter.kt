@@ -3,7 +3,9 @@ package com.sample.chrono12.ui.adapter
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FilterRvItemBinding
 import java.util.*
 
@@ -31,7 +33,7 @@ class FilterAdapter(
                 notifyDataSetChanged()
             }
             if(selectedPosition == position){
-                binding.root.setBackgroundColor(Color.WHITE)
+                binding.root.setBackgroundColor(ResourcesCompat.getColor(binding.root.resources, R.color.filterBackGround, binding.root.context.theme))
             }
             else binding.root.setBackgroundColor(Color.TRANSPARENT)
         }

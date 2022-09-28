@@ -14,6 +14,7 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.databinding.FragmentLogInBinding
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.UserViewModel
 
@@ -48,7 +49,10 @@ class LogInFragment : Fragment() {
 //                    }
                     SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
                     if(findNavController().currentDestination?.id == R.id.logInFragment)
+                    {
                         findNavController().popBackStack(R.id.logInFragment, true)
+                        (requireActivity() as HomeActivity).enableCartBadge()
+                    }
                 }
             }
         }

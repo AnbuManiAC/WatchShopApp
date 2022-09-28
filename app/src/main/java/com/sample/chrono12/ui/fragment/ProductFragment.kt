@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Cart
 import com.sample.chrono12.data.entities.ProductDetail
@@ -43,7 +44,7 @@ class ProductFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
         binding = FragmentProductBinding.inflate(layoutInflater)
         return binding.root
@@ -131,14 +132,15 @@ class ProductFragment : Fragment() {
     private fun setUpAddToCartButton(isInUserCart: Boolean) {
         if (isInUserCart) {
             with(binding.btnAddToCart) {
-                backgroundTintList = resources.getColorStateList(R.color.goldenYellow, null)
-                icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_goto_cart, null)
+                setBackgroundColor(ResourcesCompat.getColor(resources, R.color.buttonColorSelected, requireActivity().theme))
+                icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_goto_cart, requireActivity().theme)
                 text = getString(R.string.go_to_cart)
             }
         } else {
             with(binding.btnAddToCart) {
-                backgroundTintList = resources.getColorStateList(R.color.primaryColor, null)
-                icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_add_to_cart, null)
+                setBackgroundColor(ResourcesCompat.getColor(resources, R.color.buttonColor, requireActivity().theme))
+//                backgroundTintList = ResourcesCompat.getColorStateList(resources, R.color.primaryColor, requireActivity().theme)
+                icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_add_to_cart, requireActivity().theme)
                 text = getString(R.string.add_to_cart)
             }
         }
@@ -150,14 +152,9 @@ class ProductFragment : Fragment() {
         val wishList = WishList(productId = productId, userId = userId)
         if (isChecked) {
             wishListViewModel.addProductToUserWishList(wishList)
-            Toast.makeText(requireContext(), "Added to Wishlist Successfully", Toast.LENGTH_SHORT)
-                .show()
+            Snackbar.make(binding.snackBarLayout, "Product is added to Wishlist", Snackbar.LENGTH_SHORT).show()
         } else {
-            Toast.makeText(
-                requireContext(),
-                "Removed from Wishlist Successfully",
-                Toast.LENGTH_SHORT
-            ).show()
+            Snackbar.make(binding.snackBarLayout, "Product is removed from Wishlist", Snackbar.LENGTH_SHORT).show()
             wishListViewModel.removeProductFromUserWishList(productId, userId)
         }
         productViewModel.setIsProductInUserWishList(isChecked)

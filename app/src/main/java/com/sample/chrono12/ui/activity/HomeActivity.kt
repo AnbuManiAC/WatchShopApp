@@ -1,13 +1,11 @@
 package com.sample.chrono12.ui.activity
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -16,14 +14,13 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.ActivityMainBinding
-import com.sample.chrono12.ui.fragment.FilterFragment
-import com.sample.chrono12.ui.fragment.HomeFragment
 import com.sample.chrono12.utils.ConnectivityObserver
-import com.sample.chrono12.viewmodels.FilterViewModel
+import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,14 +33,16 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var bottomNav: BottomNavigationView
-    private lateinit var userViewModel: UserViewModel
+    private lateinit var badge : BadgeDrawable
+    private val userViewModel by lazy { ViewModelProvider(this)[UserViewModel::class.java] }
     private val mProductListViewModel by lazy { ViewModelProvider(this)[ProductListViewModel::class.java] }
+    private val cartViewModel by lazy { ViewModelProvider(this)[CartViewModel::class.java] }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         setupSharedPref()
         setupUser()
         bottomNav = binding.bottomNav
@@ -60,12 +59,37 @@ class HomeActivity : AppCompatActivity() {
         mProductListViewModel.setSubCategory()
         mProductListViewModel.setBrand()
         mProductListViewModel.setTopRatedWatches(10)
+        enableCartBadge()
+    }
 
+    fun enableCartBadge() {
+        badge = bottomNav.getOrCreateBadge(R.id.cartFragment)
+        badge.backgroundColor = ResourcesCompat.getColor(resources, R.color.badgeColor, theme)
+        badge.badgeTextColor = getColor(R.color.white)
+        if(userViewModel.getIsUserLoggedIn()){
+            cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).observe(this){
+                val cartItemCount = it.size
+                if(cartItemCount>0){
+                    badge.isVisible = true
+                    badge.number = cartItemCount
+                }else{
+                    badge.isVisible = false
+                }
+            }
+        } else{
+            badge.isVisible = false
+        }
+    }
+
+    fun disableCartBadge(){
+        badge.isVisible = false
+        cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).removeObservers(this)
     }
 
     override fun onResume() {
         super.onResume()
         setupNetworkConnectionMonitor()
+
     }
 
     private fun setupNetworkConnectionMonitor() {

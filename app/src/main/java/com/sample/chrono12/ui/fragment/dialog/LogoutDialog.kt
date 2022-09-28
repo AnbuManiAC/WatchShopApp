@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.sample.chrono12.R
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.UserViewModel
 
@@ -35,6 +36,9 @@ class LogoutDialog : DialogFragment() {
         SharedPrefUtil.setUserId(requireActivity(), 0)
         userViewModel.logOutUser()
         if (findNavController().currentDestination?.id == R.id.logoutDialog)
+        {
             findNavController().popBackStack(R.id.homeFragment, false)
+            (requireActivity() as  HomeActivity).disableCartBadge()
+        }
     }
 }

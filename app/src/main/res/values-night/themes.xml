@@ -18,6 +18,14 @@
     </style>
     <color name="ashBlack">#878686</color>
     <color name="ashGrey">#777</color>
+    <color name="badgeColor">#FFBB86FC</color>
+    <color name="backgroundBlueShade">#232323</color>
+    <color name="background">#232323</color>
+    <color name="filterBackGround">#FF000000</color>
+    <color name="buttonColor">#FFBB86FC</color>
+    <color name="buttonColorSelected">#025a44</color>
+    <color name="deleteButtonBackground">#232323</color>
+
 
     <style name="roundedImageViewRounded">
         <item name="cornerFamily">rounded</item>

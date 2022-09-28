@@ -4,8 +4,10 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.relations.OrderedProductInfo
 import com.sample.chrono12.databinding.ProductRvItemBinding
 
@@ -65,6 +67,10 @@ class ProductOrderedAdapter(
             parent,
             false
         )
+        binding.tvItemCurrentPrice.setTextColor(ResourcesCompat.getColor(binding.root.resources, R.color.lightGreen, binding.root.context.theme))
+        binding.rbItemRating.visibility = View.GONE
+        binding.tvItemOriginalPrice.visibility = View.GONE
+        binding.tvItemOffPercent.visibility = View.GONE
         return ProductOrderedViewHolder(binding)
     }
 

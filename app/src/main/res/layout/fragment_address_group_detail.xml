@@ -36,11 +36,11 @@
                 android:id="@+id/btnEditGroupName"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="@color/deleteButtonBackground"
+                app:tint="?attr/colorPrimary"
                 android:checked="false"
                 android:clickable="true"
                 android:focusable="true"
-
                 android:src="@drawable/ic_edit"
                 android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="@id/tvGroupName"

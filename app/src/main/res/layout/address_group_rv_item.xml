@@ -53,6 +53,7 @@
             android:layout_height="0dp"
             android:backgroundTint="@color/backgroundBlueShade"
             android:src="@drawable/ic_delete"
+            app:tint="@color/mattRed"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/rbSelect"

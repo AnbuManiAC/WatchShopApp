@@ -36,7 +36,7 @@
                 android:id="@+id/btnEditGroupName"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:backgroundTint="@color/deleteButtonBackground"
+                android:backgroundTint="@color/editButtonBackground"
                 app:tint="?attr/colorPrimary"
                 android:checked="false"
                 android:clickable="true"

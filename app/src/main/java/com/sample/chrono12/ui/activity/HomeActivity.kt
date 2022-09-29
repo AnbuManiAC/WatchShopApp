@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.ActivityMainBinding
 import com.sample.chrono12.utils.ConnectivityObserver
+import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
@@ -62,30 +63,6 @@ class HomeActivity : AppCompatActivity() {
         enableCartBadge()
     }
 
-    fun enableCartBadge() {
-        badge = bottomNav.getOrCreateBadge(R.id.cartFragment)
-        badge.backgroundColor = ResourcesCompat.getColor(resources, R.color.badgeColor, theme)
-        badge.badgeTextColor = getColor(R.color.white)
-        if(userViewModel.getIsUserLoggedIn()){
-            cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).observe(this){
-                val cartItemCount = it.size
-                if(cartItemCount>0){
-                    badge.isVisible = true
-                    badge.number = cartItemCount
-                }else{
-                    badge.isVisible = false
-                }
-            }
-        } else{
-            badge.isVisible = false
-        }
-    }
-
-    fun disableCartBadge(){
-        badge.isVisible = false
-        cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).removeObservers(this)
-    }
-
     override fun onResume() {
         super.onResume()
         setupNetworkConnectionMonitor()
@@ -112,11 +89,13 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun setupUser() {
-        val sharedPref = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE)
-        val userId = sharedPref?.getLong(getString(R.string.user_id), 0)
-        userId?.let {
-            if (it != 0L) userViewModel.setLoggedInUser(it)
-        }
+//        val sharedPref = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE)
+//        val userId = sharedPref?.getLong(getString(R.string.user_id), 0)
+//        userId?.let {
+//            if (it != 0L) userViewModel.setLoggedInUser(it)
+//        }
+        val userId = SharedPrefUtil.getUserId(this)
+        if(userId != 0L) userViewModel.setLoggedInUser(userId)
     }
 
     private fun onNavDestinationChangedListener() =
@@ -126,7 +105,7 @@ class HomeActivity : AppCompatActivity() {
                 R.id.cartFragment -> showBottomBar()
                 R.id.profileFragment -> showBottomBar()
                 R.id.logoutDialog -> showBottomBar()
-                R.id.deleteSearchHistory -> showBottomBar()
+                R.id.deleteSearchDialog -> showBottomBar()
                 R.id.chooseAddressTypeFragment -> showBottomBar()
                 else -> hideBottomBar()
             }
@@ -152,12 +131,36 @@ class HomeActivity : AppCompatActivity() {
         supportActionBar?.setHomeAsUpIndicator(drawableIcon)
     }
 
+    fun enableCartBadge() {
+        badge = bottomNav.getOrCreateBadge(R.id.cartFragment)
+        badge.backgroundColor = ResourcesCompat.getColor(resources, R.color.badgeColor, theme)
+        badge.badgeTextColor = getColor(R.color.white)
+        if(userViewModel.getIsUserLoggedIn()){
+            cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).observe(this){
+                val cartItemCount = it.size
+                if(cartItemCount>0){
+                    badge.isVisible = true
+                    badge.number = cartItemCount
+                }else{
+                    badge.isVisible = false
+                }
+            }
+        } else{
+            badge.isVisible = false
+        }
+    }
+
+    fun disableCartBadge(){
+        badge.isVisible = false
+        cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt()).removeObservers(this)
+    }
+
     private fun setupSharedPref() {
         val sharedPreference =
             this.getSharedPreferences(getString(R.string.user_pref), Context.MODE_PRIVATE)
         if (sharedPreference.getLong(getString(R.string.user_id), -1) == -1L) {
-            val editor = sharedPreference?.edit()
-            editor?.let { editor ->
+            val sharedPrefEditor = sharedPreference?.edit()
+            sharedPrefEditor?.let { editor ->
                 editor.putLong(getString(R.string.user_id), 0)
                 editor.putInt(getString(R.string.bulk_order_id), 0)
                 editor.putInt(getString(R.string.notification_id), 0)

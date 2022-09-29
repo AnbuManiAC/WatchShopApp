@@ -226,10 +226,13 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
             userDao.deleteCartItems(userId)
         }
 
-    suspend fun getOrderDetail(bulkOrderId: Int, userId: Int): List<Order> =
-        withContext(Dispatchers.IO) {
+//    suspend fun getOrderDetail(bulkOrderId: Int, userId: Int): List<Order> =
+//        withContext(Dispatchers.IO) {
+//            userDao.getOrderDetail(bulkOrderId, userId)
+//        }
+
+    fun getOrderDetail(bulkOrderId: Int, userId: Int): LiveData<List<Order>> =
             userDao.getOrderDetail(bulkOrderId, userId)
-        }
 
     suspend fun getOrderedProductInfo(orderId: Int): List<OrderedProductInfo> =
         withContext(Dispatchers.IO) {

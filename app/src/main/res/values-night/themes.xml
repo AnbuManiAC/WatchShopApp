@@ -25,7 +25,7 @@
     <color name="buttonColor">#FFBB86FC</color>
     <color name="buttonColorSelected">#025a44</color>
     <color name="deleteButtonBackground">#232323</color>
-
+    <color name="editButtonBackground">#121212</color>
 
     <style name="roundedImageViewRounded">
         <item name="cornerFamily">rounded</item>

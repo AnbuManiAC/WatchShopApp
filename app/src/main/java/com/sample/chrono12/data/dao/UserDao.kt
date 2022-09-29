@@ -180,8 +180,11 @@ interface UserDao {
     @Query("select distinct bulkOrderId,orderId,timestamp, sum(actualTotal) as totalPrice, sum(totalPrice) as currentPrice,count() as orderCount,(select count() from ProductOrdered where ProductOrdered.orderId = `Order`.orderId) as productCount from `Order` where userId = :userId and bulkOrderId = :bulkOrderId group by bulkOrderId")
     suspend fun getOrderInfo(bulkOrderId: Int, userId: Int): OrderInfo
 
+//    @Query("Select * FROM `Order` where bulkOrderId = :bulkOrderId and userId = :userId ORDER BY orderId ASC")
+//    suspend fun getOrderDetail(bulkOrderId: Int, userId: Int): List<Order>
+
     @Query("Select * FROM `Order` where bulkOrderId = :bulkOrderId and userId = :userId ORDER BY orderId ASC")
-    suspend fun getOrderDetail(bulkOrderId: Int, userId: Int): List<Order>
+    fun getOrderDetail(bulkOrderId: Int, userId: Int): LiveData<List<Order>>
 
     @Query("SELECT * FROM ProductOrdered where orderId = :orderId ORDER BY productOrderedId ASC")
     suspend fun getOrderedProductInfo(orderId: Int): List<OrderedProductInfo>

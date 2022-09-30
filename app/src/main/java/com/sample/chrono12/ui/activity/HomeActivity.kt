@@ -22,6 +22,7 @@ import com.sample.chrono12.databinding.ActivityMainBinding
 import com.sample.chrono12.utils.ConnectivityObserver
 import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.CartViewModel
+import com.sample.chrono12.viewmodels.ConnectivityViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +39,7 @@ class HomeActivity : AppCompatActivity() {
     private val userViewModel by lazy { ViewModelProvider(this)[UserViewModel::class.java] }
     private val mProductListViewModel by lazy { ViewModelProvider(this)[ProductListViewModel::class.java] }
     private val cartViewModel by lazy { ViewModelProvider(this)[CartViewModel::class.java] }
+    private val connectivityViewModel by lazy { ViewModelProvider(this)[ConnectivityViewModel::class.java] }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,23 +68,35 @@ class HomeActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         setupNetworkConnectionMonitor()
-
     }
 
     private fun setupNetworkConnectionMonitor() {
-        val connectionLiveData = ConnectivityObserver(this)
-        connectionLiveData.observe(this) { hasInternet ->
-            if (hasInternet) {
-                Snackbar.make(
+//        val connectionLiveData = ConnectivityObserver(this)
+//        connectionLiveData.observe(this) { hasInternet ->
+//            if (hasInternet) {
+//                Snackbar.make(
+//                    findViewById(R.id.snackBarLayout),
+//                    R.string.internet_is_back, Snackbar.LENGTH_SHORT
+//                ).show()
+//            }
+//            else {
+//                Snackbar.make(
+//                    findViewById(R.id.snackBarLayout),
+//                    R.string.no_internet, Snackbar.LENGTH_LONG
+//                ).show()
+//            }
+//        }
+        connectivityViewModel.networkState.observe(this){ hasInternet ->
+            if (!hasInternet) {
+                val snackBar = Snackbar.make(
                     findViewById(R.id.snackBarLayout),
-                    R.string.internet_is_back, Snackbar.LENGTH_SHORT
-                ).show()
-            }
-            else {
-                Snackbar.make(
-                    findViewById(R.id.snackBarLayout),
-                    R.string.no_internet, Snackbar.LENGTH_LONG
-                ).show()
+                    R.string.no_internet, Snackbar.LENGTH_INDEFINITE
+                )
+                snackBar.setAction("Okay"){
+                    snackBar.dismiss()
+                }
+                snackBar.show()
+                connectivityViewModel.setNetWorkState(true)
             }
         }
     }

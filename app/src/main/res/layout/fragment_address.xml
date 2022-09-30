@@ -66,12 +66,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tvEmptyCart"/>
+            app:layout_constraintBottom_toTopOf="@id/tvEmptyAddress"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvEmptyCart"
+            android:id="@+id/tvEmptyAddress"
             android:layout_margin="@dimen/margin_small"
             android:text="No Address Found"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
@@ -79,12 +79,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivEmptyAddress"
-            app:layout_constraintBottom_toTopOf="@id/tvEmptyCartDesc"/>
+            app:layout_constraintBottom_toTopOf="@id/tvEmptyAddressDesc"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvEmptyCartDesc"
+            android:id="@+id/tvEmptyAddressDesc"
             android:layout_margin="@dimen/margin_small"
             android:textStyle="bold"
             android:gravity="center"
@@ -94,7 +94,7 @@
             app:layout_constraintVertical_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvEmptyCart"
+            app:layout_constraintTop_toBottomOf="@id/tvEmptyAddress"
             app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -36,15 +36,6 @@ class LogInFragment : Fragment() {
             field?.let {
                 deliverFieldMessage(it)
                 if (field.response == Response.SUCCESS) {
-//                    val sharedPref = requireActivity().getSharedPreferences(
-//                        getString(R.string.user_pref),
-//                        Context.MODE_PRIVATE
-//                    )
-//                    val editor = sharedPref?.edit()
-//                    editor?.let {
-//                        editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
-//                        editor.apply()
-//                    }
                     SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
                     if(findNavController().currentDestination?.id == R.id.logInFragment)
                     {

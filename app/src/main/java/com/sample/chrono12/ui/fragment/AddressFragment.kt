@@ -3,9 +3,11 @@ package com.sample.chrono12.ui.fragment
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,18 +24,19 @@ class AddressFragment : Fragment() {
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private val navArgs by navArgs<AddressFragmentArgs>()
     private lateinit var addressAdapter: AddressAdapter
+    private var showMenu = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        setHasOptionsMenu(true)
         binding = FragmentAddressBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupMenu()
         if (navArgs.addFromExisting) {
             binding.fabAddAddress.visibility = View.GONE
         } else {
@@ -97,11 +100,22 @@ class AddressFragment : Fragment() {
                     )
                     addressAdapter.setAddressGroup(addressGroupWithAddress.addressGroup)
                     addressAdapter.setNewData(addressGroupWithAddress.addressList)
+                    if (addressGroupWithAddress.addressList.isEmpty()) {
+                        if(it.addressList.isEmpty()){
+                            binding.tvEmptyAddressDesc.text = resources.getString(R.string.no_address_found)
+                        }
+                        else{
+                            binding.tvEmptyAddressDesc.text = resources.getString(R.string.all_address_added)
+                        }
+                        binding.clNoDataFound.visibility = View.VISIBLE
+                        showMenu = false
+                        (requireActivity() as MenuHost).invalidateMenu()
+                    } else {
+                        binding.clNoDataFound.visibility = View.GONE
+                    }
                 }
-                if (it == null || it.addressList.isNullOrEmpty()) {
+                if (it == null || it.addressList.isEmpty()) {
                     binding.clNoDataFound.visibility = View.VISIBLE
-                } else {
-                    binding.clNoDataFound.visibility = View.GONE
                 }
             }
         } else {
@@ -170,21 +184,24 @@ class AddressFragment : Fragment() {
 
         }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (navArgs.addFromExisting) inflater.inflate(R.menu.done_menu, menu)
-    }
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.done) {
-            addressAdapter.getSelectedIds().forEach {
-                userViewModel.insertIntoAddressAndGroupCrossRef(it, navArgs.addressGroupName)
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                if (navArgs.addFromExisting && showMenu) menuInflater.inflate(R.menu.done_menu, menu)
             }
-            if (findNavController().currentDestination?.id == R.id.addressFragment) findNavController().navigateUp()
-//            findNavController().navigate(AddressFragmentDirections.actionAddressFragmentToAddressGroupDetailFragment(addressGroupId = navArgs.addressGroupId, addressGroupName = navArgs.addressGroupName))
-            return true
-        }
-        return super.onOptionsItemSelected(item)
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.done) {
+                    addressAdapter.getSelectedIds().forEach {
+                        userViewModel.insertIntoAddressAndGroupCrossRef(it, navArgs.addressGroupName)
+                    }
+                    if (findNavController().currentDestination?.id == R.id.addressFragment) findNavController().navigateUp()
+                    return true
+                }
+                return false
+            }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
-
-
 }

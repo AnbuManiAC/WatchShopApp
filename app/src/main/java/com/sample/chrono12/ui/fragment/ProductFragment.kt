@@ -2,11 +2,12 @@ package com.sample.chrono12.ui.fragment
 
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -45,14 +46,13 @@ class ProductFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        setHasOptionsMenu(true)
         binding = FragmentProductBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setupMenu()
         productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
 
         productViewModel.setProduct(navArgs.productId)
@@ -103,10 +103,24 @@ class ProductFragment : Fragment() {
                 editUserWishList(isChecked)
             } else {
                 button.isChecked = false
-                Toast.makeText(requireContext(), "Login to add to wishlist", Toast.LENGTH_SHORT)
-                    .show()
+                showLogInSnackBar()
             }
         }
+    }
+
+    private fun showLogInSnackBar() {
+        val snackBar = Snackbar.make(binding.snackBarLayout, getString(R.string.you_are_not_logged_in), Snackbar.LENGTH_LONG)
+        snackBar.setAction(getString(R.string.log_in)){
+            if(findNavController().currentDestination?.id == R.id.productFragment){
+                findNavController().navigate(ProductFragmentDirections.actionProductFragmentToLogInFragment())
+            }
+        }
+        snackBar.show()
+    }
+
+    private fun showWishListSnackBar(message: String) {
+        val snackBar = Snackbar.make(binding.snackBarLayout, message, Snackbar.LENGTH_LONG)
+        snackBar.show()
     }
 
     private fun setUpAddToCartButtonListener(isInUserCart: Boolean) {
@@ -124,7 +138,7 @@ class ProductFragment : Fragment() {
                     productViewModel.setIsProductInUserCart(!isInUserCart)
                 }
             } else {
-                Toast.makeText(requireContext(), "Login to add to cart", Toast.LENGTH_SHORT).show()
+                showLogInSnackBar()
             }
         }
     }
@@ -139,7 +153,6 @@ class ProductFragment : Fragment() {
         } else {
             with(binding.btnAddToCart) {
                 setBackgroundColor(ResourcesCompat.getColor(resources, R.color.buttonColor, requireActivity().theme))
-//                backgroundTintList = ResourcesCompat.getColorStateList(resources, R.color.primaryColor, requireActivity().theme)
                 icon = ResourcesCompat.getDrawable(resources, R.drawable.ic_add_to_cart, requireActivity().theme)
                 text = getString(R.string.add_to_cart)
             }
@@ -152,9 +165,9 @@ class ProductFragment : Fragment() {
         val wishList = WishList(productId = productId, userId = userId)
         if (isChecked) {
             wishListViewModel.addProductToUserWishList(wishList)
-            Snackbar.make(binding.snackBarLayout, "Product is added to Wishlist", Snackbar.LENGTH_SHORT).show()
+            showWishListSnackBar(getString(R.string.product_is_added_to_wishlist))
         } else {
-            Snackbar.make(binding.snackBarLayout, "Product is removed from Wishlist", Snackbar.LENGTH_SHORT).show()
+            showWishListSnackBar(getString(R.string.product_is_removed_from_wishlist))
             wishListViewModel.removeProductFromUserWishList(productId, userId)
         }
         productViewModel.setIsProductInUserWishList(isChecked)
@@ -164,26 +177,26 @@ class ProductFragment : Fragment() {
     private fun setProductInfo(productWithBrand: ProductWithBrand) {
         binding.tvProductName.text = productWithBrand.product.name
         binding.tvBrandName.text = productWithBrand.brand.brandName
-        binding.tvCurrentPrice.text = "₹" + productWithBrand.product.currentPrice.toInt().toString()
-        binding.rbRating.rating = productWithBrand.product.totalRating!!
+        binding.tvCurrentPrice.text = getString(R.string.price, productWithBrand.product.currentPrice.toInt())
+        binding.rbRating.rating = productWithBrand.product.totalRating
         if (productWithBrand.product.originalPrice == productWithBrand.product.currentPrice) {
             binding.tvOriginalPrice.visibility = View.GONE
             binding.tvOffPercent.visibility = View.GONE
         } else {
             binding.tvOriginalPrice.apply {
-                text = "₹" + productWithBrand.product.originalPrice.toInt().toString()
+                text = getString(R.string.price, productWithBrand.product.originalPrice.toInt())
                 paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             }
             binding.tvOffPercent.text =
-                "${((productWithBrand.product.originalPrice - productWithBrand.product.currentPrice) / productWithBrand.product.originalPrice * 100).toInt()}% Off"
+                getString(R.string.offer_percentage, ((productWithBrand.product.originalPrice - productWithBrand.product.currentPrice) / productWithBrand.product.originalPrice * 100).toInt())
         }
         if (productWithBrand.product.stockCount <= 10) {
             binding.tvStockAlert.apply {
                 if (productWithBrand.product.stockCount == 0) {
-                    text = "Currently out of stock"
+                    text = getString(R.string.out_of_stock)
                     binding.btnAddToCart.visibility = View.GONE
                 } else {
-                    text = "Only ${productWithBrand.product.stockCount} left in stock - Order soon."
+                    text = getString(R.string.order_soon, productWithBrand.product.stockCount)
                 }
                 visibility = View.VISIBLE
             }
@@ -215,37 +228,40 @@ class ProductFragment : Fragment() {
 
     private fun setupProductDetailAdapter(productDetailList: List<ProductDetail>) {
         val adapter = ProductDetailsAdapter(productDetailList)
-        productDetailList.forEach {
-            Log.d("Detail", "${it.title} -> ${it.content}")
-        }
+
         binding.rvProductDetails.adapter = adapter
         binding.rvProductDetails.layoutManager = LinearLayoutManager(activity)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_wishlist_cart_menu, menu)
-    }
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.searchFragment -> {
-                if (findNavController().currentDestination?.id == R.id.productFragment)
-                    findNavController().navigate(ProductFragmentDirections.actionProductFragmentToSearchFragment())
-                true
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.search_wishlist_cart_menu, menu)
             }
-            R.id.wishlistFragment -> {
-                if (findNavController().currentDestination?.id == R.id.productFragment)
-                    findNavController().navigate(ProductFragmentDirections.actionProductFragmentToWishlistFragment())
-                true
-            }
-            R.id.cartFragment -> {
-                if (findNavController().currentDestination?.id == R.id.productFragment)
-                    findNavController().navigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
 
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.searchFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.productFragment)
+                            findNavController().navigate(ProductFragmentDirections.actionProductFragmentToSearchFragment())
+                        true
+                    }
+                    R.id.wishlistFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.productFragment)
+                            findNavController().navigate(ProductFragmentDirections.actionProductFragmentToWishlistFragment())
+                        true
+                    }
+                    R.id.cartFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.productFragment)
+                            findNavController().navigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
 }

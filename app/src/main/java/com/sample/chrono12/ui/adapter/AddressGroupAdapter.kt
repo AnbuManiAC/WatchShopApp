@@ -3,12 +3,11 @@ package com.sample.chrono12.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
-import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.databinding.AddressGroupRvItemBinding
-import java.util.*
 
 class AddressGroupAdapter(
     private val onGroupClick: OnClickAddressGroup,
@@ -35,8 +34,14 @@ class AddressGroupAdapter(
                 binding.rbSelect.visibility = View.VISIBLE
                 val groupId = addressGroupWithAddress.addressGroup.addressGroupId
                 binding.rbSelect.setOnClickListener {
-                    selectedGroupId = groupId
-                    notifyDataSetChanged()
+                    if(addressGroupWithAddress.addressList.isEmpty()){
+                        Toast.makeText(binding.root.context, "Address group empty", Toast.LENGTH_SHORT).show()
+                        notifyDataSetChanged()
+                    }
+                    else{
+                        selectedGroupId = groupId
+                        notifyDataSetChanged()
+                    }
                 }
                 binding.rbSelect.isChecked = selectedGroupId == groupId
             } else {

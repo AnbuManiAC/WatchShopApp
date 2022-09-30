@@ -166,7 +166,6 @@ class AddressGroupDetailFragment : Fragment() {
 
     override fun onDestroy() {
         userViewModel.clearAddressGroupId()
-        userViewModel.clearAddressIds()
         super.onDestroy()
     }
 }

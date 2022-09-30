@@ -32,7 +32,7 @@ class OrderHistoryAdapter(
             else
                 tvOrderId.text = binding.root.context.getString(R.string.order_id,order.orderId)
             tvOrderDateTime.text = binding.root.context.getString(R.string.date_time,DateUtil.getDateAndTime(order.timestamp))
-            tvOrderPrice.text = binding.root.context.getString(R.string.total_price,order.totalPrice)
+            tvOrderPrice.text = binding.root.context.getString(R.string.total_price,order.currentPrice)
             tvNumOfProducts.text = binding.root.context.getString(R.string.no_of_products,order.productCount)
             binding.root.setOnClickListener { onOrderClickListener.onClick(order.bulkOrderId, order.orderId) }
         }

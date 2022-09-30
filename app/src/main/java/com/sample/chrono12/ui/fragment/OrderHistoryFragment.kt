@@ -1,18 +1,14 @@
 package com.sample.chrono12.ui.fragment
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.room.Index
 import com.sample.chrono12.R
-import com.sample.chrono12.databinding.FragmentOrderConfirmationBinding
 import com.sample.chrono12.databinding.FragmentOrderHistoryBinding
 import com.sample.chrono12.ui.adapter.OrderHistoryAdapter
 import com.sample.chrono12.viewmodels.OrderViewModel
@@ -27,7 +23,7 @@ class OrderHistoryFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentOrderHistoryBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -67,5 +63,4 @@ class OrderHistoryFragment : Fragment() {
             )
         }
     }
-
 }

@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Chrono12</string>
 
-    //Signup
     <string name="name">Name</string>
     <string name="email">Email</string>
     <string name="mobile_number">Mobile Number</string>
@@ -9,6 +8,7 @@
     <string name="confirm_password">Confirm Password</string>
     <string name="already_have_an_account">"Already have an account? "</string>
     <string name="log_in">Log In</string>
+    <string name="you_are_not_logged_in">You are not logged in</string>
     <string name="don_t_have_an_account">"Don\'t have an account? "</string>
     <string name="sign_up">Sign Up</string>
     <string name="submit">Submit</string>
@@ -63,14 +63,22 @@
     <string name="cancel">Cancel</string>
     <string name="go_to_settings">Go To Settings</string>
     <string name="to_use_this_feature_you_need_to_allow_chrono12_to_access_your_storage_you_can_update_this_permission_in_settings">To use this feature, you need to allow Chrono12 to access your STORAGE. You can update this permission in Settings</string>
-    <string name="no_internet">No Internet Connection. Images may not load properly.</string>
+    <string name="no_internet">No Internet Connection. Product images may not load properly.</string>
     <string name="internet_is_back">Internet Connection Available. Images will be loaded soon.</string>
     <string name="okay">Okay</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
     <string name="address_group">Address Group</string>
     <string name="edit_group_name">Edit Group Name</string>
+    <string name="all_address_added">Looks like you have\n added all existing addresses\n to this group</string>
+    <string name="no_address_found">Looks like you haven\'t\n added any address yet</string>
+    <string name="out_of_stock">Currently out of stock</string>
+    <string name="order_soon">Only %d left in stock - Order soon.</string>
+    <string name="offer_percentage">%d Off</string>
+    <string name="product_is_added_to_wishlist">Product is added to Wishlist</string>
+    <string name="product_is_removed_from_wishlist">Product is removed from Wishlist</string>
 
+    //Indian states
     <string-array name="india_states">
         <item>Andaman and Nicobar Islands</item>
         <item>Andhra Pradesh</item>

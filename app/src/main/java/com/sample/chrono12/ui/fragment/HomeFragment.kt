@@ -3,7 +3,10 @@ package com.sample.chrono12.ui.fragment
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,7 +26,7 @@ import kotlinx.coroutines.launch
 class HomeFragment : Fragment() {
 
 
-    lateinit var binding: FragmentHomeBinding
+    private lateinit var binding: FragmentHomeBinding
     private val mProductListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
 
@@ -32,13 +35,17 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        setHasOptionsMenu(true)
         binding = FragmentHomeBinding.inflate(layoutInflater)
         setupCategoriesAdapter()
         setupBrandsAdapter()
         setupAllWatchesButton()
         setupTopWatchesAdapter()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupMenu()
     }
 
     override fun onResume() {
@@ -151,26 +158,31 @@ class HomeFragment : Fragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_wishlist_menu, menu)
-    }
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider{
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.searchFragment -> {
-                mProductListViewModel.setSearchText("")
-                if (findNavController().currentDestination?.id == R.id.homeFragment)
-                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
-                true
-            }
-            R.id.wishlistFragment -> {
-                if (findNavController().currentDestination?.id == R.id.homeFragment)
-                    findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToWishlistFragment())
-                true
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.search_wishlist_menu, menu)
             }
 
-            else -> super.onOptionsItemSelected(item)
-        }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.searchFragment -> {
+                        mProductListViewModel.setSearchText("")
+                        if (findNavController().currentDestination?.id == R.id.homeFragment)
+                            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
+                        true
+                    }
+                    R.id.wishlistFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.homeFragment)
+                            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToWishlistFragment())
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private val brands = hashMapOf(

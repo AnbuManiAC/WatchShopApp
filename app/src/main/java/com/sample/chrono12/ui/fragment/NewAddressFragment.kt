@@ -4,7 +4,10 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ArrayAdapter
 import androidx.core.text.isDigitsOnly
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -24,7 +27,6 @@ class NewAddressFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
         if (navArgs.addressId > 0)
             userViewModel.setAddress(navArgs.addressId)
         binding = FragmentNewAddressBinding.inflate(layoutInflater)
@@ -33,6 +35,7 @@ class NewAddressFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupMenu()
         setUpFocusChangeListeners()
         if (navArgs.addressId > 0) {
             (requireActivity() as HomeActivity).setActionBarTitle("Address")
@@ -49,7 +52,7 @@ class NewAddressFragment : Fragment() {
                     tilEtMobile.setText(address.contactNumber.toString())
                 }
             }
-        }else{
+        } else {
             (requireActivity() as HomeActivity).setActionBarTitle("New Address")
         }
         setupStatesDropDownAdapter()
@@ -88,7 +91,9 @@ class NewAddressFragment : Fragment() {
 
     private fun mobileCheck(): Boolean {
         val mobile = binding.tilEtMobile.text.toString()
-        if ( !mobile.isDigitsOnly() || mobile.length!=10 || mobile.first().toString().toInt() !in listOf(6,7,8,9)){
+        if (!mobile.isDigitsOnly() || mobile.length != 10 || mobile.first().toString()
+                .toInt() !in listOf(6, 7, 8, 9)
+        ) {
             val mobileInfo = getString(R.string.not_a_mobile)
             binding.tilMobile.error = mobileInfo
             return false
@@ -208,27 +213,31 @@ class NewAddressFragment : Fragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.done_menu, menu)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        (requireActivity() as HomeActivity).setBackButtonAs(R.drawable.ic_close)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.done) {
-            cancelErrors()
-            clearFocus()
-            if (checkInput()) {
-                addUserAddress()
-                if(findNavController().currentDestination?.id == R.id.newAddressFragment)
-                    findNavController().navigateUp()
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onPrepareMenu(menu: Menu) {
+                super.onPrepareMenu(menu)
+                (requireActivity() as HomeActivity).setBackButtonAs(R.drawable.ic_close)
             }
-            return true
-        }
-        return super.onOptionsItemSelected(item)
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.done_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.done) {
+                    cancelErrors()
+                    clearFocus()
+                    if (checkInput()) {
+                        addUserAddress()
+                        if (findNavController().currentDestination?.id == R.id.newAddressFragment)
+                            findNavController().navigateUp()
+                    }
+                    return true
+                }
+                return false
+            }
+        },viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onPause() {

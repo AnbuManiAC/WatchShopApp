@@ -2,7 +2,10 @@ package com.sample.chrono12.ui.fragment
 
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -41,7 +44,6 @@ class ProductListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        setHasOptionsMenu(true)
         (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
         binding = FragmentProductListBinding.inflate(layoutInflater)
         return binding.root
@@ -49,7 +51,7 @@ class ProductListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        setupMenu()
         setupProductListAdapter()
         setupSortButtonListener()
         setupFilterButtonListener()
@@ -116,10 +118,10 @@ class ProductListFragment : Fragment() {
                     adapter.setNewData(it)
                     linearLayoutManager.scrollToPosition(0)
                 }
-                if(productList.isEmpty()){
+                if (productList.isEmpty()) {
                     binding.tvProductDetail.visibility = View.GONE
                     binding.ivNoProductFound.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.tvProductDetail.visibility = View.VISIBLE
                     binding.ivNoProductFound.visibility = View.GONE
                 }
@@ -136,27 +138,31 @@ class ProductListFragment : Fragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_wishlist_menu, menu)
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.wishlistFragment -> {
-                if (findNavController().currentDestination?.id == R.id.productListFragment)
-                    findNavController()
-                        .navigate(ProductListFragmentDirections.actionProductListFragmentToWishlistFragment())
-                true
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.search_wishlist_menu, menu)
             }
-            R.id.searchFragment -> {
-                if (findNavController().currentDestination?.id == R.id.productListFragment)
-                    findNavController()
-                        .navigate(ProductListFragmentDirections.actionProductListFragmentToSearchFragment())
-                true
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.wishlistFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.productListFragment)
+                            findNavController()
+                                .navigate(ProductListFragmentDirections.actionProductListFragmentToWishlistFragment())
+                        true
+                    }
+                    R.id.searchFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.productListFragment)
+                            findNavController()
+                                .navigate(ProductListFragmentDirections.actionProductListFragmentToSearchFragment())
+                        true
+                    }
+                    else -> false
+                }
             }
-            else -> super.onOptionsItemSelected(item)
-        }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
 }

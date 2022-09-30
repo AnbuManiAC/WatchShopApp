@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.widget.WithHint
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -45,9 +48,8 @@ class WishListFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
-        setHasOptionsMenu(true)
         return if (isUserLoggedIn) {
             fragmentWishListBinding = FragmentWishlistBinding.inflate(layoutInflater)
             fragmentWishListBinding.root
@@ -59,6 +61,7 @@ class WishListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupMenu()
         if (isUserLoggedIn) {
             setupWishList()
         } else {
@@ -191,25 +194,28 @@ class WishListFragment : Fragment() {
             }
         }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_cart_menu, menu)
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.searchFragment -> {
-                if (findNavController().currentDestination?.id == R.id.wishlistFragment)
-                    findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToSearchFragment())
-                true
+    private fun setupMenu(){
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.search_cart_menu, menu)
             }
-            R.id.cartFragment -> {
-                if (findNavController().currentDestination?.id == R.id.wishlistFragment)
-                    findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
 
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.searchFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.wishlistFragment)
+                            findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToSearchFragment())
+                        true
+                    }
+                    R.id.cartFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.wishlistFragment)
+                            findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
+                        true
+                    }
+                    else -> false
+                }            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
 }

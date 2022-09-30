@@ -5,9 +5,11 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
@@ -18,7 +20,6 @@ import com.sample.chrono12.databinding.LoginPromptCartWishlistDialogBinding
 import com.sample.chrono12.ui.adapter.CartAdapter
 import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
-import kotlinx.coroutines.awaitAll
 
 class CartFragment : Fragment() {
 
@@ -32,7 +33,6 @@ class CartFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        setHasOptionsMenu(true)
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
         return if (isUserLoggedIn) {
             fragmentCartBinding = FragmentCartBinding.inflate(layoutInflater)
@@ -43,12 +43,10 @@ class CartFragment : Fragment() {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_wishlist_menu, menu)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupMenu()
         if (isUserLoggedIn) {
             setupCart()
         } else {
@@ -190,21 +188,29 @@ class CartFragment : Fragment() {
 
         }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.searchFragment -> {
-                if (findNavController().currentDestination?.id == R.id.cartFragment)
-                    findNavController().navigate(CartFragmentDirections.actionCartFragmentToSearchFragment())
-                true
-            }
-            R.id.wishlistFragment -> {
-                if (findNavController().currentDestination?.id == R.id.cartFragment)
-                    findNavController().navigate(CartFragmentDirections.actionCartFragmentToWishlistFragment())
-                true
+    private fun setupMenu(){
+        (requireActivity() as MenuHost).addMenuProvider(object: MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.search_wishlist_menu, menu)
             }
 
-            else -> super.onOptionsItemSelected(item)
-        }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.searchFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.cartFragment)
+                            findNavController().navigate(CartFragmentDirections.actionCartFragmentToSearchFragment())
+                        true
+                    }
+                    R.id.wishlistFragment -> {
+                        if (findNavController().currentDestination?.id == R.id.cartFragment)
+                            findNavController().navigate(CartFragmentDirections.actionCartFragmentToWishlistFragment())
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
-
 }

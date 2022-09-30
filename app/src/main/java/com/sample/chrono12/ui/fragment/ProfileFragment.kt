@@ -15,7 +15,10 @@ import android.util.Log
 import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -39,7 +42,6 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        setHasOptionsMenu(true)
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
         return if (isUserLoggedIn) {
             bindingProfile = FragmentProfileBinding.inflate(layoutInflater)
@@ -53,6 +55,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupMenu()
         if (isUserLoggedIn) {
             setupProfile()
             setupProfilePicture()
@@ -63,12 +66,12 @@ class ProfileFragment : Fragment() {
 
     private fun setupProfilePicture() {
         bindingProfile.btnProfilePicture.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.profileFragment)
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
                 findNavController().navigate(
-                ProfileFragmentDirections.actionProfileFragmentToProfilePictureDialog(
-                    hasProfilePicture
+                    ProfileFragmentDirections.actionProfileFragmentToProfilePictureDialog(
+                        hasProfilePicture
+                    )
                 )
-            )
         }
         userViewModel.getProfileSettingAction().observe(viewLifecycleOwner) { action ->
             when (action) {
@@ -195,37 +198,23 @@ class ProfileFragment : Fragment() {
         }
 
         bindingProfile.signOut.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.profileFragment)
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
                 findNavController()
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
         }
     }
 
     private fun setupLoginPrompt() {
         bindingLoginPrompt.btnLogIn.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.profileFragment)
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
                 findNavController()
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToLogInFragment())
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToLogInFragment())
         }
         bindingLoginPrompt.toSignup.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.profileFragment)
+            if (findNavController().currentDestination?.id == R.id.profileFragment)
                 findNavController()
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToSignUpFragment())
+                    .navigate(ProfileFragmentDirections.actionProfileFragmentToSignUpFragment())
         }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        if (isUserLoggedIn) inflater.inflate(R.menu.logout_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.logout) {
-            if(findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                .navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 
 
@@ -249,18 +238,18 @@ class ProfileFragment : Fragment() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 takePictureFromCamera()
             } else {
-                if(findNavController().currentDestination?.id == R.id.profileFragment)
+                if (findNavController().currentDestination?.id == R.id.profileFragment)
                     findNavController().navigate(
-                    ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog()
-                )
+                        ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog()
+                    )
             }
         } else if (requestCode == 30) {
             if (requestCode == 30 && grantResults[0] == PackageManager.PERMISSION_GRANTED) takePictureFromGallery()
             else {
-                if(findNavController().currentDestination?.id == R.id.profileFragment)
+                if (findNavController().currentDestination?.id == R.id.profileFragment)
                     findNavController().navigate(
-                    ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog()
-                )
+                        ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog()
+                    )
             }
         }
     }
@@ -334,5 +323,23 @@ class ProfileFragment : Fragment() {
             imageOut!!.close()
         }
         return getPathFromUri(uri)
+    }
+
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                if (isUserLoggedIn) menuInflater.inflate(R.menu.logout_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                if (menuItem.itemId == R.id.logout) {
+                    if (findNavController().currentDestination?.id == R.id.profileFragment)
+                        findNavController()
+                            .navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
+                    return true
+                }
+                return false
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 }

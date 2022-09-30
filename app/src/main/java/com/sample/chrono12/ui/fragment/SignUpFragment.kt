@@ -1,10 +1,8 @@
 package com.sample.chrono12.ui.fragment
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,7 +15,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.sample.chrono12.R
@@ -40,7 +37,7 @@ class SignUpFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentSignUpBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -168,7 +165,7 @@ class SignUpFragment : Fragment() {
     }
 
     private fun emailCheck(): Boolean {
-        val email = binding.tilEtEmail.text
+        val email = binding.tilEtEmail.text.toString()
         val isEmailPattern = Patterns.EMAIL_ADDRESS.matcher(email).matches()
         if (!isEmailPattern) {
             val emailInfo = getString(R.string.not_an_email)

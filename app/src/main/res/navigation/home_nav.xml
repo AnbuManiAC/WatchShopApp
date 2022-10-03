@@ -150,6 +150,8 @@
         <action
             android:id="@+id/action_wishlistFragment_to_productFragment"
             app:destination="@id/productFragment"
+            app:popUpTo="@id/productFragment"
+            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
@@ -203,6 +205,8 @@
             app:popExitAnim="@anim/slide_out_right"/>
         <action
             android:id="@+id/action_productFragment_to_wishlistFragment"
+            app:popUpTo="@id/wishlistFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/wishlistFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -358,6 +362,8 @@
         tools:layout="@layout/fragment_log_in" >
         <action
             android:id="@+id/action_logInFragment_to_signUpFragment"
+            app:popUpTo="@id/signUpFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/signUpFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
@@ -378,6 +384,8 @@
         tools:layout="@layout/fragment_sign_up" >
         <action
             android:id="@+id/action_signUpFragment_to_logInFragment"
+            app:popUpTo="@id/logInFragment"
+            app:popUpToInclusive="true"
             app:destination="@id/logInFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"

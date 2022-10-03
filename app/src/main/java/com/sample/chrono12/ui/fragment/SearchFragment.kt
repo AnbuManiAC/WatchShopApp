@@ -8,9 +8,10 @@ import android.util.Log
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -41,7 +42,7 @@ class SearchFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         setHasOptionsMenu(true)
         binding = FragmentSearchBinding.inflate(layoutInflater)
         return binding.root
@@ -49,7 +50,7 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+//        setupMenu()
         userViewModel.setSearchHistory()
         setupSuggestionAdapter()
         productListViewModel.searchStatus.observe(viewLifecycleOwner) { status ->
@@ -90,7 +91,7 @@ class SearchFragment : Fragment() {
                 binding.rvSearchSuggestions.visibility = View.GONE
                 return@observe
             } else {
-                val mutableSuggestions = ArrayList<SearchSuggestion>(suggestions)
+                val mutableSuggestions = ArrayList(suggestions)
                 adapter.setNewData(mutableSuggestions)
             }
 
@@ -200,6 +201,51 @@ class SearchFragment : Fragment() {
                     return true
                 }
             })
+    }
+
+    private fun setupMenu(){
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider{
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.search_menu, menu)
+
+                val searchItem = menu.findItem(R.id.searchFragment)
+                searchView = searchItem.actionView as SearchView
+                searchView.maxWidth = Integer.MAX_VALUE
+                searchItem.expandActionView()
+                searchView.setOnQueryTextListener(getSearchQueryListener)
+
+                val searchText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
+
+                searchText.setText(productListViewModel.searchText)
+                searchText.setSelection(productListViewModel.searchText.length)
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    searchText.textCursorDrawable = ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.cursor_primary,
+                        null
+                    )
+                }
+
+                searchItem.setOnActionExpandListener(
+                    object : MenuItem.OnActionExpandListener {
+                        override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+                            return true
+                        }
+
+                        override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
+                            hideInput()
+                            requireActivity().onBackPressed()
+                            return true
+                        }
+                    })
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
     override fun onDestroyView() {

@@ -29,8 +29,6 @@
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <com.google.android.material.card.MaterialCardView
-                    app:strokeColor="?attr/colorPrimary"
-                    app:strokeWidth="2dp"
                     android:id="@+id/cvProfilePicture"
                     android:layout_width="130dp"
                     android:layout_height="130dp"

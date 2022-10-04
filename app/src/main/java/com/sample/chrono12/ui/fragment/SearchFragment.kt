@@ -139,7 +139,7 @@ class SearchFragment : Fragment() {
         }
 
     private fun hideInput() {
-        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(
             searchView.windowToken,
             InputMethodManager.HIDE_NOT_ALWAYS
@@ -219,13 +219,13 @@ class SearchFragment : Fragment() {
                 searchText.setText(productListViewModel.searchText)
                 searchText.setSelection(productListViewModel.searchText.length)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    searchText.textCursorDrawable = ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.cursor_primary,
-                        null
-                    )
-                }
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//                    searchText.textCursorDrawable = ResourcesCompat.getDrawable(
+//                        resources,
+//                        R.drawable.cursor_primary,
+//                        null
+//                    )
+//                }
 
                 searchItem.setOnActionExpandListener(
                     object : MenuItem.OnActionExpandListener {
@@ -242,7 +242,7 @@ class SearchFragment : Fragment() {
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                TODO("Not yet implemented")
+                return menuItem.itemId == R.id.searchFragment
             }
 
         })

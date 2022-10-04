@@ -1,13 +1,17 @@
 package com.sample.chrono12.ui.fragment
 
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputLayout
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.Response
 import com.sample.chrono12.data.models.UserField
@@ -59,8 +63,11 @@ class LogInFragment : Fragment() {
             val email = binding.tiEtEmail.text.toString()
             val password = binding.tiEtPassword.text.toString()
             if (isInputNonNull(email, password)) {
-                userViewModel.authenticateUser(email, password)
-            }else{
+                if (emailCheck()){
+                    userViewModel.authenticateUser(email, password)
+                }
+            }
+            else{
                 if(email.isEmpty()) binding.tilLoginName.error = "This field can't be empty"
                 if(password.isEmpty()) binding.tilLoginPassword.error = "This field can't be empty"
             }
@@ -68,10 +75,36 @@ class LogInFragment : Fragment() {
 
         binding.tiEtPassword.setOnFocusChangeListener { _, hasFocus ->
             if(hasFocus) binding.tilLoginPassword.error = null
+            setIconColor(
+                binding.tilLoginPassword,
+                hasFocus
+            )
         }
         binding.tiEtEmail.setOnFocusChangeListener { _, hasFocus ->
             if(hasFocus) binding.tilLoginName.error = null
+            setIconColor(
+                binding.tilLoginName,
+                hasFocus
+            )
         }
+    }
+
+    private fun setIconColor(textInputLayout: TextInputLayout, hasFocus: Boolean) {
+        val colorFocussed =
+            ResourcesCompat.getColor(resources, R.color.primaryColor, null)
+        val colorNonFocussed = ResourcesCompat.getColor(resources, R.color.unselected, null)
+        val color = if (hasFocus) colorFocussed else colorNonFocussed
+        textInputLayout.setStartIconTintList(ColorStateList.valueOf(color))
+    }
+
+    private fun emailCheck(): Boolean {
+        val email = binding.tiEtEmail.text.toString()
+        val isEmailPattern = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        if (!isEmailPattern) {
+            val emailInfo = getString(R.string.not_an_email)
+            binding.tilLoginName.error = emailInfo
+        }
+        return isEmailPattern
     }
 
 
@@ -93,7 +126,6 @@ class LogInFragment : Fragment() {
             UserField.EMAIL -> binding.tilLoginName.error = field.response.message
             UserField.PASSWORD -> binding.tilLoginPassword.error = field.response.message
             else -> {
-                Toast.makeText(requireContext(), field.response.message, Toast.LENGTH_SHORT).show()
             }
         }
     }

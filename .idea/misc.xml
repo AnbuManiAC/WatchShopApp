@@ -80,7 +80,7 @@
         <entry key="app/src/main/res/layout/fragment_new_address.xml" value="0.20614035087719298" />
         <entry key="app/src/main/res/layout/fragment_order_confirmation.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_order_confirmed_dialog.xml" value="0.2859375" />
-        <entry key="app/src/main/res/layout/fragment_order_detail.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_order_detail.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_order_history.xml" value="0.30520833333333336" />
         <entry key="app/src/main/res/layout/fragment_product.xml" value="0.165" />
         <entry key="app/src/main/res/layout/fragment_product_list.xml" value="0.335" />

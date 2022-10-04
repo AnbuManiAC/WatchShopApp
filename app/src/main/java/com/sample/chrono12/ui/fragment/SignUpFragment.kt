@@ -45,6 +45,7 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpFocusChangeListeners()
+        binding.tilEtEmail.setText(userViewModel.suggestedEmail)
         binding.btnSignup.setOnClickListener {
             userViewModel.clearUserFieldInfo()
             clearFormFocuses()
@@ -73,12 +74,6 @@ class SignUpFragment : Fragment() {
             field?.let {
                 deliverFieldMessage(it)
                 if(field.response == Response.SUCCESS){
-//                    val sharedPref = requireActivity().getSharedPreferences(getString(R.string.user_pref), Context.MODE_PRIVATE)
-//                    val editor = sharedPref?.edit()
-//                    editor?.let {
-//                        editor.putLong(getString(R.string.user_id), userViewModel.getLoggedInUser())
-//                        editor.apply()
-//                    }
                     SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
                     lifecycleScope.launch{
                         userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))
@@ -107,11 +102,7 @@ class SignUpFragment : Fragment() {
         when(field){
             EMAIL -> binding.tilEmail.error = field.response.message
             MOBILE -> binding.tilMobile.error = field.response.message
-            ALL -> {
-                Toast.makeText(requireContext(), field.response.message, Toast.LENGTH_SHORT).show()
-            }
             else -> {
-                Toast.makeText(requireContext(), field.response.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -257,5 +248,6 @@ class SignUpFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         userViewModel.clearUserFieldInfo()
+        userViewModel.suggestedEmail = ""
     }
 }

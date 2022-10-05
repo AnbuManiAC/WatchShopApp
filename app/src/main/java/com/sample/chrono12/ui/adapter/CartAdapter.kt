@@ -18,7 +18,6 @@ class CartAdapter(
     val onProductClickListener: ProductListAdapter.OnClickProduct,
     val onDeleteClickListener: OnClickDelete,
     val onQuantityClickListener: OnClickQuantity
-
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     private lateinit var cartWithProductInfoList: MutableList<CartWithProductInfo>
@@ -103,10 +102,12 @@ class CartAdapter(
                 }
             }
             productQuantity.setOnClickListener(null)
-
-            binding.btnDelete.setOnClickListener {
-                onDeleteClickListener.onDelete(product.productId, quantity)
+            if(!hideDeleteButton){
+                binding.btnDelete.setOnClickListener {
+                    onDeleteClickListener.onDelete(product.productId, quantity)
+                }
             }
+
         }
 
     }
@@ -131,6 +132,8 @@ class CartAdapter(
     override fun getItemCount(): Int {
         return cartWithProductInfoList.size
     }
+
+    interface Abcd
 
     interface OnClickDelete {
         fun onDelete(productId: Int, quantity: Int)

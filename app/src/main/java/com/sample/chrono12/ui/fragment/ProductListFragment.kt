@@ -17,6 +17,7 @@ import com.sample.chrono12.databinding.FragmentProductListBinding
 import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.ProductListAdapter
 import com.sample.chrono12.utils.SharedPrefUtil
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -71,9 +72,7 @@ class ProductListFragment : Fragment() {
             }
         }
         binding.btnFilter.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.productListFragment)
-                findNavController()
-                    .navigate(ProductListFragmentDirections.actionProductListFragmentToFilterFragment())
+            findNavController().safeNavigate(ProductListFragmentDirections.actionProductListFragmentToFilterFragment())
         }
     }
 
@@ -87,8 +86,7 @@ class ProductListFragment : Fragment() {
             }
         }
         binding.btnSort.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.productListFragment)
-                findNavController().navigate(ProductListFragmentDirections.actionProductListFragmentToSortDialog())
+            findNavController().safeNavigate(ProductListFragmentDirections.actionProductListFragmentToSortDialog())
             (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
         }
     }
@@ -100,10 +98,9 @@ class ProductListFragment : Fragment() {
     private fun setupProductListAdapter() {
 
         val adapter = ProductListAdapter { product ->
-            if (findNavController().currentDestination?.id == R.id.productListFragment)
-                findNavController().navigate(
-                    ProductListFragmentDirections.actionProductListFragmentToProductFragment(product.productId)
-                )
+            findNavController().safeNavigate(
+                ProductListFragmentDirections.actionProductListFragmentToProductFragment(product.productId)
+            )
         }
         adapter.setData(mutableListOf())
         val linearLayoutManager = LinearLayoutManager(requireActivity())
@@ -147,15 +144,11 @@ class ProductListFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.wishlistFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.productListFragment)
-                            findNavController()
-                                .navigate(ProductListFragmentDirections.actionProductListFragmentToWishlistFragment())
+                        findNavController().safeNavigate(ProductListFragmentDirections.actionProductListFragmentToWishlistFragment())
                         true
                     }
                     R.id.searchFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.productListFragment)
-                            findNavController()
-                                .navigate(ProductListFragmentDirections.actionProductListFragmentToSearchFragment())
+                        findNavController().safeNavigate(ProductListFragmentDirections.actionProductListFragmentToSearchFragment())
                         true
                     }
                     else -> false

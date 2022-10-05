@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
@@ -20,12 +19,12 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.sample.chrono12.R
 import com.sample.chrono12.data.models.ProfileSettingAction.*
 import com.sample.chrono12.databinding.FragmentProfileBinding
 import com.sample.chrono12.databinding.LoginPromptBinding
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.UserViewModel
 import java.util.*
 
@@ -66,12 +65,11 @@ class ProfileFragment : Fragment() {
 
     private fun setupProfilePicture() {
         bindingProfile.btnProfilePicture.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController().navigate(
-                    ProfileFragmentDirections.actionProfileFragmentToProfilePictureDialog(
-                        hasProfilePicture
-                    )
+            findNavController().safeNavigate(
+                ProfileFragmentDirections.actionProfileFragmentToProfilePictureDialog(
+                    hasProfilePicture
                 )
+            )
         }
         userViewModel.getProfileSettingAction().observe(viewLifecycleOwner) { action ->
             when (action) {
@@ -159,7 +157,6 @@ class ProfileFragment : Fragment() {
                     bindingProfile.ivProfilePicture.setImageBitmap(bitmap)
                     true
                 } catch (e: Exception) {
-                    Log.d("ProfilePicture", "${e.cause} and ${e.message}")
                     bindingProfile.ivProfilePicture.setImageDrawable(
                         ResourcesCompat.getDrawable(
                             resources,
@@ -172,48 +169,32 @@ class ProfileFragment : Fragment() {
             }
         }
         bindingProfile.myWishList.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                    .navigate(ProfileFragmentDirections.actionProfileFragmentToWishlistFragment())
+            findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToWishlistFragment())
         }
         bindingProfile.myOrders.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                    .navigate(ProfileFragmentDirections.actionProfileFragmentToOrderHistoryFragment())
+            findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToOrderHistoryFragment())
         }
         bindingProfile.myAddress.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                    .navigate(ProfileFragmentDirections.actionProfileFragmentToAddressFragment())
+            findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToAddressFragment())
         }
         bindingProfile.myAddressGroup.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                    .navigate(ProfileFragmentDirections.actionProfileFragmentToAddressGroupFragment())
+            findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToAddressGroupFragment())
         }
         bindingProfile.deleteSearchHistory.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                    .navigate(ProfileFragmentDirections.actionProfileFragmentToDeleteSearchDialog())
+            findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToDeleteSearchDialog())
         }
 
         bindingProfile.signOut.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                    .navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
+            findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
         }
     }
 
     private fun setupLoginPrompt() {
         bindingLoginPrompt.btnLogIn.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                    .navigate(ProfileFragmentDirections.actionProfileFragmentToLogInFragment())
+            findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToLogInFragment())
         }
         bindingLoginPrompt.toSignup.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.profileFragment)
-                findNavController()
-                    .navigate(ProfileFragmentDirections.actionProfileFragmentToSignUpFragment())
+            findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToSignUpFragment())
         }
     }
 
@@ -238,18 +219,12 @@ class ProfileFragment : Fragment() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 takePictureFromCamera()
             } else {
-                if (findNavController().currentDestination?.id == R.id.profileFragment)
-                    findNavController().navigate(
-                        ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog()
-                    )
+                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog())
             }
         } else if (requestCode == 30) {
             if (requestCode == 30 && grantResults[0] == PackageManager.PERMISSION_GRANTED) takePictureFromGallery()
             else {
-                if (findNavController().currentDestination?.id == R.id.profileFragment)
-                    findNavController().navigate(
-                        ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog()
-                    )
+                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog())
             }
         }
     }
@@ -333,9 +308,7 @@ class ProfileFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 if (menuItem.itemId == R.id.logout) {
-                    if (findNavController().currentDestination?.id == R.id.profileFragment)
-                        findNavController()
-                            .navigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
+                    findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToLogoutDialog())
                     return true
                 }
                 return false

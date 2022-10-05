@@ -96,9 +96,7 @@ class WishListAdapter(
     }
 
     interface OnClickAddToCart {
-
         fun initButton(button: MaterialButton, productId: Int)
-
         fun onClickAdd(button: MaterialButton, productId: Int)
     }
 

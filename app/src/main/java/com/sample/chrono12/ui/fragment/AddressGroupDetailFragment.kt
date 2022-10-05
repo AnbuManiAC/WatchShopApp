@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FragmentAddressGroupDetailBinding
-import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.AddressAdapter
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.UserViewModel
 
 
@@ -37,7 +36,7 @@ class AddressGroupDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (navArgs.addressGroupId > 0 && navArgs.addressGroupName != "default") {
+        if (navArgs.addressGroupId > 0 && navArgs.addressGroupName != getString(R.string.default_group_name)) {
             this.addressGroupId = navArgs.addressGroupId
             setupAdapter(navArgs.addressGroupId)
         }
@@ -58,39 +57,28 @@ class AddressGroupDetailFragment : Fragment() {
 
     private fun setupEditButton() {
         binding.btnEditGroupName.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.addressGroupDetailFragment)
-                findNavController().navigate(
-                AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToCreateAddressGroupDialog(
-                    navArgs.addressGroupId,
-                    navArgs.addressGroupName
-                )
-            )
+            findNavController().safeNavigate(AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToCreateAddressGroupDialog(
+                navArgs.addressGroupId,
+                navArgs.addressGroupName
+            ))
         }
     }
 
 
     private fun setupAddFromExistingButton() {
         binding.btnAddFromExisting.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.addressGroupDetailFragment)
-                findNavController()
-                .navigate(
-                    AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToAddressFragment(
-                        addressGroupName = addressGroupName,
-                        addFromExisting = true
-                    )
-                )
+            findNavController().safeNavigate(AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToAddressFragment(
+                addressGroupName = addressGroupName,
+                addFromExisting = true
+            ))
         }
     }
 
     private fun setupAddNewAddressButton() {
         binding.btnAddNewAddress.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.addressGroupDetailFragment)
-                findNavController()
-                .navigate(
-                    AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(
-                        addressGroupName = addressGroupName
-                    )
-                )
+            findNavController().safeNavigate(AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(
+                addressGroupName = addressGroupName
+            ))
         }
     }
 
@@ -118,7 +106,7 @@ class AddressGroupDetailFragment : Fragment() {
                 if (addressGroupWithAddress.addressList.isNotEmpty()) {
                     with(binding.tvAddresses) {
                         visibility = View.VISIBLE
-                        text = "Addresses(" + addressGroupWithAddress.addressList.size + ")"
+                        text = getString(R.string.addresses, addressGroupWithAddress.addressList.size)
                     }
                     binding.rvGroupAddresses.visibility = View.VISIBLE
                 } else{
@@ -136,14 +124,13 @@ class AddressGroupDetailFragment : Fragment() {
                 addressGroupId: Int,
                 addressGroupName: String
             ) {
-
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Are you sure to remove this Address?")
-                    .setMessage("Remove address from this group")
-                    .setPositiveButton("Remove") { _, _ ->
+                builder.setTitle(getString(R.string.remove_address))
+                    .setMessage(getString(R.string.address_item_remove_alert))
+                    .setPositiveButton(getString(R.string.remove)) { _, _ ->
                         userViewModel.deleteAddressFromGroup(addressId, addressGroupId)
                     }
-                    .setNegativeButton("Cancel") { _, _ ->
+                    .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                     }
                     .setCancelable(false)
@@ -152,14 +139,10 @@ class AddressGroupDetailFragment : Fragment() {
             }
 
             override fun onClickEdit(addressId: Int) {
-                if(findNavController().currentDestination?.id == R.id.addressGroupDetailFragment)
-                    findNavController().navigate(
-                    AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(
-                        addressId,
-                        addressGroupName
-                    )
-                )
-
+                findNavController().safeNavigate(AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToNewAddressFragment(
+                    addressId,
+                    addressGroupName
+                ))
             }
 
         }

@@ -25,6 +25,7 @@ import com.sample.chrono12.databinding.FragmentProductBinding
 import com.sample.chrono12.ui.adapter.ImageSliderAdapter
 import com.sample.chrono12.ui.adapter.ProductDetailsAdapter
 import com.sample.chrono12.ui.adapter.ThumbnailAdapter
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.ProductViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
@@ -111,9 +112,7 @@ class ProductFragment : Fragment() {
     private fun showLogInSnackBar() {
         val snackBar = Snackbar.make(binding.snackBarLayout, getString(R.string.you_are_not_logged_in), Snackbar.LENGTH_LONG)
         snackBar.setAction(getString(R.string.log_in)){
-            if(findNavController().currentDestination?.id == R.id.productFragment){
-                findNavController().navigate(ProductFragmentDirections.actionProductFragmentToLogInFragment())
-            }
+            findNavController().safeNavigate(ProductFragmentDirections.actionProductFragmentToLogInFragment())
         }
         snackBar.show()
     }
@@ -127,8 +126,7 @@ class ProductFragment : Fragment() {
         binding.btnAddToCart.setOnClickListener {
             if (userViewModel.getIsUserLoggedIn()) {
                 if (isInUserCart) {
-                    if (findNavController().currentDestination?.id == R.id.productFragment)
-                        findNavController().navigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
+                    findNavController().safeNavigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
                 } else {
                     val userId = userViewModel.getLoggedInUser().toInt()
                     val productId =
@@ -243,18 +241,15 @@ class ProductFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.searchFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.productFragment)
-                            findNavController().navigate(ProductFragmentDirections.actionProductFragmentToSearchFragment())
+                        findNavController().safeNavigate(ProductFragmentDirections.actionProductFragmentToSearchFragment())
                         true
                     }
                     R.id.wishlistFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.productFragment)
-                            findNavController().navigate(ProductFragmentDirections.actionProductFragmentToWishlistFragment())
+                        findNavController().safeNavigate(ProductFragmentDirections.actionProductFragmentToWishlistFragment())
                         true
                     }
                     R.id.cartFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.productFragment)
-                            findNavController().navigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
+                        findNavController().safeNavigate(ProductFragmentDirections.actionProductFragmentToCartFragment())
                         true
                     }
                     else -> false

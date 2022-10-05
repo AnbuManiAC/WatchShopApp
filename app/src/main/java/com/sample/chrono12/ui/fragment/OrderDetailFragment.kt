@@ -1,7 +1,6 @@
 package com.sample.chrono12.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import com.sample.chrono12.databinding.FragmentOrderDetailBinding
 import com.sample.chrono12.ui.adapter.OrderInfoAdapter
 import com.sample.chrono12.ui.adapter.ProductOrderedAdapter
 import com.sample.chrono12.utils.DateUtil
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.OrderViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
@@ -32,8 +32,6 @@ class OrderDetailFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentOrderDetailBinding.inflate(layoutInflater)
-        Log.d("NavArgs", "${navArgs.orderId} and ${navArgs.bulkOrderId}")
-//        orderViewModel.setOrderDetail(navArgs.bulkOrderId, userViewModel.getLoggedInUser().toInt())
         orderViewModel.setOrderedProductInfo(navArgs.orderId)
         return binding.root
     }
@@ -56,14 +54,16 @@ class OrderDetailFragment : Fragment() {
                 binding.tvOrderId.text = getString(R.string.bulk_ord_id, orderInfo.bulkOrderId)
                 with(binding.tvNumberOfProduct) {
                     visibility = View.VISIBLE
-                    text = "Number of Products Per Order : " + orderInfo.productCount
+                    text = getString(R.string.number_of_products_per_order, orderInfo.productCount)
                 }
-                binding.tvTotalNumberOfProduct.text =
-                    "Total Number of Products : " + (orderInfo.orderCount * orderInfo.productCount)
+                binding.tvTotalNumberOfProduct.text = getString(
+                    R.string.total_number_of_products,
+                    (orderInfo.orderCount * orderInfo.productCount)
+                )
             } else {
                 binding.tvOrderId.text = getString(R.string.order_id, orderInfo.orderId)
                 binding.tvTotalNumberOfProduct.text =
-                    "Number of Products : " + orderInfo.productCount
+                    getString(R.string.number_of_products, orderInfo.productCount)
 
             }
             binding.tvOrderDateTime.text =
@@ -91,10 +91,6 @@ class OrderDetailFragment : Fragment() {
     }
 
     private fun setupAddressAndStatus() {
-//        orderViewModel.getOrderDetail().observe(viewLifecycleOwner){ orderInfo ->
-//            binding.tvAddress.text = orderInfo[0].addressInfo
-//            binding.tvOrderStatus.text = orderInfo[0].orderStatus
-//        }
         orderViewModel.getOrderDetail(navArgs.bulkOrderId, userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) { orderDetail ->
                 binding.tvAddress.text = orderDetail[0].addressInfo
@@ -105,28 +101,23 @@ class OrderDetailFragment : Fragment() {
     private fun setupOrderInfoAdapter() {
         val adapter = OrderInfoAdapter()
         binding.rvOrderInfo.layoutManager = LinearLayoutManager(requireContext())
-//        orderViewModel.getOrderDetail().observe(viewLifecycleOwner) { orderList ->
-//            with(adapter) {
-//                setData(orderList)
-//                notifyDataSetChanged()
-//            }
-//            binding.rvOrderInfo.adapter = adapter
-//        }
-        orderViewModel.getOrderDetail(navArgs.bulkOrderId, userViewModel.getLoggedInUser().toInt()).observe(viewLifecycleOwner) { orderList ->
-            with(adapter) {
-                setData(orderList)
-                notifyDataSetChanged()
+        orderViewModel.getOrderDetail(navArgs.bulkOrderId, userViewModel.getLoggedInUser().toInt())
+            .observe(viewLifecycleOwner) { orderList ->
+                with(adapter) {
+                    setData(orderList)
+                    notifyDataSetChanged()
+                }
+                binding.rvOrderInfo.adapter = adapter
             }
-            binding.rvOrderInfo.adapter = adapter
-        }
     }
 
     private fun setupProductAdapter() {
-        val adapter = ProductOrderedAdapter() { product ->
-            if (findNavController().currentDestination?.id == R.id.orderDetailFragment)
-                findNavController().navigate(
-                    OrderDetailFragmentDirections.actionOrderDetailFragmentToProductFragment(product.productId)
+        val adapter = ProductOrderedAdapter { product ->
+            findNavController().safeNavigate(
+                OrderDetailFragmentDirections.actionOrderDetailFragmentToProductFragment(
+                    product.productId
                 )
+            )
         }
         binding.rvProducts.layoutManager = LinearLayoutManager(requireContext())
         orderViewModel.getOrderedProductInfo().observe(viewLifecycleOwner) { productList ->

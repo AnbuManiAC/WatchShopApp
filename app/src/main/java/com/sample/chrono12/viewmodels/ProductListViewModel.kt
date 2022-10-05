@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sample.chrono12.data.entities.Category
 import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.SubCategory
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
@@ -20,8 +19,7 @@ class ProductListViewModel @Inject constructor(
     private val watchRepository: WatchRepository
 ) : ViewModel() {
 
-    var first = true
-
+    var isFirstInitialize = true
     private val subCategoryList = MutableLiveData<List<SubCategory>>()
     private val brandList = MutableLiveData<List<ProductBrand>>()
     private val _watchList = MutableLiveData<List<ProductWithBrandAndImages>>()
@@ -47,8 +45,6 @@ class ProductListViewModel @Inject constructor(
         get() = _searchText
 
     init {
-//        setSubCategory()
-//        setBrand()
         _sortType.value = RATING_HIGH_TO_LOW
         _searchStatus.value = SEARCH_NOT_INITIATED
     }
@@ -193,18 +189,10 @@ class ProductListViewModel @Inject constructor(
     }
 
     fun setFilterResult(
-        args1: List<Int> = listOf(1, 2, 3),
-        args2: List<Int> = listOf(4, 5, 6),
-        args3: List<Int> = listOf(7, 8, 9, 10, 11),
-        args4: List<String> = listOf(
-            "Fastrack",
-            "Titan",
-            "Sonata",
-            "Timex",
-            "Maxima",
-            "Helix",
-            "Fossil"
-        ),
+        args1: List<Int>,
+        args2: List<Int>,
+        args3: List<Int>,
+        args4: List<String>,
         args5: List<Pair<Int, Int>>,
         args6: List<Pair<Int, Int>>
     ) {

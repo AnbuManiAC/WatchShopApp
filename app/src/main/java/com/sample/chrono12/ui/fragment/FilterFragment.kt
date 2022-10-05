@@ -45,9 +45,7 @@ class FilterFragment : Fragment() {
             filterViewModel.setAppliedFilterIds(filterViewModel.selectedFilterIds)
             if (filterViewModel.isClearClicked) filterViewModel.clearSelectedFilterIds()
             setFilter()
-//            findNavController().navigate(FilterFragmentDirections.actionFilterFragmentToProductListFragment())
-            if (findNavController().currentDestination?.id == R.id.filterFragment)
-                findNavController().navigateUp()
+            findNavController().navigateUp()
         }
     }
 
@@ -104,12 +102,12 @@ class FilterFragment : Fragment() {
     private val getOnFilterClickListener = object : FilterAdapter.OnClickFilter {
         override fun onClick(filter: String) {
             when (filter) {
-                "Gender" -> setDataToFilterValueAdapter(genders)
-                "Dial Shape" -> setDataToFilterValueAdapter(dialShapes)
-                "Display type" -> setDataToFilterValueAdapter(displayTypes)
-                "Brand" -> setDataToFilterValueAdapter(brands)
-                "Price Range" -> setDataToFilterValueAdapter(priceRanges)
-                "Rating" -> setDataToFilterValueAdapter(ratings)
+                filterList[0] -> setDataToFilterValueAdapter(genders)
+                filterList[1] -> setDataToFilterValueAdapter(dialShapes)
+                filterList[2] -> setDataToFilterValueAdapter(displayTypes)
+                filterList[3] -> setDataToFilterValueAdapter(brands)
+                filterList[4] -> setDataToFilterValueAdapter(priceRanges)
+                filterList[5] -> setDataToFilterValueAdapter(ratings)
             }
         }
     }

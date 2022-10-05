@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.AddressGroup
 import com.sample.chrono12.databinding.AddAddressGroupNameBinding
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -93,13 +94,12 @@ class CreateAddressGroupDialog : DialogFragment() {
                         groupName = groupName
                     )
                 )
-                if (findNavController().currentDestination?.id == R.id.createAddressGroupDialog)
-                    findNavController().navigate(
-                        CreateAddressGroupDialogDirections.actionCreateAddressGroupDialogToAddressGroupDetailFragment(
-                            addressGroupName = groupName,
-                            addressGroupId = groupId
-                        )
+                findNavController().safeNavigate(
+                    CreateAddressGroupDialogDirections.actionCreateAddressGroupDialogToAddressGroupDetailFragment(
+                        addressGroupName = groupName,
+                        addressGroupId = groupId
                     )
+                )
             }
         }
     }

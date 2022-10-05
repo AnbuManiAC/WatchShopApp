@@ -19,7 +19,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.ActivityMainBinding
-import com.sample.chrono12.utils.ConnectivityObserver
 import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.ConnectivityViewModel

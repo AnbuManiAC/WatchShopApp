@@ -28,16 +28,10 @@ class OrderViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val orderHistory = MutableLiveData<List<OrderInfo>>()
-//    private val orderDetailList = MutableLiveData<List<Order>>()
     private val orderedProductInfoList = MutableLiveData<List<OrderedProductInfo>>()
 
     suspend fun insertOrder(order: Order): Int  =
             userRepository.insertOrder(order).toInt()
-//        val orderId = viewModelScope.async(Dispatchers.IO) {
-//            return@async userRepository.insertOrder(order)
-//        }
-//        return orderId.await().toInt()
-//    }
 
     fun insertProductOrdered(productOrdered: ProductOrdered) {
         viewModelScope.launch { userRepository.insertProductOrdered(productOrdered) }
@@ -57,14 +51,6 @@ class OrderViewModel @Inject constructor(
     }
 
     fun getOrderHistory(): LiveData<List<OrderInfo>> = orderHistory
-
-//    fun setOrderDetail(bulkOrderId: Int, userId: Int) {
-//        viewModelScope.launch {
-//            orderDetailList.postValue(userRepository.getOrderDetail(bulkOrderId, userId))
-//        }
-//    }
-
-//    fun getOrderDetail(): LiveData<List<Order>> = orderDetailList
 
     fun getOrderDetail(bulkOrderId: Int, userId: Int): LiveData<List<Order>> = userRepository.getOrderDetail(bulkOrderId, userId)
 

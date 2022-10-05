@@ -22,6 +22,7 @@
     <string name="content">Content</string>
     <string name="detail">Detail</string>
     <string name="add_to_cart">Add to Cart</string>
+    <string name="added_to_cart">Added to Cart</string>
     <string name="go_to_cart">Go to Cart</string>
     <string name="product_name">Product Name</string>
     <string name="brand_name">Brand Name</string>
@@ -56,6 +57,7 @@
     <string name="password_doesnt_match">Password does not match</string>
     <string name="password_min_character">Password must contains atleast 8 characters</string>
     <string name="not_a_mobile">Invalid mobile number</string>
+    <string name="invalid_state_name">Invalid state name</string>
     <string name="not_an_email">Invalid email address</string>
     <string name="field_cant_be_empty">This field can\'t be empty</string>
     <string name="address_group_name_already_exists">Address group name already exists</string>
@@ -74,9 +76,30 @@
     <string name="no_address_found">Looks like you haven\'t\n added any address yet</string>
     <string name="out_of_stock">Currently out of stock</string>
     <string name="order_soon">Only %d left in stock - Order soon.</string>
-    <string name="offer_percentage">%d Off</string>
+    <string name="offer_percentage">%d%% Off</string>
     <string name="product_is_added_to_wishlist">Product is added to Wishlist</string>
     <string name="product_is_removed_from_wishlist">Product is removed from Wishlist</string>
+    <string name="remove_item">Remove Product</string>
+    <string name="wishlist_item_remove_alert">Are you sure you want to Remove this product from Wishlist?</string>
+    <string name="cart_item_remove_alert">Are you sure you want to Remove this product from Cart?</string>
+    <string name="remove_address">Remove Address</string>
+    <string name="address_item_remove_alert">Are you sure to remove this Address?</string>
+    <string name="address_item_delete_alert_title">Are you sure to delete this Address?</string>
+    <string name="address_item_delete_alert_msg">Deleting a address will result in removing the same from all address groups</string>
+    <string name="delete_address_group">Delete Address Group</string>
+    <string name="delete">Delete</string>
+    <string name="address_group_delete_alert">Are you sure you want to delete this Address group?</string>
+    <string name="remove">Remove</string>
+    <string name="default_group_name">Default</string>
+    <string name="addresses">Addresses(%d)</string>
+    <string name="max_units_reached">Max 5 units only</string>
+    <string name="only_units_left">Only %d units left</string>
+    <string name="order_confirmation_product_quantity_error_msg">%s\nRequired quantity: %d\nAvailable quantity: %d</string>
+    <string name="order_confirmation_error_suggestion">Kindly go back and make changes in the product quantity or address group to continue</string>
+    <string name="number_of_products_per_order">Number of Products Per Order : %d</string>
+    <string name="total_number_of_products">Total Number of Products : %d</string>
+    <string name="number_of_products">Number of Products : %d</string>
+    <string name="remove_suggestion">Remove from Suggestion History?</string>
 
     //Indian states
     <string-array name="india_states">

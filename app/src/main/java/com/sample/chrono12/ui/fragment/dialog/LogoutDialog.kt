@@ -35,10 +35,7 @@ class LogoutDialog : DialogFragment() {
     private fun logoutUser() {
         SharedPrefUtil.setUserId(requireActivity(), 0)
         userViewModel.logOutUser()
-        if (findNavController().currentDestination?.id == R.id.logoutDialog)
-        {
-            findNavController().popBackStack(R.id.homeFragment, false)
-            (requireActivity() as  HomeActivity).disableCartBadge()
-        }
+        findNavController().popBackStack(R.id.homeFragment, false)
+        (requireActivity() as HomeActivity).disableCartBadge()
     }
 }

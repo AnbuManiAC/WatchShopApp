@@ -26,9 +26,8 @@ object ImageUtil {
 
     fun loadImage(url: String, imageview: ImageView, imageKey: ImageKey = ImageKey.SMALL) {
 
-        if (getBitmapFromMemoryCache(url+imageKey) != null) {
+        if (getBitmapFromMemoryCache(url+imageKey)!=null) {
             imageview.setImageBitmap(getBitmapFromMemoryCache(url+imageKey.toString()))
-            Log.d("TAG", "Image set from cache")
         } else {
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) { imageview.setImageResource(R.drawable.image_load) }
@@ -67,7 +66,6 @@ object ImageUtil {
                         val bitmap = result.await()
                         if (bitmap != null) {
                             memoryCache.put(url+imageKey.toString(), bitmap)
-                            Log.d("TAG", "Image set from loading url")
                             imageview.setImageBitmap(bitmap)
                             imageview.setTag(666,true)
                         }
@@ -75,7 +73,6 @@ object ImageUtil {
                     }
 
                 } catch (e: Exception) {
-                    Log.d("TAG", "Exception : $e")
                 }
             }
         }
@@ -91,17 +88,12 @@ object ImageUtil {
         var inSampleSize = 1
 
         if (height > reqHeight || width > reqWidth) {
-
             val halfHeight: Int = height / 2
             val halfWidth: Int = width / 2
-            Log.d("SampleSize", "$reqHeight $reqWidth $halfHeight $halfWidth $inSampleSize")
             while (inSampleSize != 0 && halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
                 inSampleSize *= 2
-                Log.d("SampleSizeUpdated", "$halfHeight $halfWidth $inSampleSize")
-
             }
         }
-
         return inSampleSize
     }
 

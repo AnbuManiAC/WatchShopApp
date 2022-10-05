@@ -52,7 +52,6 @@ class SortDialog : BottomSheetDialogFragment() {
         }
 
         sortRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            Log.i("ProdBottomSheetSort", "checkedId - $checkedId")
             when (checkedId) {
                 R.id.rbPriceHighToLow -> {
                     productListViewModel.applySort(PRICE_HIGH_TO_LOW)

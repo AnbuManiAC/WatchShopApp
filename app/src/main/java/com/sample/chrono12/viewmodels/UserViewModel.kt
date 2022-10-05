@@ -36,7 +36,6 @@ class UserViewModel @Inject constructor(
     private val address = MutableLiveData<Address>()
     private var addressId = MutableLiveData<Int>()
     private var addressGroupId = MutableLiveData<Int>()
-    private var addressGroupName = MutableLiveData<String>()
     private val addressIds = MutableLiveData<List<Int>>()
     private var profileSettingAction = MutableLiveData<ProfileSettingAction>()
 
@@ -45,10 +44,6 @@ class UserViewModel @Inject constructor(
     }
 
     fun getProfileSettingAction(): LiveData<ProfileSettingAction> = profileSettingAction
-
-    fun clearAddressIds() {
-        null.also { addressIds.value = it }
-    }
 
     fun setAddressIds(addressIdList: List<Int>) {
         addressIds.value = addressIdList
@@ -138,7 +133,7 @@ class UserViewModel @Inject constructor(
     private fun createUser(user: User) = viewModelScope.launch {
         setLoggedInUser(userRepository.createUser(user))
         userField.value = UserField.ALL.also { userField ->
-            userField.response = Response.SUCCESS.also { it.message = "Sign up  successfull" }
+            userField.response = Response.SUCCESS.also { it.message = "Sign up successful" }
         }
     }
 
@@ -212,9 +207,6 @@ class UserViewModel @Inject constructor(
     fun getUserAddresses(userId: Int): LiveData<AddressGroupWithAddress> =
         userRepository.getUserAddresses(userId)
 
-//    fun getUserAddressesWithException(userId: Int, addressIds: List<Int>): LiveData<AddressGroupWithAddress> =
-//        userRepository.getUserAddressesWithException(userId, addressIds)
-
     fun setAddress(addressId: Int) {
         viewModelScope.launch {
             address.postValue(userRepository.getAddressById(addressId))
@@ -239,8 +231,6 @@ class UserViewModel @Inject constructor(
     ): LiveData<AddressGroupWithAddress> =
         userRepository.getAddressGroupWithAddressByAddressId(userId, addressGroupId, addressId)
 
-    fun getAddressGroupId(): LiveData<Int> = addressGroupId
-
     fun getAddressGroupName(userId: Int, addressGroupId: Int): LiveData<String> =
         userRepository.getAddressGroupName(userId, addressGroupId)
 
@@ -248,7 +238,6 @@ class UserViewModel @Inject constructor(
     fun insertAddress(address: Address, addressGroupName: String) {
         viewModelScope.launch {
             val id = userRepository.insertAddress(address)
-//            addressId.postValue(id.toInt())
             if (addressGroupName != "default") {
                 insertIntoAddressAndGroupCrossRef(id.toInt(), addressGroupName)
             }
@@ -256,7 +245,7 @@ class UserViewModel @Inject constructor(
         }
     }
 
-    fun setAddressGroupId(id:Int){
+    private fun setAddressGroupId(id:Int){
         addressGroupId.value = id
     }
 

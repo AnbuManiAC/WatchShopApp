@@ -2,20 +2,12 @@ package com.sample.chrono12.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Build
-import android.os.Bundle
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentActivity
 import androidx.navigation.NavDeepLinkBuilder
 import com.sample.chrono12.R
-import com.sample.chrono12.ui.activity.HomeActivity
-import com.sample.chrono12.ui.fragment.OrderDetailFragment
 import com.sample.chrono12.ui.fragment.OrderDetailFragmentArgs
 
 class NotificationUtil(val context: Context) {
@@ -30,9 +22,7 @@ class NotificationUtil(val context: Context) {
                 channelId,
                 channelId,
                 NotificationManager.IMPORTANCE_DEFAULT
-            ).apply {
-                description = "Reminder Channel Description"
-            }
+            )
             val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
@@ -78,6 +68,5 @@ class NotificationUtil(val context: Context) {
             editor.apply()
         }
         return notificationId
-//        return SharedPrefUtil.getNotificationId(context as FragmentActivity)
     }
 }

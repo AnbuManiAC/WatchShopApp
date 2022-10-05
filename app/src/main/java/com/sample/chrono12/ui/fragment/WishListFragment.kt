@@ -2,38 +2,27 @@ package com.sample.chrono12.ui.fragment
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
-import android.widget.Button
-import android.widget.Toast
-import androidx.appcompat.widget.WithHint
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Cart
-import com.sample.chrono12.data.entities.WishList
 import com.sample.chrono12.databinding.FragmentWishlistBinding
-import com.sample.chrono12.databinding.LoginPromptBinding
 import com.sample.chrono12.databinding.LoginPromptCartWishlistDialogBinding
-import com.sample.chrono12.ui.adapter.CartAdapter
 import com.sample.chrono12.ui.adapter.WishListAdapter
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.CartViewModel
-import com.sample.chrono12.viewmodels.ProductViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 import com.sample.chrono12.viewmodels.WishListViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlin.math.log
 
 class WishListFragment : Fragment() {
 
@@ -72,14 +61,14 @@ class WishListFragment : Fragment() {
     private fun setupLoginPrompt() {
         loginPromptBinding.ivMissingCart.setImageResource(R.drawable.missing_wishlist)
         loginPromptBinding.tvContinueShopping.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.wishlistFragment)
-                findNavController()
-                .navigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
+            findNavController().safeNavigate(
+                WishListFragmentDirections.actionWishlistFragmentToHomeFragment()
+            )
         }
         loginPromptBinding.btnLogIn.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.wishlistFragment)
-                findNavController()
-                .navigate(WishListFragmentDirections.actionWishlistFragmentToLogInFragment())
+            findNavController().safeNavigate(
+                WishListFragmentDirections.actionWishlistFragmentToLogInFragment()
+            )
         }
     }
 
@@ -87,8 +76,7 @@ class WishListFragment : Fragment() {
 
         val adapter = WishListAdapter(
             {
-                if(findNavController().currentDestination?.id == R.id.wishlistFragment)
-                    findNavController().navigate(
+                findNavController().safeNavigate(
                     WishListFragmentDirections.actionWishlistFragmentToProductFragment(it.productId)
                 )
             },
@@ -100,9 +88,7 @@ class WishListFragment : Fragment() {
         rvWishList.layoutManager = LinearLayoutManager(activity)
         rvWishList.adapter = adapter
         fragmentWishListBinding.btnGoHome.setOnClickListener {
-            if(findNavController().currentDestination?.id == R.id.wishlistFragment)
-                findNavController()
-                .navigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
+            findNavController().safeNavigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
         }
         wishListViewModel.getWishListItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
@@ -132,16 +118,9 @@ class WishListFragment : Fragment() {
                         userViewModel.getLoggedInUser().toInt()
                     )
                     if (isInCart) {
-                        button.text = "Added To Cart"
-                        button.icon = resources.getDrawable(R.drawable.ic_done_small, null)
-                        button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
-                        button.iconTint = resources.getColorStateList(R.color.white, null)
-                        button.backgroundTintList =
-                            resources.getColorStateList(R.color.green1, null)
-                        button.isEnabled = false
+                        changeButtonToText(button)
                     } else {
-                        button.text = "Add to Cart"
-
+                        button.text = getString(R.string.add_to_cart)
                     }
                 }
             }
@@ -153,9 +132,7 @@ class WishListFragment : Fragment() {
                         userViewModel.getLoggedInUser().toInt()
                     )
                     if (isInCart) {
-                        if(findNavController().currentDestination?.id == R.id.wishlistFragment)
-                            findNavController()
-                            .navigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
+                        findNavController().safeNavigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
                     } else {
                         cartViewModel.addProductToUserCart(
                             Cart(
@@ -163,30 +140,37 @@ class WishListFragment : Fragment() {
                                 userId = userViewModel.getLoggedInUser().toInt()
                             )
                         )
-                        button.text = "Added To Cart"
-                        button.icon = resources.getDrawable(R.drawable.ic_done_small, null)
-                        button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
-                        button.iconTint = resources.getColorStateList(R.color.white, null)
-                        button.backgroundTintList =
-                            resources.getColorStateList(R.color.green1, null)
-                        button.isEnabled = false
+                        changeButtonToText(button)
                     }
                 }
             }
-
-
         }
+
+    private fun changeButtonToText(button: MaterialButton) {
+        button.text = getString(R.string.added_to_cart)
+        button.icon = ResourcesCompat.getDrawable(
+            resources,
+            R.drawable.ic_done_small,
+            requireContext().theme
+        )
+        button.iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+        button.iconTint = resources.getColorStateList(R.color.white, null)
+        button.backgroundTintList =
+            resources.getColorStateList(R.color.green1, null)
+        button.isEnabled = false
+    }
 
     private fun getOnClickDeleteListener(): WishListAdapter.OnClickDelete =
         object : WishListAdapter.OnClickDelete {
             override fun onDelete(productId: Int) {
                 val userId = userViewModel.getLoggedInUser().toInt()
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Are you sure you want to Remove this product from Wishlist?")
-                    .setPositiveButton("Remove") { _, _ ->
+                builder.setTitle(getString(R.string.remove_item))
+                    .setMessage(getString(R.string.wishlist_item_remove_alert))
+                    .setPositiveButton(getString(R.string.remove)) { _, _ ->
                         wishListViewModel.removeProductFromUserWishList(productId, userId)
                     }
-                    .setNegativeButton("Cancel") { _, _ ->
+                    .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                     }
                     .setCancelable(false)
@@ -195,8 +179,8 @@ class WishListFragment : Fragment() {
         }
 
 
-    private fun setupMenu(){
-        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider{
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.search_cart_menu, menu)
             }
@@ -204,17 +188,16 @@ class WishListFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.searchFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.wishlistFragment)
-                            findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToSearchFragment())
+                        findNavController().safeNavigate(WishListFragmentDirections.actionWishlistFragmentToSearchFragment())
                         true
                     }
                     R.id.cartFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.wishlistFragment)
-                            findNavController().navigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
+                        findNavController().safeNavigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
                         true
                     }
                     else -> false
-                }            }
+                }
+            }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 

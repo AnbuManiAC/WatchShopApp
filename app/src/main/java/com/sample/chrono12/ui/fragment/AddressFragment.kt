@@ -16,6 +16,7 @@ import com.sample.chrono12.data.entities.Address
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.FragmentAddressBinding
 import com.sample.chrono12.ui.adapter.AddressAdapter
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.UserViewModel
 
 class AddressFragment : Fragment() {
@@ -42,12 +43,11 @@ class AddressFragment : Fragment() {
         } else {
             binding.fabAddAddress.visibility = View.VISIBLE
             binding.fabAddAddress.setOnClickListener {
-                if (findNavController().currentDestination?.id == R.id.addressFragment)
-                    findNavController().navigate(
-                        AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(
-                            addressGroupName = "default"
-                        )
+                findNavController().safeNavigate(
+                    AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(
+                        addressGroupName = getString(R.string.delete_address_group)
                     )
+                )
             }
         }
         setupAddressAdapter()
@@ -60,13 +60,12 @@ class AddressFragment : Fragment() {
             if (addressAdapter.getSelectedAddressId().second > 0) {
                 val groupId = addressAdapter.getSelectedAddressId().first
                 val addressId = addressAdapter.getSelectedAddressId().second
-                if (findNavController().currentDestination?.id == R.id.addressFragment)
-                    findNavController().navigate(
-                        AddressFragmentDirections.actionAddressFragmentToOrderConfirmationFragment(
-                            groupId,
-                            addressId
-                        )
+                findNavController().safeNavigate(
+                    AddressFragmentDirections.actionAddressFragmentToOrderConfirmationFragment(
+                        groupId,
+                        addressId
                     )
+                )
             }
         }
     }
@@ -101,11 +100,12 @@ class AddressFragment : Fragment() {
                     addressAdapter.setAddressGroup(addressGroupWithAddress.addressGroup)
                     addressAdapter.setNewData(addressGroupWithAddress.addressList)
                     if (addressGroupWithAddress.addressList.isEmpty()) {
-                        if(it.addressList.isEmpty()){
-                            binding.tvEmptyAddressDesc.text = resources.getString(R.string.no_address_found)
-                        }
-                        else{
-                            binding.tvEmptyAddressDesc.text = resources.getString(R.string.all_address_added)
+                        if (it.addressList.isEmpty()) {
+                            binding.tvEmptyAddressDesc.text =
+                                resources.getString(R.string.no_address_found)
+                        } else {
+                            binding.tvEmptyAddressDesc.text =
+                                resources.getString(R.string.all_address_added)
                         }
                         binding.clNoDataFound.visibility = View.VISIBLE
                         showMenu = false
@@ -144,14 +144,14 @@ class AddressFragment : Fragment() {
                 addressGroupId: Int,
                 addressGroupName: String
             ) {
-                if (addressGroupName == "default") {
+                if (addressGroupName == getString(R.string.default_group_name)) {
                     val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Are you sure to delete this Address?")
-                        .setMessage("Deleting a address will result in removing the same from all address groups")
-                        .setPositiveButton("Delete") { _, _ ->
+                    builder.setTitle(getString(R.string.address_item_delete_alert_title))
+                        .setMessage(getString(R.string.address_item_delete_alert_msg))
+                        .setPositiveButton(getString(R.string.delete)) { _, _ ->
                             userViewModel.deleteAddress(addressId)
                         }
-                        .setNegativeButton("Cancel") { _, _ ->
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                         }
                         .setCancelable(false)
@@ -159,12 +159,12 @@ class AddressFragment : Fragment() {
                     builder.create().show()
                 } else {
                     val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Are you sure you want to remove this Address?")
-                        .setMessage("Remove address from this group")
-                        .setPositiveButton("Remove") { _, _ ->
+                    builder.setTitle(getString(R.string.remove_address))
+                        .setMessage(getString(R.string.address_item_remove_alert))
+                        .setPositiveButton(getString(R.string.remove)) { _, _ ->
                             userViewModel.deleteAddressFromGroup(addressId, addressGroupId)
                         }
-                        .setNegativeButton("Cancel") { _, _ ->
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                         }
                         .setCancelable(false)
@@ -174,12 +174,11 @@ class AddressFragment : Fragment() {
             }
 
             override fun onClickEdit(addressId: Int) {
-                if (findNavController().currentDestination?.id == R.id.addressFragment)
-                    findNavController().navigate(
-                        AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(
-                            addressId
-                        )
+                findNavController().safeNavigate(
+                    AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(
+                        addressId
                     )
+                )
             }
 
         }
@@ -188,15 +187,21 @@ class AddressFragment : Fragment() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                if (navArgs.addFromExisting && showMenu) menuInflater.inflate(R.menu.done_menu, menu)
+                if (navArgs.addFromExisting && showMenu) menuInflater.inflate(
+                    R.menu.done_menu,
+                    menu
+                )
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 if (menuItem.itemId == R.id.done) {
                     addressAdapter.getSelectedIds().forEach {
-                        userViewModel.insertIntoAddressAndGroupCrossRef(it, navArgs.addressGroupName)
+                        userViewModel.insertIntoAddressAndGroupCrossRef(
+                            it,
+                            navArgs.addressGroupName
+                        )
                     }
-                    if (findNavController().currentDestination?.id == R.id.addressFragment) findNavController().navigateUp()
+                    findNavController().navigateUp()
                     return true
                 }
                 return false

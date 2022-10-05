@@ -8,17 +8,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FragmentOrderHistoryBinding
 import com.sample.chrono12.ui.adapter.OrderHistoryAdapter
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.OrderViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 
 class OrderHistoryFragment : Fragment() {
 
     private lateinit var binding: FragmentOrderHistoryBinding
-    private val orderViewModel by  lazy { ViewModelProvider(requireActivity())[OrderViewModel::class.java] }
-    private val userViewModel by  lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
+    private val orderViewModel by lazy { ViewModelProvider(requireActivity())[OrderViewModel::class.java] }
+    private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -37,14 +37,14 @@ class OrderHistoryFragment : Fragment() {
     private fun setupOrderHistoryAdapter() {
         val adapter = OrderHistoryAdapter(onOrderClickListener)
         binding.rvOrderHistory.layoutManager = LinearLayoutManager(requireContext())
-        orderViewModel.getOrderHistory().observe(viewLifecycleOwner){  orderHistory ->
-            if (orderHistory.isEmpty()){
+        orderViewModel.getOrderHistory().observe(viewLifecycleOwner) { orderHistory ->
+            if (orderHistory.isEmpty()) {
                 binding.clEmptyOrder.visibility = View.VISIBLE
-            }else{
+            } else {
                 binding.clEmptyOrder.visibility = View.GONE
             }
             orderHistory?.let {
-                with(adapter){
+                with(adapter) {
                     setData(orderHistory)
                     notifyDataSetChanged()
                 }
@@ -56,11 +56,13 @@ class OrderHistoryFragment : Fragment() {
 
     private val onOrderClickListener =
         object : OrderHistoryAdapter.OnClickOrder {
-        override fun onClick(bulkOrderId: Int, orderId: Int) {
-            if(findNavController().currentDestination?.id == R.id.orderHistoryFragment)
-                findNavController().navigate(
-                OrderHistoryFragmentDirections.actionOrderHistoryFragmentToOrderDetailFragment(bulkOrderId, orderId)
-            )
+            override fun onClick(bulkOrderId: Int, orderId: Int) {
+                findNavController().safeNavigate(
+                    OrderHistoryFragmentDirections.actionOrderHistoryFragmentToOrderDetailFragment(
+                        bulkOrderId,
+                        orderId
+                    )
+                )
+            }
         }
-    }
 }

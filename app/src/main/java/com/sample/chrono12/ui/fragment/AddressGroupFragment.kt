@@ -16,6 +16,7 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.FragmentAddressGroupBinding
 import com.sample.chrono12.ui.adapter.AddressGroupAdapter
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.UserViewModel
 
 
@@ -37,8 +38,7 @@ class AddressGroupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.fabAddAddress.setOnClickListener{
-            if(findNavController().currentDestination?.id == R.id.addressGroupFragment)
-                findNavController().navigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToCreateAddressGroupDialog())
+            findNavController().safeNavigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToCreateAddressGroupDialog())
         }
         setupAddressGroupAdapter()
         if(navArgs.chooseGroup) setupChooseGroupButton()
@@ -49,10 +49,7 @@ class AddressGroupFragment : Fragment() {
         binding.btnSelectGroup.setOnClickListener {
             val groupId = addressGroupAdapter.getSelectedGroupId()
             if(groupId>0){
-                if(findNavController().currentDestination?.id == R.id.addressGroupFragment)
-                    findNavController().navigate(
-                    AddressGroupFragmentDirections.actionAddressGroupFragmentToOrderConfirmationFragment(addressGroupId = groupId)
-                )
+                findNavController().safeNavigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToOrderConfirmationFragment(addressGroupId = groupId))
             }
         }
     }
@@ -85,11 +82,12 @@ class AddressGroupFragment : Fragment() {
         object : AddressGroupAdapter.OnClickDelete {
             override fun onClick(addressGroupId: Int) {
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Are you sure you want to delete this Address group?")
-                    .setPositiveButton("Delete") { _, _ ->
+                builder.setTitle(getString(R.string.delete_address_group))
+                    .setMessage(R.string.address_group_delete_alert)
+                    .setPositiveButton(getString(R.string.delete)) { _, _ ->
                         userViewModel.deleteAddressGroup(addressGroupId)
                     }
-                    .setNegativeButton("Cancel") { _, _ ->
+                    .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                     }
                     .setCancelable(false)
@@ -102,12 +100,9 @@ class AddressGroupFragment : Fragment() {
     private fun getOnGroupClickListener() =
         object : AddressGroupAdapter.OnClickAddressGroup {
             override fun onClick(addressGroupWithAddress: AddressGroupWithAddress) {
-                if(findNavController().currentDestination?.id == R.id.addressGroupFragment)
-                    findNavController().navigate(
-                    AddressGroupFragmentDirections.actionAddressGroupFragmentToAddressGroupDetailFragment(
-                        addressGroupWithAddress.addressGroup.addressGroupId, addressGroupWithAddress.addressGroup.groupName
-                    )
-                )
+                findNavController().safeNavigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToAddressGroupDetailFragment(
+                    addressGroupWithAddress.addressGroup.addressGroupId, addressGroupWithAddress.addressGroup.groupName
+                ))
             }
         }
 

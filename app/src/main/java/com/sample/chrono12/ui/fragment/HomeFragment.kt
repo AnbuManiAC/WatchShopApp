@@ -15,6 +15,7 @@ import com.sample.chrono12.databinding.FragmentHomeBinding
 import com.sample.chrono12.ui.adapter.BrandsAdapter
 import com.sample.chrono12.ui.adapter.CategoriesAdapter
 import com.sample.chrono12.ui.adapter.ProductListAdapter
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,14 +50,14 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (mProductListViewModel.first) {
+        if (mProductListViewModel.isFirstInitialize) {
             lifecycleScope.launch {
                 changeVisibility(View.GONE)
                 binding.progressBar.visibility = View.VISIBLE
                 delay(1000)
                 binding.progressBar.visibility = View.GONE
                 changeVisibility(View.VISIBLE)
-                mProductListViewModel.first = false
+                mProductListViewModel.isFirstInitialize = false
             }
         }
     }
@@ -77,12 +78,11 @@ class HomeFragment : Fragment() {
                 mProductListViewModel.setProductListTitle("All Watches")
                 filterViewModel.clearSelectedFilterIds()
                 filterViewModel.clearSelectedFilterPosition()
-                if (findNavController().currentDestination?.id == R.id.homeFragment)
-                    findNavController().navigate(
-                        HomeFragmentDirections.actionHomeFragmentToProductListFragment(
-                            fromAllWatches = true
-                        )
+                findNavController().safeNavigate(
+                    HomeFragmentDirections.actionHomeFragmentToProductListFragment(
+                        fromAllWatches = true
                     )
+                )
             }
     }
 
@@ -92,12 +92,9 @@ class HomeFragment : Fragment() {
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
             filterViewModel.setAppliedFilterIds(subCategory.subCategoryId)
-            if (findNavController().currentDestination?.id == R.id.homeFragment)
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToProductListFragment(
-                        subCategoryId = subCategory.subCategoryId
-                    )
-                )
+            findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(
+                subCategoryId = subCategory.subCategoryId
+            ))
         }
         binding.rvCategories.apply {
             layoutManager =
@@ -116,13 +113,10 @@ class HomeFragment : Fragment() {
             mProductListViewModel.setProductListTitle(brand.brandName + " Watches")
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
-            filterViewModel.setAppliedFilterIds(getKey(brands, brand.brandName))
-            if (findNavController().currentDestination?.id == R.id.homeFragment)
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToProductListFragment(
-                        brandId = brand.brandId
-                    )
-                )
+            filterViewModel.setAppliedFilterIds(getKey(FilterFragment.brands, brand.brandName))
+            findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(
+                brandId = brand.brandId
+            ))
         }
         binding.rvBrands.apply {
             layoutManager =
@@ -138,12 +132,9 @@ class HomeFragment : Fragment() {
 
     private fun setupTopWatchesAdapter() {
         val topWatchAdapter = ProductListAdapter { product ->
-            if (findNavController().currentDestination?.id == R.id.homeFragment)
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToProductFragment(
-                        product.productId
-                    )
-                )
+            findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToProductFragment(
+                product.productId
+            ))
         }
         topWatchAdapter.setData(mutableListOf())
         binding.rvTopWatches.apply {
@@ -166,13 +157,11 @@ class HomeFragment : Fragment() {
                 return when (menuItem.itemId) {
                     R.id.searchFragment -> {
                         mProductListViewModel.setSearchText("")
-                        if (findNavController().currentDestination?.id == R.id.homeFragment)
-                            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
+                        findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
                         true
                     }
                     R.id.wishlistFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.homeFragment)
-                            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToWishlistFragment())
+                        findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToWishlistFragment())
                         true
                     }
                     else -> false
@@ -184,17 +173,5 @@ class HomeFragment : Fragment() {
 
     private fun <K, V> getKey(hashMap: Map<K, V>, target: V): K {
         return hashMap.filter { target == it.value }.keys.first()
-    }
-
-    companion object {
-        private val brands = hashMapOf(
-            12 to "Fastrack",
-            13 to "Titan",
-            14 to "Sonata",
-            15 to "Timex",
-            16 to "Maxima",
-            17 to "Helix",
-            18 to "Fossil"
-        )
     }
 }

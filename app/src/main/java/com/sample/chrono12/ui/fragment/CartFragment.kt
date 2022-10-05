@@ -3,7 +3,6 @@ package com.sample.chrono12.ui.fragment
 import android.app.AlertDialog
 import android.graphics.Paint
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -18,6 +17,7 @@ import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.databinding.FragmentCartBinding
 import com.sample.chrono12.databinding.LoginPromptCartWishlistDialogBinding
 import com.sample.chrono12.ui.adapter.CartAdapter
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
 
@@ -58,24 +58,17 @@ class CartFragment : Fragment() {
     private fun setupCartMissing() {
         loginPromptBinding.ivMissingCart.setImageResource(R.drawable.missing_cart)
         loginPromptBinding.btnLogIn.setOnClickListener {
-            Log.d("cart", "In missing cart nav")
-            if (findNavController().currentDestination?.id == R.id.cartFragment)
-                findNavController()
-                    .navigate(CartFragmentDirections.actionCartFragmentToLogInFragment())
+            findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToLogInFragment())
         }
         loginPromptBinding.tvContinueShopping.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.cartFragment)
-                findNavController()
-                    .navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
+            findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
         }
     }
 
     private fun setupCart() {
         val adapter = CartAdapter(
             {
-                if (findNavController().currentDestination?.id == R.id.cartFragment)
-                    findNavController()
-                        .navigate(CartFragmentDirections.actionCartFragmentToProductFragment(it.productId))
+                findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToProductFragment(it.productId))
             },
             getOnDeleteClickListener(),
             getOnQuantityClickListener()
@@ -84,10 +77,7 @@ class CartFragment : Fragment() {
         fragmentCartBinding.rvCart.layoutManager = LinearLayoutManager(activity)
         fragmentCartBinding.rvCart.adapter = adapter
         fragmentCartBinding.btnPlaceOrder.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.cartFragment)
-                findNavController().navigate(
-                    CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment()
-                )
+            findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment())
         }
         cartViewModel.getTotalCurrentPrice().observe(viewLifecycleOwner) {
             fragmentCartBinding.tvTotalCurrentPrice.text = getString(R.string.price, it)
@@ -100,9 +90,7 @@ class CartFragment : Fragment() {
 
         }
         fragmentCartBinding.btnGoHome.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.cartFragment)
-                findNavController()
-                    .navigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
+            findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
         }
         cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) { cartItems ->
@@ -123,7 +111,6 @@ class CartFragment : Fragment() {
                     fragmentCartBinding.layoutPriceOrder.visibility = View.GONE
                 }
                 adapter.setNewData(cartItems)
-//                fragmentCartBinding.rvCart.adapter = adapter
             }
     }
 
@@ -132,11 +119,12 @@ class CartFragment : Fragment() {
             override fun onDelete(productId: Int, quantity: Int) {
                 val userId = userViewModel.getLoggedInUser().toInt()
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Are you sure you want to remove this product from Cart?")
-                    .setPositiveButton("Remove") { _, _ ->
+                builder.setTitle(getString(R.string.remove_item))
+                    .setMessage(getString(R.string.cart_item_remove_alert))
+                    .setPositiveButton(getString(R.string.remove)) { _, _ ->
                         cartViewModel.removeProductFromUserCart(productId, userId)
                     }
-                    .setNegativeButton("Cancel") { _, _ ->
+                    .setNegativeButton(getString(R.string.remove)) { _, _ ->
 
                     }
                     .setCancelable(false)
@@ -158,13 +146,13 @@ class CartFragment : Fragment() {
                     if (product.stockCount <= quantity) {
                         Snackbar.make(
                             fragmentCartBinding.snackBarLayout,
-                            "Only $quantity units left",
+                            getString(R.string.only_units_left, quantity),
                             Snackbar.LENGTH_SHORT
                         ).show()
                     } else {
                         Snackbar.make(
                             fragmentCartBinding.snackBarLayout,
-                            "Max 5 units only",
+                            getString(R.string.max_units_reached),
                             Snackbar.LENGTH_SHORT
                         )
                             .show()
@@ -197,13 +185,11 @@ class CartFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.searchFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.cartFragment)
-                            findNavController().navigate(CartFragmentDirections.actionCartFragmentToSearchFragment())
+                        findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToSearchFragment())
                         true
                     }
                     R.id.wishlistFragment -> {
-                        if (findNavController().currentDestination?.id == R.id.cartFragment)
-                            findNavController().navigate(CartFragmentDirections.actionCartFragmentToWishlistFragment())
+                        findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToWishlistFragment())
                         true
                     }
 

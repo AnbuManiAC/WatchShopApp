@@ -23,6 +23,8 @@ import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.databinding.FragmentSearchBinding
 import com.sample.chrono12.ui.adapter.SuggestionAdapter
 import com.sample.chrono12.utils.SharedPrefUtil
+import com.sample.chrono12.utils.hideInput
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel.Companion.SEARCH_COMPLETED
@@ -64,9 +66,7 @@ class SearchFragment : Fragment() {
                     } else if (list.isNotEmpty()) {
                         changeSearchImageAndTextVisibility(View.GONE)
                         productListViewModel.setSearchStatus()
-                        if(findNavController().currentDestination?.id == R.id.searchFragment)
-                            findNavController()
-                            .navigate(SearchFragmentDirections.actionSearchFragmentToProductListFragment())
+                        findNavController().safeNavigate(SearchFragmentDirections.actionSearchFragmentToProductListFragment())
                     }
                 }
                 else -> {}
@@ -115,7 +115,7 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 binding.rvSearchSuggestions.visibility = View.GONE
                 searchView.clearFocus()
-                hideInput()
+                searchView.hideInput()
                 if (query == null) return false
                 productListViewModel.setProductsWithBrandAndImagesByQuery(query, getSortType())
                     .also {
@@ -137,14 +137,6 @@ class SearchFragment : Fragment() {
 
         }
 
-    private fun hideInput() {
-        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(
-            searchView.windowToken,
-            InputMethodManager.HIDE_NOT_ALWAYS
-        )
-    }
-
     private fun getOnClickSuggestionListener() =
         object : SuggestionAdapter.OnClickSuggestion {
             override fun onClick(suggestion: SearchSuggestion) {
@@ -154,12 +146,12 @@ class SearchFragment : Fragment() {
             override fun onClickRemove(suggestionHistory: SearchSuggestion, position: Int) {
                 AlertDialog.Builder(requireContext())
                     .setTitle(suggestionHistory.suggestion)
-                    .setMessage("Remove from Suggestion History")
-                    .setPositiveButton("Remove") { _, _ ->
+                    .setMessage(getString(R.string.remove_suggestion))
+                    .setPositiveButton(getString(R.string.remove)) { _, _ ->
                         userViewModel.removeSuggestion(suggestionHistory)
                         adapter.removeSuggestion(position)
                     }
-                    .setNegativeButton("Cancel") { _, _ -> }
+                    .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
                     .create()
                     .show()
             }
@@ -197,7 +189,7 @@ class SearchFragment : Fragment() {
                         }
 
                         override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                            hideInput()
+                            searchView.hideInput()
                             requireActivity().onBackPressed()
                             return true
                         }

@@ -7,6 +7,7 @@ import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
@@ -20,6 +21,9 @@ import com.sample.chrono12.data.models.UserField
 import com.sample.chrono12.databinding.FragmentLogInBinding
 import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.utils.SharedPrefUtil
+import com.sample.chrono12.utils.hideInput
+import com.sample.chrono12.utils.safeNavigate
+import com.sample.chrono12.utils.showKeyboard
 import com.sample.chrono12.viewmodels.UserViewModel
 
 class LogInFragment : Fragment() {
@@ -39,43 +43,32 @@ class LogInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupForm()
-        userViewModel.getUserFieldInfo().observe(viewLifecycleOwner) { field ->
-            field?.let {
-                deliverFieldMessage(it)
-                if (field.response == Response.SUCCESS) {
-                    SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
-                    if(findNavController().currentDestination?.id == R.id.logInFragment)
-                    {
-                        findNavController().popBackStack(R.id.logInFragment, true)
-                        (requireActivity() as HomeActivity).enableCartBadge()
-                    }
-                }
-            }
-        }
-
+        setUpFocusChangeListeners()
 
         binding.toSignup.setOnClickListener {
             userViewModel.clearUserFieldInfo()
             cancelErrors()
-            if(findNavController().currentDestination?.id == R.id.logInFragment)
-                findNavController()
-                .navigate(LogInFragmentDirections.actionLogInFragmentToSignUpFragment())
-        }
-        binding.btnLogin.setOnClickListener {
-            clearFormFocus()
-            val email = binding.tiEtEmail.text.toString()
-            val password = binding.tiEtPassword.text.toString()
-            if (isInputNonNull(email, password)) {
-                if (emailCheck()){
-                    userViewModel.authenticateUser(email, password)
-                }
-            }
-            else{
-                if(email.isEmpty()) binding.tilLoginName.error = "This field can't be empty"
-                if(password.isEmpty()) binding.tilLoginPassword.error = "This field can't be empty"
-            }
+            findNavController().safeNavigate(LogInFragmentDirections.actionLogInFragmentToSignUpFragment())
         }
 
+        binding.btnLogin.setOnClickListener {
+            clearFormFocus()
+            initiateLogin()
+        }
+
+        binding.tiEtPassword.setOnEditorActionListener { v, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    v.clearFocus()
+                    v.hideInput()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun setUpFocusChangeListeners() {
         binding.tiEtPassword.setOnFocusChangeListener { _, hasFocus ->
             if(hasFocus) binding.tilLoginPassword.error = null
             setIconColor(
@@ -86,7 +79,7 @@ class LogInFragment : Fragment() {
         binding.tiEtEmail.setOnFocusChangeListener { _, hasFocus ->
             if(hasFocus) {
                 binding.tilLoginName.error = null
-                showKeyBoard(binding.tiEtEmail)
+                binding.tiEtEmail.showKeyboard()
             }
             setIconColor(
                 binding.tilLoginName,
@@ -95,12 +88,28 @@ class LogInFragment : Fragment() {
         }
     }
 
-    private fun showKeyBoard(view: View) {
-        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(
-            view,
-            InputMethodManager.SHOW_IMPLICIT
-        )
+    private fun initiateLogin() {
+        userViewModel.getUserFieldInfo().observe(viewLifecycleOwner) { field ->
+            field?.let {
+                deliverFieldMessage(it)
+                if (field.response == Response.SUCCESS) {
+                    SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
+                    findNavController().popBackStack(R.id.logInFragment, true)
+                    (requireActivity() as HomeActivity).enableCartBadge()
+                }
+            }
+        }
+        val email = binding.tiEtEmail.text.toString()
+        val password = binding.tiEtPassword.text.toString()
+        if (isInputNonNull(email, password)) {
+            if (emailCheck()){
+                userViewModel.authenticateUser(email, password)
+            }
+        }
+        else{
+            if(email.isEmpty()) binding.tilLoginName.error = getString(R.string.field_cant_be_empty)
+            if(password.isEmpty()) binding.tilLoginPassword.error = getString(R.string.field_cant_be_empty)
+        }
     }
 
     private fun setupForm() {
@@ -109,10 +118,11 @@ class LogInFragment : Fragment() {
     }
 
     private fun setIconColor(textInputLayout: TextInputLayout, hasFocus: Boolean) {
-        val colorFocussed =
-            ResourcesCompat.getColor(resources, R.color.primaryColor, null)
-        val colorNonFocussed = ResourcesCompat.getColor(resources, R.color.unselected, null)
-        val color = if (hasFocus) colorFocussed else colorNonFocussed
+        val color = if (hasFocus) ResourcesCompat.getColor(
+            resources,
+            R.color.buttonColor,
+            requireContext().theme
+        ) else ResourcesCompat.getColor(resources, R.color.unselected, requireContext().theme)
         textInputLayout.setStartIconTintList(ColorStateList.valueOf(color))
     }
 

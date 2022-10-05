@@ -1,18 +1,13 @@
 package com.sample.chrono12.ui.fragment
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Bundle
-import android.os.SystemClock
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,14 +25,11 @@ import com.sample.chrono12.databinding.FragmentOrderConfirmationBinding
 import com.sample.chrono12.ui.adapter.AddressAdapter
 import com.sample.chrono12.ui.adapter.CartAdapter
 import com.sample.chrono12.utils.SharedPrefUtil
+import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.CartViewModel
 import com.sample.chrono12.viewmodels.OrderViewModel
 import com.sample.chrono12.viewmodels.UserViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 class OrderConfirmationFragment : Fragment() {
@@ -91,11 +83,14 @@ class OrderConfirmationFragment : Fragment() {
                         val requiredStock = it.cart.quantity * orderCount
                         val availableStock =
                             it.productWithBrandAndImagesList.productWithBrand.product.stockCount
-                        errorMsg =
-                            errorMsg + "${it.productWithBrandAndImagesList.productWithBrand.product.name}" +
-                                    "\nRequired quantity: $requiredStock\nAvailable quantity: $availableStock\n"
+                        errorMsg += getString(
+                            R.string.order_confirmation_product_quantity_error_msg,
+                            it.productWithBrandAndImagesList.productWithBrand.product.name,
+                            requiredStock,
+                            availableStock
+                        )
                     }
-                    errorMsg += "Kindly go back and make changes in the product quantity or address group to continue"
+                    errorMsg += getString(R.string.order_confirmation_error_suggestion)
                     binding.cvError.visibility = View.VISIBLE
                     binding.tvError.text = errorMsg
                 } else {
@@ -124,11 +119,11 @@ class OrderConfirmationFragment : Fragment() {
                     orderStatus = OrderStatus.ORDERED.toString()
                 )
                 orderId = orderViewModel.insertOrder(order)
-                cartWithProductInfo.forEach {
+                cartWithProductInfo.forEach { cartWithProductInfo ->
                     val productOrdered = ProductOrdered(
                         orderId = orderId,
-                        productId = it.cart.productId,
-                        quantity = it.cart.quantity
+                        productId = cartWithProductInfo.cart.productId,
+                        quantity = cartWithProductInfo.cart.quantity
                     )
                     orderViewModel.insertProductOrdered(productOrdered)
                 }
@@ -145,13 +140,10 @@ class OrderConfirmationFragment : Fragment() {
 //                orderViewModel.updateProductStock(it.productWithBrandAndImagesList.productWithBrand.product.productId, updatedStockCount)
 //            }
             cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
-            if(findNavController().currentDestination?.id == R.id.orderConfirmationFragment)
-                findNavController().navigate(
-                OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(
-                    bulkOrderId,
-                    orderId
-                )
-            )
+            findNavController().safeNavigate(OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(
+                bulkOrderId,
+                orderId
+            ))
         }
     }
 
@@ -181,7 +173,7 @@ class OrderConfirmationFragment : Fragment() {
 
     private fun setupAddressAdapter() {
         binding.rvAddress.layoutManager = LinearLayoutManager(requireActivity())
-        addressAdapter = AddressAdapter(getOnAddressButtonClickListener(), false, false)
+        addressAdapter = AddressAdapter(getOnAddressButtonClickListener(), addFromExisting =  false, chooseAddress =  false)
         addressAdapter.setAddresses(listOf())
         binding.rvAddress.adapter = addressAdapter
         addressAdapter.setHideEditAndDeleteButton(true)
@@ -222,12 +214,9 @@ class OrderConfirmationFragment : Fragment() {
     private fun setupProductsAdapter() {
         val cartAdapter = CartAdapter(
             {
-                if(findNavController().currentDestination?.id == R.id.orderConfirmationFragment)
-                    findNavController().navigate(
-                    OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToProductFragment(
-                        it.productId
-                    )
-                )
+                findNavController().safeNavigate(OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToProductFragment(
+                    it.productId
+                ))
             },
             getOnDeleteClickListener(),
             getOnQuantityClickListener()
@@ -256,12 +245,12 @@ class OrderConfirmationFragment : Fragment() {
             ) {
                 if (addressGroupName == "default") {
                     val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Are you sure to delete this Address?")
-                        .setMessage("Deleting a address will result in removing the same from all address groups")
-                        .setPositiveButton("Delete") { _, _ ->
+                    builder.setTitle(getString(R.string.address_item_delete_alert_title))
+                        .setMessage(getString(R.string.address_item_delete_alert_msg))
+                        .setPositiveButton(getString(R.string.delete)) { _, _ ->
                             userViewModel.deleteAddress(addressId)
                         }
-                        .setNegativeButton("Cancel") { _, _ ->
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                         }
                         .setCancelable(false)
@@ -269,12 +258,12 @@ class OrderConfirmationFragment : Fragment() {
                     builder.create().show()
                 } else {
                     val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Are you sure you want to remove this Address?")
-                        .setMessage("Remove address from this group")
-                        .setPositiveButton("Remove") { _, _ ->
+                    builder.setTitle(getString(R.string.remove_address))
+                        .setMessage(getString(R.string.address_item_remove_alert))
+                        .setPositiveButton(getString(R.string.remove)) { _, _ ->
                             userViewModel.deleteAddressFromGroup(addressId, addressGroupId)
                         }
-                        .setNegativeButton("Cancel") { _, _ ->
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                         }
                         .setCancelable(false)
@@ -284,12 +273,9 @@ class OrderConfirmationFragment : Fragment() {
             }
 
             override fun onClickEdit(addressId: Int) {
-                if(findNavController().currentDestination?.id == R.id.orderConfirmationFragment)
-                    findNavController().navigate(
-                    OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToNewAddressFragment(
-                        addressId
-                    )
-                )
+                findNavController().safeNavigate(OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToNewAddressFragment(
+                    addressId
+                ))
             }
 
         }
@@ -299,12 +285,12 @@ class OrderConfirmationFragment : Fragment() {
             override fun onDelete(productId: Int, quantity: Int) {
                 val userId = userViewModel.getLoggedInUser().toInt()
                 val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle("Are you sure you want to delete this product from Cart?")
-                    .setMessage("This will not be reversed")
-                    .setPositiveButton("Delete") { _, _ ->
+                builder.setTitle(getString(R.string.remove_item))
+                    .setMessage(getString(R.string.cart_item_remove_alert))
+                    .setPositiveButton(getString(R.string.remove)) { _, _ ->
                         cartViewModel.removeProductFromUserCart(productId, userId)
                     }
-                    .setNegativeButton("Cancel") { _, _ ->
+                    .setNegativeButton(getString(R.string.remove)) { _, _ ->
 
                     }
                     .setCancelable(false)
@@ -326,11 +312,11 @@ class OrderConfirmationFragment : Fragment() {
                     if (product.stockCount <= quantity) {
                         Snackbar.make(
                             requireView(),
-                            "Only $quantity units left",
+                            getString(R.string.only_units_left, quantity),
                             Snackbar.LENGTH_SHORT
                         ).show()
                     } else {
-                        Snackbar.make(requireView(), "Max 5 units only", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(requireView(), getString(R.string.max_units_reached), Snackbar.LENGTH_SHORT)
                             .show()
                     }
                     false
@@ -353,11 +339,13 @@ class OrderConfirmationFragment : Fragment() {
         }
 
     private fun getAddressString(address: Address): String {
-        return address.contactName + "\n" + address.addressLine1.split("___")
-            .joinToString(", ") + "\n" + address.addressLine2 + "\n" + address.city + ", " + address.state + " - " + address.pincode + "\n" + "Mobile Number : " + address.contactNumber.toString()
-    }
+        var addressString =  address.contactName + "\n" + address.addressLine1.split("___")
+            .joinToString(", ")
+        if(address.addressLine2.isNotEmpty()){
+            addressString += "\n" + address.addressLine2
+        }
+        addressString += "\n" + address.city + ", " + address.state + " - " + address.pincode + "\n" + "Mobile Number : " + address.contactNumber
 
-    override fun onDestroy() {
-        super.onDestroy()
+        return addressString
     }
 }

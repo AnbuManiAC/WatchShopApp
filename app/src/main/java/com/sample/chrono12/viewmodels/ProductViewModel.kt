@@ -1,6 +1,5 @@
 package com.sample.chrono12.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -29,8 +28,6 @@ class ProductViewModel @Inject constructor(
 
     fun setProduct(productId: Int) {
         viewModelScope.launch {
-            Log.d("dataaa",
-                watchRepository.getProductWithImages(productId).productImage[0].imageUrl)
             product.postValue(watchRepository.getProductWithBrandAndImages(productId))
             productDetail.postValue(watchRepository.getProductDetail(productId))
         }
@@ -40,8 +37,8 @@ class ProductViewModel @Inject constructor(
 
     fun getProductDetail(): LiveData<List<ProductDetail>> = productDetail
 
-    fun setIsProductInUserWishList(isWishlisted: Boolean){
-        isProductInUserWishList.value = isWishlisted
+    fun setIsProductInUserWishList(isWishListed: Boolean){
+        isProductInUserWishList.value = isWishListed
     }
 
     fun getIsProductInUserWishList():LiveData<Boolean> = isProductInUserWishList

@@ -26,7 +26,7 @@ class NewAddressFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         if (navArgs.addressId > 0)
             userViewModel.setAddress(navArgs.addressId)
         binding = FragmentNewAddressBinding.inflate(layoutInflater)
@@ -49,7 +49,7 @@ class NewAddressFragment : Fragment() {
                     tilEtCity.setText(address.city)
                     tilEtState.setText(address.state)
                     tilEtPincode.setText(address.pincode.toString())
-                    tilEtMobile.setText(address.contactNumber.toString())
+                    tilEtMobile.setText(address.contactNumber)
                 }
             }
         } else {
@@ -87,7 +87,7 @@ class NewAddressFragment : Fragment() {
     }
 
     private fun checkInput(): Boolean =
-        isFieldsNotEmpty() && pincodeCheck() && mobileCheck()
+        isFieldsNotEmpty() && pincodeCheck() && mobileCheck() && stateCheck()
 
     private fun mobileCheck(): Boolean {
         val mobile = binding.tilEtMobile.text.toString()
@@ -101,6 +101,15 @@ class NewAddressFragment : Fragment() {
         return true
     }
 
+    private fun stateCheck(): Boolean{
+        val state = binding.tilEtState.text.toString()
+        val states = resources.getStringArray(R.array.india_states)
+        return if(state in states) true
+        else{
+            binding.tilState.error = getString(R.string.invalid_state_name)
+            false
+        }
+    }
 
     private fun isFieldsNotEmpty(): Boolean {
         val name = binding.tilEtAddressName
@@ -110,7 +119,7 @@ class NewAddressFragment : Fragment() {
         val state = binding.tilEtState
         val pincode = binding.tilEtPincode
         val mobile = binding.tilEtMobile
-        val emptyErrorMsg = "Thid field can't be empty"
+        val emptyErrorMsg = getString(R.string.field_cant_be_empty)
 
         val isNameEmpty = name.text.isNullOrEmpty()
         val isDoorNumEmpty = doorNum.text.isNullOrEmpty()
@@ -135,7 +144,7 @@ class NewAddressFragment : Fragment() {
 
     private fun pincodeCheck(): Boolean {
         val pincode = binding.tilEtPincode.text.toString()
-        var isValidPincode = pincode.isDigitsOnly() && pincode.length == 6
+        val isValidPincode = pincode.isDigitsOnly() && pincode.length == 6
         if (!isValidPincode && pincode.toInt() < 100_000) {
             binding.tilPincode.error = "Invalid pincode"
         }
@@ -227,7 +236,6 @@ class NewAddressFragment : Fragment() {
                     clearFocus()
                     if (checkInput()) {
                         addUserAddress()
-                        if (findNavController().currentDestination?.id == R.id.newAddressFragment)
                             findNavController().navigateUp()
                     }
                     return true

@@ -1,6 +1,5 @@
 package com.sample.chrono12.ui.fragment
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Patterns
@@ -8,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
 import androidx.fragment.app.Fragment
@@ -26,9 +24,11 @@ import com.sample.chrono12.data.models.UserField.MOBILE
 import com.sample.chrono12.databinding.FragmentSignUpBinding
 import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.utils.SharedPrefUtil
+import com.sample.chrono12.utils.hideInput
+import com.sample.chrono12.utils.safeNavigate
+import com.sample.chrono12.utils.showKeyboard
 import com.sample.chrono12.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
-
 
 class SignUpFragment : Fragment() {
 
@@ -52,31 +52,21 @@ class SignUpFragment : Fragment() {
             clearFormFocuses()
             initiateSignup()
         }
+
+        binding.toLogIn.setOnClickListener {
+            findNavController().safeNavigate(SignUpFragmentDirections.actionSignUpFragmentToLogInFragment())
+        }
+
         binding.tilEtCPassword.setOnEditorActionListener { v, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_DONE -> {
                     v.clearFocus()
-                    hideInput(v)
+                    v.hideInput()
                     true
                 }
                 else -> false
             }
         }
-
-
-        binding.toLogIn.setOnClickListener {
-            if (findNavController().currentDestination?.id == R.id.signUpFragment)
-                findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToLogInFragment())
-        }
-
-    }
-
-    private fun showKeyBoard(view: View) {
-        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.showSoftInput(
-            view,
-            InputMethodManager.SHOW_IMPLICIT
-        )
     }
 
     private fun setupForm() {
@@ -97,14 +87,13 @@ class SignUpFragment : Fragment() {
                         userViewModel.insertIntoAddressGroup(
                             AddressGroup(
                                 userId = userViewModel.getLoggedInUser().toInt(),
-                                groupName = "default"
+                                groupName = getString(R.string.default_group_name)
                             )
                         )
                     }
-                    if (findNavController().currentDestination?.id == R.id.signUpFragment) {
                         findNavController().popBackStack(R.id.signUpFragment, true)
                         (requireActivity() as HomeActivity).enableCartBadge()
-                    }
+
 
                 }
             }
@@ -222,7 +211,7 @@ class SignUpFragment : Fragment() {
         binding.tilEtName.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 binding.tilName.error = null
-                showKeyBoard(binding.tilEtName)
+                binding.tilEtName.showKeyboard()
             }
             setIconColor(
                 binding.tilName,
@@ -262,17 +251,12 @@ class SignUpFragment : Fragment() {
     }
 
     private fun setIconColor(textInputLayout: TextInputLayout, hasFocus: Boolean) {
-        val colorFocussed =
-            ResourcesCompat.getColor(resources, R.color.primaryColor, null)
-        val colorNonFocussed = ResourcesCompat.getColor(resources, R.color.unselected, null)
-        val color = if (hasFocus) colorFocussed else colorNonFocussed
+        val color = if (hasFocus) ResourcesCompat.getColor(
+            resources,
+            R.color.buttonColor,
+            requireContext().theme
+        ) else ResourcesCompat.getColor(resources, R.color.unselected, requireContext().theme)
         textInputLayout.setStartIconTintList(ColorStateList.valueOf(color))
-    }
-
-    private fun hideInput(view: View) {
-        val imm =
-            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     override fun onDestroy() {

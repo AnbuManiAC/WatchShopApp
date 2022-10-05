@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
-import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FragmentChooseAddressTypeBinding
+import com.sample.chrono12.utils.safeNavigate
 
 
 class ChooseAddressTypeDialog : DialogFragment() {
@@ -42,20 +42,18 @@ class ChooseAddressTypeDialog : DialogFragment() {
         binding.btnSelect.setOnClickListener {
             when (binding.rgChooseAddressType.checkedRadioButtonId) {
                 binding.rbFromAddresses.id -> {
-                    if (findNavController().currentDestination?.id == R.id.chooseAddressTypeFragment)
-                        findNavController().navigate(
-                            ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressFragment(
-                                chooseAddress = true
-                            )
+                    findNavController().safeNavigate(
+                        ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressFragment(
+                            chooseAddress = true
                         )
+                    )
                 }
                 binding.rbFromAddressGroups.id -> {
-                    if (findNavController().currentDestination?.id == R.id.chooseAddressTypeFragment)
-                        findNavController().navigate(
-                            ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressGroupFragment(
-                                chooseGroup = true
-                            )
+                    findNavController().safeNavigate(
+                        ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressGroupFragment(
+                            chooseGroup = true
                         )
+                    )
                 }
             }
 

@@ -52,14 +52,4 @@ object SharedPrefUtil {
 
     private fun getEditor(sharedPreferences: SharedPreferences) =
         sharedPreferences.edit()
-
-    fun getNotificationId(requireActivity: FragmentActivity): Int {
-        val sharedPreferences = getSharedPreference(requireActivity)
-        val editor = getEditor(sharedPreferences)
-        val notificationIdKey = requireActivity.getString(R.string.notification_id)
-        var notificationId = sharedPreferences.getInt(notificationIdKey, 0)
-        notificationId++
-        editor.putInt(notificationIdKey, notificationId).apply()
-        return notificationId
-    }
 }

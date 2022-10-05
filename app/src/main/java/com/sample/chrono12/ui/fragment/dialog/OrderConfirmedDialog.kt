@@ -7,6 +7,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.sample.chrono12.R
+import com.sample.chrono12.utils.safeNavigate
 
 class OrderConfirmedDialog : DialogFragment() {
 
@@ -17,16 +18,14 @@ class OrderConfirmedDialog : DialogFragment() {
             val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.fragment_order_confirmed_dialog)
                 .setPositiveButton("Okay") { _, _ ->
-                    if (findNavController().currentDestination?.id == R.id.orderConfirmedDialog)
-                        findNavController().popBackStack(R.id.homeFragment, false)
+                    findNavController().popBackStack(R.id.homeFragment, false)
                 }.setNegativeButton("View Order") { _, _ ->
-                    if (findNavController().currentDestination?.id == R.id.orderConfirmedDialog)
-                        findNavController().navigate(
-                            OrderConfirmedDialogDirections.actionOrderConfirmedDialogToOrderDetailFragment(
-                                navArgs.bulkOrderId,
-                                navArgs.orderId
-                            )
+                    findNavController().safeNavigate(
+                        OrderConfirmedDialogDirections.actionOrderConfirmedDialogToOrderDetailFragment(
+                            navArgs.bulkOrderId,
+                            navArgs.orderId
                         )
+                    )
                 }
             val alertDialog = builder.create()
             alertDialog.setCancelable(false)

@@ -27,7 +27,8 @@ class UserViewModel @Inject constructor(
     private var loggedInUser: Long = 0
     private var userDetails = MutableLiveData<UserDetails>()
     private var userField = MutableLiveData<UserField>()
-    var suggestedEmail = ""
+    var suggestedLoginEmail = ""
+    var suggestedSignupEmail = ""
     private val _suggestions = MutableLiveData<List<SearchSuggestion>>()
     val suggestion: LiveData<List<SearchSuggestion>>
         get() = _suggestions
@@ -109,7 +110,7 @@ class UserViewModel @Inject constructor(
             }
         } else {
             userField.value = UserField.EMAIL.also { userField ->
-                suggestedEmail = emailId
+                suggestedSignupEmail = emailId
                 userField.response = Response.FAILURE.also { it.message = "Email does not exists" }
             }
         }
@@ -129,6 +130,7 @@ class UserViewModel @Inject constructor(
             userField.value = UserField.EMAIL.also { userField ->
                 userField.response =
                     Response.FAILURE.also { it.message = "Email id already Exists" }
+                suggestedLoginEmail = user.email
             }
         }
     }

@@ -40,7 +40,11 @@ class AddressAdapter(
         fun bind(address: Address) {
             addressName.text = address.contactName
             doorAndStreet.text = address.addressLine1.split("___").joinToString(", ")
-            landmark.text = address.addressLine2
+            if(address.addressLine2.isEmpty()){
+                landmark.visibility = View.GONE
+            }else{
+                landmark.text = address.addressLine2
+            }
             cityStatePincode.text = address.city + ", " + address.state + " - " + address.pincode
             mobile.text = "Mobile Number : " + address.contactNumber.toString()
             if (addressGroup.groupName == "default") {

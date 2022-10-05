@@ -27,11 +27,13 @@
             app:startIconDrawable="@drawable/ic_person">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:saveEnabled="false"
                 android:id="@+id/tilEtName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="text" />
 
+            <requestFocus/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -50,6 +52,7 @@
             app:startIconDrawable="@drawable/ic_mail">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:saveEnabled="false"
                 android:id="@+id/tilEtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -73,6 +76,7 @@
             app:startIconDrawable="@drawable/ic_mobile">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:saveEnabled="false"
                 android:id="@+id/tilEtMobile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -98,6 +102,7 @@
             app:startIconDrawable="@drawable/ic_lock">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:saveEnabled="false"
                 android:id="@+id/tilEtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -122,6 +127,7 @@
             app:startIconDrawable="@drawable/ic_lock">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:saveEnabled="false"
                 android:id="@+id/tilEtCPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

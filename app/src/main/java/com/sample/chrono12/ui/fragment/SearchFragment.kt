@@ -13,6 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,14 +44,13 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        setHasOptionsMenu(true)
         binding = FragmentSearchBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        setupMenu()
+        setupMenu()
         userViewModel.setSearchHistory()
         setupSuggestionAdapter()
         productListViewModel.searchStatus.observe(viewLifecycleOwner) { status ->
@@ -113,7 +113,6 @@ class SearchFragment : Fragment() {
     private val getSearchQueryListener =
         object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                Log.d("SEARCH1", "$query")
                 binding.rvSearchSuggestions.visibility = View.GONE
                 searchView.clearFocus()
                 hideInput()
@@ -167,42 +166,6 @@ class SearchFragment : Fragment() {
 
         }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.search_menu, menu)
-
-        val searchItem = menu.findItem(R.id.searchFragment)
-        searchView = searchItem.actionView as SearchView
-        searchView.maxWidth = Integer.MAX_VALUE
-        searchItem.expandActionView()
-        searchView.setOnQueryTextListener(getSearchQueryListener)
-
-        val searchText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
-
-        searchText.setText(productListViewModel.searchText)
-        searchText.setSelection(productListViewModel.searchText.length)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            searchText.textCursorDrawable = ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.cursor_primary,
-                null
-            )
-        }
-
-        searchItem.setOnActionExpandListener(
-            object : MenuItem.OnActionExpandListener {
-                override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
-                    return true
-                }
-
-                override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                    hideInput()
-                    requireActivity().onBackPressed()
-                    return true
-                }
-            })
-    }
-
     private fun setupMenu(){
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -219,13 +182,13 @@ class SearchFragment : Fragment() {
                 searchText.setText(productListViewModel.searchText)
                 searchText.setSelection(productListViewModel.searchText.length)
 
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//                    searchText.textCursorDrawable = ResourcesCompat.getDrawable(
-//                        resources,
-//                        R.drawable.cursor_primary,
-//                        null
-//                    )
-//                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    searchText.textCursorDrawable = ResourcesCompat.getDrawable(
+                        resources,
+                        R.drawable.cursor_primary,
+                        null
+                    )
+                }
 
                 searchItem.setOnActionExpandListener(
                     object : MenuItem.OnActionExpandListener {
@@ -245,7 +208,7 @@ class SearchFragment : Fragment() {
                 return menuItem.itemId == R.id.searchFragment
             }
 
-        })
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     override fun onDestroyView() {

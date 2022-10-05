@@ -4,15 +4,14 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Patterns
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.isDigitsOnly
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,13 +20,15 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.AddressGroup
 import com.sample.chrono12.data.entities.User
 import com.sample.chrono12.data.models.Response
-import com.sample.chrono12.data.models.UserField.*
 import com.sample.chrono12.data.models.UserField
+import com.sample.chrono12.data.models.UserField.EMAIL
+import com.sample.chrono12.data.models.UserField.MOBILE
 import com.sample.chrono12.databinding.FragmentSignUpBinding
 import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
+
 
 class SignUpFragment : Fragment() {
 
@@ -45,7 +46,7 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpFocusChangeListeners()
-        binding.tilEtEmail.setText(userViewModel.suggestedEmail)
+        setupForm()
         binding.btnSignup.setOnClickListener {
             userViewModel.clearUserFieldInfo()
             clearFormFocuses()
@@ -63,23 +64,44 @@ class SignUpFragment : Fragment() {
         }
 
 
-        binding.toLogIn.setOnClickListener{
-            if(findNavController().currentDestination?.id == R.id.signUpFragment)
+        binding.toLogIn.setOnClickListener {
+            if (findNavController().currentDestination?.id == R.id.signUpFragment)
                 findNavController().navigate(SignUpFragmentDirections.actionSignUpFragmentToLogInFragment())
         }
+
+    }
+
+    private fun showKeyBoard(view: View) {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(
+            view,
+            InputMethodManager.SHOW_IMPLICIT
+        )
+    }
+
+    private fun setupForm() {
+        binding.tilEtEmail.setText(userViewModel.suggestedSignupEmail)
+        binding.tilEtName.setText("")
+        binding.tilEtMobile.setText("")
+        binding.tilEtPassword.setText("")
+        binding.tilEtCPassword.setText("")
     }
 
     private fun initiateSignup() {
-        userViewModel.getUserFieldInfo().observe(viewLifecycleOwner){ field ->
+        userViewModel.getUserFieldInfo().observe(viewLifecycleOwner) { field ->
             field?.let {
                 deliverFieldMessage(it)
-                if(field.response == Response.SUCCESS){
+                if (field.response == Response.SUCCESS) {
                     SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
-                    lifecycleScope.launch{
-                        userViewModel.insertIntoAddressGroup(AddressGroup(userId = userViewModel.getLoggedInUser().toInt(), groupName = "default"))
+                    lifecycleScope.launch {
+                        userViewModel.insertIntoAddressGroup(
+                            AddressGroup(
+                                userId = userViewModel.getLoggedInUser().toInt(),
+                                groupName = "default"
+                            )
+                        )
                     }
-                    if(findNavController().currentDestination?.id == R.id.signUpFragment)
-                    {
+                    if (findNavController().currentDestination?.id == R.id.signUpFragment) {
                         findNavController().popBackStack(R.id.signUpFragment, true)
                         (requireActivity() as HomeActivity).enableCartBadge()
                     }
@@ -88,18 +110,18 @@ class SignUpFragment : Fragment() {
             }
         }
         cancelErrors()
-        if(inputCheck()){
+        if (inputCheck()) {
             val name = binding.tilEtName.text.toString()
             val email = binding.tilEtEmail.text.toString()
             val mobile = binding.tilEtMobile.text.toString()
             val password = binding.tilEtPassword.text.toString()
-            val user = User(0,name,email,mobile,password,null)
+            val user = User(0, name, email, mobile, password, null)
             userViewModel.initiateSignUp(user)
         }
     }
 
     private fun deliverFieldMessage(field: UserField) {
-        when(field){
+        when (field) {
             EMAIL -> binding.tilEmail.error = field.response.message
             MOBILE -> binding.tilMobile.error = field.response.message
             else -> {
@@ -130,13 +152,13 @@ class SignUpFragment : Fragment() {
     private fun passwordCheck(): Boolean {
         val password = binding.tilEtPassword.text.toString()
         val confirmPassword = binding.tilEtCPassword.text.toString()
-        if (password != confirmPassword){
+        if (password != confirmPassword) {
             val passwordInfo = getString(R.string.password_doesnt_match)
             binding.tilPassword.error = passwordInfo
             binding.tilCPassword.error = passwordInfo
             return false
         }
-        if(password.length<8){
+        if (password.length < 8) {
             val passwordInfo = getString(R.string.password_min_character)
             binding.tilPassword.error = passwordInfo
             binding.tilCPassword.error = passwordInfo
@@ -147,7 +169,9 @@ class SignUpFragment : Fragment() {
 
     private fun mobileCheck(): Boolean {
         val mobile = binding.tilEtMobile.text.toString()
-        if ( !mobile.isDigitsOnly() || mobile.length!=10 || mobile.first().toString().toInt() !in listOf(6,7,8,9)){
+        if (!mobile.isDigitsOnly() || mobile.length != 10 || mobile.first().toString()
+                .toInt() !in listOf(6, 7, 8, 9)
+        ) {
             val mobileInfo = getString(R.string.not_a_mobile)
             binding.tilMobile.error = mobileInfo
             return false
@@ -172,19 +196,19 @@ class SignUpFragment : Fragment() {
         val password = binding.tilEtPassword.text
         val confirmPassword = binding.tilEtCPassword.text
         val emptyInfo = getString(R.string.field_cant_be_empty)
-        if(name.isNullOrEmpty()) {
+        if (name.isNullOrEmpty()) {
             binding.tilName.error = emptyInfo
         }
-        if(email.isNullOrEmpty()) {
+        if (email.isNullOrEmpty()) {
             binding.tilEmail.error = emptyInfo
         }
-        if(mobile.isNullOrEmpty()) {
+        if (mobile.isNullOrEmpty()) {
             binding.tilMobile.error = emptyInfo
         }
-        if(password.isNullOrEmpty()) {
+        if (password.isNullOrEmpty()) {
             binding.tilPassword.error = emptyInfo
         }
-        if(confirmPassword.isNullOrEmpty()) {
+        if (confirmPassword.isNullOrEmpty()) {
             binding.tilCPassword.error = emptyInfo
         }
         return (!name.isNullOrEmpty() &&
@@ -194,16 +218,21 @@ class SignUpFragment : Fragment() {
                 !confirmPassword.isNullOrEmpty())
     }
 
-    private fun setUpFocusChangeListeners(){
+    private fun setUpFocusChangeListeners() {
         binding.tilEtName.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tilName.error = null
+            if (hasFocus) {
+                binding.tilName.error = null
+                showKeyBoard(binding.tilEtName)
+            }
             setIconColor(
                 binding.tilName,
                 hasFocus
             )
         }
         binding.tilEtEmail.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tilEmail.error = null
+            if (hasFocus) {
+                binding.tilEmail.error = null
+            }
             setIconColor(
                 binding.tilEmail,
                 hasFocus
@@ -241,13 +270,14 @@ class SignUpFragment : Fragment() {
     }
 
     private fun hideInput(view: View) {
-        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         userViewModel.clearUserFieldInfo()
-        userViewModel.suggestedEmail = ""
+        userViewModel.suggestedSignupEmail = ""
     }
 }

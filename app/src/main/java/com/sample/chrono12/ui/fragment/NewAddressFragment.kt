@@ -106,7 +106,6 @@ class NewAddressFragment : Fragment() {
         val name = binding.tilEtAddressName
         val doorNum = binding.tilEtDoorNum
         val street = binding.tilEtStreet
-        val landmark = binding.tilEtLandmark
         val city = binding.tilEtCity
         val state = binding.tilEtState
         val pincode = binding.tilEtPincode
@@ -116,7 +115,6 @@ class NewAddressFragment : Fragment() {
         val isNameEmpty = name.text.isNullOrEmpty()
         val isDoorNumEmpty = doorNum.text.isNullOrEmpty()
         val isStreetEmpty = street.text.isNullOrEmpty()
-        val isLandmarkEmpty = landmark.text.isNullOrEmpty()
         val isCityEmpty = city.text.isNullOrEmpty()
         val isStateEmpty = state.text.isNullOrEmpty()
         val isPincodeEmpty = pincode.text.isNullOrEmpty()
@@ -125,14 +123,13 @@ class NewAddressFragment : Fragment() {
         if (isNameEmpty) binding.tilAddressName.error = emptyErrorMsg
         if (isDoorNumEmpty) binding.tilDoorNum.error = emptyErrorMsg
         if (isStreetEmpty) binding.tilStreet.error = emptyErrorMsg
-        if (isLandmarkEmpty) binding.tilLandmark.error = emptyErrorMsg
         if (isCityEmpty) binding.tilCity.error = emptyErrorMsg
         if (isStateEmpty) binding.tilState.error = emptyErrorMsg
         if (isPincodeEmpty) binding.tilPincode.error = emptyErrorMsg
         if (isMobileEmpty) binding.tilMobile.error = emptyErrorMsg
 
         return (!isNameEmpty && !isDoorNumEmpty && !isStreetEmpty
-                && !isLandmarkEmpty && !isCityEmpty && !isPincodeEmpty
+                 && !isCityEmpty && !isPincodeEmpty
                 && !isStateEmpty && !isMobileEmpty)
     }
 

@@ -1,7 +1,6 @@
 package com.sample.chrono12.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
@@ -50,8 +49,8 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if(mProductListViewModel.first){
-            lifecycleScope.launch{
+        if (mProductListViewModel.first) {
+            lifecycleScope.launch {
                 changeVisibility(View.GONE)
                 binding.progressBar.visibility = View.VISIBLE
                 delay(1000)
@@ -75,16 +74,16 @@ class HomeFragment : Fragment() {
     private fun setupAllWatchesButton() {
         binding.btnAllWatches
             .setOnClickListener {
-            mProductListViewModel.setProductListTitle("All Watches")
-            filterViewModel.clearSelectedFilterIds()
-            filterViewModel.clearSelectedFilterPosition()
-            if (findNavController().currentDestination?.id == R.id.homeFragment)
-                findNavController().navigate(
-                    HomeFragmentDirections.actionHomeFragmentToProductListFragment(
-                        fromAllWatches = true
+                mProductListViewModel.setProductListTitle("All Watches")
+                filterViewModel.clearSelectedFilterIds()
+                filterViewModel.clearSelectedFilterPosition()
+                if (findNavController().currentDestination?.id == R.id.homeFragment)
+                    findNavController().navigate(
+                        HomeFragmentDirections.actionHomeFragmentToProductListFragment(
+                            fromAllWatches = true
+                        )
                     )
-                )
-        }
+            }
     }
 
     private fun setupCategoriesAdapter() {
@@ -104,12 +103,10 @@ class HomeFragment : Fragment() {
             layoutManager =
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = categoriesAdapter
-            Log.d("Skewing1", "${System.currentTimeMillis()}")
         }
         mProductListViewModel.getSubCategory().observe(viewLifecycleOwner) {
             it?.let {
                 categoriesAdapter.setNewData(it)
-                Log.d("Skewing2", "${System.currentTimeMillis()}")
             }
         }
     }
@@ -119,7 +116,7 @@ class HomeFragment : Fragment() {
             mProductListViewModel.setProductListTitle(brand.brandName + " Watches")
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
-            filterViewModel.setAppliedFilterIds(getKey(this.brands, brand.brandName))
+            filterViewModel.setAppliedFilterIds(getKey(brands, brand.brandName))
             if (findNavController().currentDestination?.id == R.id.homeFragment)
                 findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToProductListFragment(
@@ -159,7 +156,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupMenu() {
-        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider{
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
 
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.search_wishlist_menu, menu)
@@ -185,17 +182,19 @@ class HomeFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private val brands = hashMapOf(
-        12 to "Fastrack",
-        13 to "Titan",
-        14 to "Sonata",
-        15 to "Timex",
-        16 to "Maxima",
-        17 to "Helix",
-        18 to "Fossil"
-    )
-
     private fun <K, V> getKey(hashMap: Map<K, V>, target: V): K {
         return hashMap.filter { target == it.value }.keys.first()
+    }
+
+    companion object {
+        private val brands = hashMapOf(
+            12 to "Fastrack",
+            13 to "Titan",
+            14 to "Sonata",
+            15 to "Timex",
+            16 to "Maxima",
+            17 to "Helix",
+            18 to "Fossil"
+        )
     }
 }

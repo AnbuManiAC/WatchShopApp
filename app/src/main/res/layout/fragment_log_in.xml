@@ -20,20 +20,22 @@
             android:layout_margin="@dimen/margin_large"
             android:hint="@string/email"
             android:textAlignment="viewStart"
-            app:startIconDrawable="@drawable/ic_mail"
             app:layout_constraintBottom_toTopOf="@id/tilLoginPassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed">
+            app:layout_constraintVertical_chainStyle="packed"
+            app:startIconDrawable="@drawable/ic_mail">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tiEtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/tiEtEmail"
-                android:inputType="textEmailAddress"/>
-            <requestFocus/>
+                android:inputType="textEmailAddress"
+                android:saveEnabled="false" />
+
+            <requestFocus />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -44,21 +46,22 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:hint="@string/password"
-            app:startIconDrawable="@drawable/ic_lock"
-            app:endIconMode="password_toggle"
             android:textAlignment="viewStart"
+            app:endIconMode="password_toggle"
             app:layout_constraintBottom_toTopOf="@id/btnLogin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tilLoginName">
+            app:layout_constraintTop_toBottomOf="@id/tilLoginName"
+            app:startIconDrawable="@drawable/ic_lock">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/tiEtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/tiEtPassword"
                 android:inputType="textPassword"
-                android:maxLength="15" />
+                android:maxLength="15"
+                android:saveEnabled="false" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,11 +84,11 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_large"
             android:text="@string/don_t_have_an_account"
-            app:layout_constraintHorizontal_chainStyle="packed"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toSignup"
             app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView

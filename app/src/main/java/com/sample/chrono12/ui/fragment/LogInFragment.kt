@@ -1,11 +1,13 @@
 package com.sample.chrono12.ui.fragment
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -36,6 +38,7 @@ class LogInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupForm()
         userViewModel.getUserFieldInfo().observe(viewLifecycleOwner) { field ->
             field?.let {
                 deliverFieldMessage(it)
@@ -81,12 +84,28 @@ class LogInFragment : Fragment() {
             )
         }
         binding.tiEtEmail.setOnFocusChangeListener { _, hasFocus ->
-            if(hasFocus) binding.tilLoginName.error = null
+            if(hasFocus) {
+                binding.tilLoginName.error = null
+                showKeyBoard(binding.tiEtEmail)
+            }
             setIconColor(
                 binding.tilLoginName,
                 hasFocus
             )
         }
+    }
+
+    private fun showKeyBoard(view: View) {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(
+            view,
+            InputMethodManager.SHOW_IMPLICIT
+        )
+    }
+
+    private fun setupForm() {
+        binding.tiEtEmail.setText(userViewModel.suggestedLoginEmail)
+        binding.tiEtPassword.setText("")
     }
 
     private fun setIconColor(textInputLayout: TextInputLayout, hasFocus: Boolean) {
@@ -133,6 +152,7 @@ class LogInFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         userViewModel.clearUserFieldInfo()
+        userViewModel.suggestedLoginEmail = ""
     }
 
 }

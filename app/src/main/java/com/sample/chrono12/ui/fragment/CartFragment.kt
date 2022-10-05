@@ -61,7 +61,7 @@ class CartFragment : Fragment() {
             findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToLogInFragment())
         }
         loginPromptBinding.tvContinueShopping.setOnClickListener {
-            findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
+            findNavController().navigateUp()
         }
     }
 
@@ -90,7 +90,7 @@ class CartFragment : Fragment() {
 
         }
         fragmentCartBinding.btnGoHome.setOnClickListener {
-            findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToHomeFragment())
+            findNavController().navigateUp()
         }
         cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) { cartItems ->
@@ -124,7 +124,7 @@ class CartFragment : Fragment() {
                     .setPositiveButton(getString(R.string.remove)) { _, _ ->
                         cartViewModel.removeProductFromUserCart(productId, userId)
                     }
-                    .setNegativeButton(getString(R.string.remove)) { _, _ ->
+                    .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                     }
                     .setCancelable(false)

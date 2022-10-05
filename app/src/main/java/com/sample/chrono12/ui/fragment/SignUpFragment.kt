@@ -91,10 +91,8 @@ class SignUpFragment : Fragment() {
                             )
                         )
                     }
-                        findNavController().popBackStack(R.id.signUpFragment, true)
-                        (requireActivity() as HomeActivity).enableCartBadge()
-
-
+                    findNavController().popBackStack(R.id.profileFragment, false)
+                    (requireActivity() as HomeActivity).enableCartBadge()
                 }
             }
         }

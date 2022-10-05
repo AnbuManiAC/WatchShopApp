@@ -1,12 +1,9 @@
 package com.sample.chrono12.ui.fragment
 
 import android.app.AlertDialog
-import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.res.ResourcesCompat
@@ -158,8 +155,8 @@ class SearchFragment : Fragment() {
 
         }
 
-    private fun setupMenu(){
-        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider{
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.search_menu, menu)
 
@@ -169,7 +166,8 @@ class SearchFragment : Fragment() {
                 searchItem.expandActionView()
                 searchView.setOnQueryTextListener(getSearchQueryListener)
 
-                val searchText: EditText = searchView.findViewById(androidx.appcompat.R.id.search_src_text)
+                val searchText: EditText =
+                    searchView.findViewById(androidx.appcompat.R.id.search_src_text)
 
                 searchText.setText(productListViewModel.searchText)
                 searchText.setSelection(productListViewModel.searchText.length)

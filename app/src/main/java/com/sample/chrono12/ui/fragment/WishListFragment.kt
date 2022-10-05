@@ -61,9 +61,7 @@ class WishListFragment : Fragment() {
     private fun setupLoginPrompt() {
         loginPromptBinding.ivMissingCart.setImageResource(R.drawable.missing_wishlist)
         loginPromptBinding.tvContinueShopping.setOnClickListener {
-            findNavController().safeNavigate(
-                WishListFragmentDirections.actionWishlistFragmentToHomeFragment()
-            )
+            findNavController().navigateUp()
         }
         loginPromptBinding.btnLogIn.setOnClickListener {
             findNavController().safeNavigate(
@@ -88,7 +86,7 @@ class WishListFragment : Fragment() {
         rvWishList.layoutManager = LinearLayoutManager(activity)
         rvWishList.adapter = adapter
         fragmentWishListBinding.btnGoHome.setOnClickListener {
-            findNavController().safeNavigate(WishListFragmentDirections.actionWishlistFragmentToHomeFragment())
+            findNavController().navigateUp()
         }
         wishListViewModel.getWishListItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {

@@ -25,7 +25,7 @@ class CameraPermissionDialog : DialogFragment() {
         binding = CameraPermissionDialogBinding.inflate(layoutInflater, container, false)
         binding.btnGoToSettings.setOnClickListener {
             val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            intent.data = Uri.parse("package:com.sample.chrono12")
+            intent.data = Uri.fromParts("package", requireActivity().packageName, null)
             startActivity(intent)
             dismiss()
         }

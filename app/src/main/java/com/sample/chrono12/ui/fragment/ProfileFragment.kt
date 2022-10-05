@@ -1,6 +1,7 @@
 package com.sample.chrono12.ui.fragment
 
 import android.Manifest
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
@@ -12,6 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.*
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.MenuHost
@@ -87,13 +89,14 @@ class ProfileFragment : Fragment() {
                 }
                 DELETE -> {
                     val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Remove profile picture")
-                        .setPositiveButton("Remove") { _, _ ->
+                    builder.setTitle(getString(R.string.remove_profile_picture))
+                        .setMessage(getString(R.string.remove_profile_picture_alert))
+                        .setPositiveButton(getString(R.string.remove)) { _, _ ->
                             userViewModel.deleteProfilePicture(
                                 userViewModel.getLoggedInUser().toInt()
                             )
                         }
-                        .setNegativeButton("Cancel") { _, _ ->
+                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
 
                         }
                         .setCancelable(false)
@@ -106,15 +109,46 @@ class ProfileFragment : Fragment() {
 
     }
 
+    private val cameraPermissionResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        )
+        { permissions ->
+            var isGranted = true
+            permissions.entries.forEach {
+                isGranted = it.value && isGranted
+            }
+            if (isGranted) {
+                takePictureFromCamera()
+            } else {
+                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog())
+            }
+        }
+
+    private val galleryPermissionResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        )
+        { isGranted ->
+            if (isGranted) {
+                takePictureFromGallery()
+            } else {
+                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog())
+            }
+        }
+
     private fun checkAndRequestGalleryPermissions(): Boolean {
         val galleryPermission = ActivityCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
         if (galleryPermission == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-                30
+//            requestPermissions(
+//                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+//                30
+//            )
+            galleryPermissionResultLauncher.launch(
+                Manifest.permission.READ_EXTERNAL_STORAGE
             )
             return false
         }
@@ -124,16 +158,21 @@ class ProfileFragment : Fragment() {
     private fun checkAndRequestCameraPermissions(): Boolean {
         val cameraPermission: Int =
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
-//        val galleryWritePermission: Int =
-//            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val galleryWritePermission: Int =
+            ActivityCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
 
-        if (cameraPermission == PackageManager.PERMISSION_DENIED) {
-            requestPermissions(
-                arrayOf(Manifest.permission.CAMERA), 20
+        if (cameraPermission == PackageManager.PERMISSION_DENIED || galleryWritePermission == PackageManager.PERMISSION_DENIED) {
+//            requestPermissions(
+//                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), 20
+//            )
+            cameraPermissionResultLauncher.launch(
+                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             )
             return false
         }
-
         return true
     }
 
@@ -154,7 +193,14 @@ class ProfileFragment : Fragment() {
             } else {
                 hasProfilePicture = try {
                     val bitmap = BitmapFactory.decodeFile(user.image)
-                    bindingProfile.ivProfilePicture.setImageBitmap(bitmap)
+                    if (bitmap != null) bindingProfile.ivProfilePicture.setImageBitmap(bitmap)
+                    else bindingProfile.ivProfilePicture.setImageDrawable(
+                        ResourcesCompat.getDrawable(
+                            resources,
+                            R.drawable.ic_profile_picture,
+                            null
+                        )
+                    )
                     true
                 } catch (e: Exception) {
                     bindingProfile.ivProfilePicture.setImageDrawable(
@@ -201,63 +247,45 @@ class ProfileFragment : Fragment() {
 
     private fun takePictureFromGallery() {
         val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(pickPhoto, 1)
+//        startActivityForResult(pickPhoto, 1)
+        galleryResultLauncher.launch(pickPhoto)
     }
 
     private fun takePictureFromCamera() {
         val takePicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(takePicture, 2)
+//        startActivityForResult(takePicture, 2)
+        cameraResultLauncher.launch(takePicture)
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 20) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                takePictureFromCamera()
-            } else {
-                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog())
-            }
-        } else if (requestCode == 30) {
-            if (requestCode == 30 && grantResults[0] == PackageManager.PERMISSION_GRANTED) takePictureFromGallery()
-            else {
-                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog())
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            1 -> {
-                data?.let {
-                    val selectedImageUri: Uri? = data.data
-                    bindingProfile.ivProfilePicture.setImageURI(selectedImageUri)
-                    val selectedImagePath = selectedImageUri?.let { getPathFromUri(it) }.toString()
+    private val cameraResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            data?.let {
+                val bundle = data.extras
+                bundle?.get("data")?.let {
+                    val bitmapImage = bundle.get("data") as Bitmap
+                    bindingProfile.ivProfilePicture.setImageBitmap(bitmapImage)
+                    val selectedImagePath = getImagePath(bitmapImage)
                     userViewModel.addProfilePicture(
                         selectedImagePath,
                         userViewModel.getLoggedInUser().toInt()
                     )
                 }
-
             }
-            2 -> {
-                data?.let {
-                    val bundle = data.extras
-                    bundle?.get("data")?.let {
-                        val bitmapImage = bundle.get("data") as Bitmap
-                        bindingProfile.ivProfilePicture.setImageBitmap(bitmapImage)
-                        val selectedImagePath = getImagePath(bitmapImage)
-                        userViewModel.addProfilePicture(
-                            selectedImagePath,
-                            userViewModel.getLoggedInUser().toInt()
-                        )
-                    }
-                }
+        }
+    }
 
+    private val galleryResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            data?.let {
+                val selectedImageUri: Uri? = data.data
+                bindingProfile.ivProfilePicture.setImageURI(selectedImageUri)
+                val selectedImagePath = selectedImageUri?.let { getPathFromUri(it) }.toString()
+                userViewModel.addProfilePicture(
+                    selectedImagePath,
+                    userViewModel.getLoggedInUser().toInt()
+                )
             }
         }
     }
@@ -315,4 +343,57 @@ class ProfileFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
+
+    //    override fun onRequestPermissionsResult(
+//        requestCode: Int,
+//        permissions: Array<String?>,
+//        grantResults: IntArray
+//    ) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+//        if (requestCode == 20) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+//                takePictureFromCamera()
+//            } else {
+//                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog())
+//            }
+//        } else if (requestCode == 30) {
+//            if (requestCode == 30 && grantResults[0] == PackageManager.PERMISSION_GRANTED) takePictureFromGallery()
+//            else {
+//                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog())
+//            }
+//        }
+//    }
+
+    //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        when (requestCode) {
+//            1 -> {
+//                data?.let {
+//                    val selectedImageUri: Uri? = data.data
+//                    bindingProfile.ivProfilePicture.setImageURI(selectedImageUri)
+//                    val selectedImagePath = selectedImageUri?.let { getPathFromUri(it) }.toString()
+//                    userViewModel.addProfilePicture(
+//                        selectedImagePath,
+//                        userViewModel.getLoggedInUser().toInt()
+//                    )
+//                }
+//
+//            }
+//            2 -> {
+//                data?.let {
+//                    val bundle = data.extras
+//                    bundle?.get("data")?.let {
+//                        val bitmapImage = bundle.get("data") as Bitmap
+//                        bindingProfile.ivProfilePicture.setImageBitmap(bitmapImage)
+//                        val selectedImagePath = getImagePath(bitmapImage)
+//                        userViewModel.addProfilePicture(
+//                            selectedImagePath,
+//                            userViewModel.getLoggedInUser().toInt()
+//                        )
+//                    }
+//                }
+//
+//            }
+//        }
+//    }
 }

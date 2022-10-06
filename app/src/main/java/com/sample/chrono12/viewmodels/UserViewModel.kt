@@ -201,6 +201,7 @@ class UserViewModel @Inject constructor(
     fun removeSuggestion(suggestion: SearchSuggestion) {
         viewModelScope.launch {
             userRepository.removeSuggestion(suggestion)
+            setSearchHistory()
         }
     }
 

@@ -17,9 +17,9 @@ class OrderConfirmedDialog : DialogFragment() {
         return requireActivity().let {
             val builder = AlertDialog.Builder(requireContext())
             builder.setView(R.layout.fragment_order_confirmed_dialog)
-                .setPositiveButton("Okay") { _, _ ->
+                .setPositiveButton(getString(R.string.okay)) { _, _ ->
                     findNavController().popBackStack(R.id.homeFragment, false)
-                }.setNegativeButton("View Order") { _, _ ->
+                }.setNegativeButton(getString(R.string.view_order)) { _, _ ->
                     findNavController().safeNavigate(
                         OrderConfirmedDialogDirections.actionOrderConfirmedDialogToOrderDetailFragment(
                             navArgs.bulkOrderId,

@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
+import com.sample.chrono12.R
 import com.sample.chrono12.viewmodels.UserViewModel
 
 class DeleteSearchDialog : DialogFragment() {
@@ -13,12 +14,13 @@ class DeleteSearchDialog : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(activity)
-        builder.setTitle("Are you sure you want to delete search history?")
-            .setPositiveButton("Delete") { _, _ ->
+        builder.setTitle(getString(R.string.delete_search_history))
+            .setMessage(getString(R.string.delete_search_history_alert))
+            .setPositiveButton(getString(R.string.delete)) { _, _ ->
                 deleteSearchHistory()
                 dismiss()
             }
-            .setNegativeButton("Cancel") { _, _ ->
+            .setNegativeButton(getString(R.string.cancel)) { _, _ ->
                 dismiss()
             }
             .setCancelable(false)

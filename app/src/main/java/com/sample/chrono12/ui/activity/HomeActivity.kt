@@ -36,7 +36,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var badge : BadgeDrawable
     private val userViewModel by lazy { ViewModelProvider(this)[UserViewModel::class.java] }
-    private val mProductListViewModel by lazy { ViewModelProvider(this)[ProductListViewModel::class.java] }
+    private val productListViewModel by lazy { ViewModelProvider(this)[ProductListViewModel::class.java] }
     private val cartViewModel by lazy { ViewModelProvider(this)[CartViewModel::class.java] }
     private val connectivityViewModel by lazy { ViewModelProvider(this)[ConnectivityViewModel::class.java] }
 
@@ -58,9 +58,9 @@ class HomeActivity : AppCompatActivity() {
             AppBarConfiguration(setOf(R.id.homeFragment, R.id.cartFragment, R.id.profileFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
 
-        mProductListViewModel.setSubCategory()
-        mProductListViewModel.setBrand()
-        mProductListViewModel.setTopRatedWatches(10)
+        productListViewModel.setSubCategory()
+        productListViewModel.setBrand()
+        productListViewModel.setTopRatedWatches(10)
         enableCartBadge()
     }
 
@@ -70,28 +70,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setupNetworkConnectionMonitor() {
-//        val connectionLiveData = ConnectivityObserver(this)
-//        connectionLiveData.observe(this) { hasInternet ->
-//            if (hasInternet) {
-//                Snackbar.make(
-//                    findViewById(R.id.snackBarLayout),
-//                    R.string.internet_is_back, Snackbar.LENGTH_SHORT
-//                ).show()
-//            }
-//            else {
-//                Snackbar.make(
-//                    findViewById(R.id.snackBarLayout),
-//                    R.string.no_internet, Snackbar.LENGTH_LONG
-//                ).show()
-//            }
-//        }
         connectivityViewModel.networkState.observe(this){ hasInternet ->
             if (!hasInternet) {
                 val snackBar = Snackbar.make(
                     findViewById(R.id.snackBarLayout),
                     R.string.no_internet, Snackbar.LENGTH_INDEFINITE
                 )
-                snackBar.setAction("Okay"){
+                snackBar.setAction(getString(R.string.okay)){
                     snackBar.dismiss()
                 }
                 snackBar.show()
@@ -102,11 +87,6 @@ class HomeActivity : AppCompatActivity() {
 
 
     private fun setupUser() {
-//        val sharedPref = getSharedPreferences(getString(R.string.user_pref), MODE_PRIVATE)
-//        val userId = sharedPref?.getLong(getString(R.string.user_id), 0)
-//        userId?.let {
-//            if (it != 0L) userViewModel.setLoggedInUser(it)
-//        }
         val userId = SharedPrefUtil.getUserId(this)
         if(userId != 0L) userViewModel.setLoggedInUser(userId)
     }

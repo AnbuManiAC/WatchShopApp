@@ -7,7 +7,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FilterRvItemBinding
-import java.util.*
+
 
 class FilterAdapter(
     private val filters: List<String>,

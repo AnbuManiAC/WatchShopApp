@@ -68,6 +68,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/padding_small"
             android:progressTint="@color/green"
+            android:progressBackgroundTint="@color/unselected"
+            android:secondaryProgressTint="@color/unselected"
             android:rating="4.3"
             android:stepSize="0.2"
             app:layout_constraintStart_toStartOf="@id/tvItemProductBrand"

@@ -38,14 +38,14 @@ class ProductFragment : Fragment() {
 
     private val navArgs by navArgs<ProductFragmentArgs>()
     private lateinit var binding: FragmentProductBinding
-    private lateinit var productViewModel: ProductViewModel
+    private val productViewModel by lazy { ViewModelProvider(this)[ProductViewModel::class.java] }
     private val cartViewModel by lazy { ViewModelProvider(requireActivity())[CartViewModel::class.java] }
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private val wishListViewModel by lazy { ViewModelProvider(requireActivity())[WishListViewModel::class.java] }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentProductBinding.inflate(layoutInflater)
         return binding.root
@@ -54,7 +54,6 @@ class ProductFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupMenu()
-        productViewModel = ViewModelProvider(this)[ProductViewModel::class.java]
 
         productViewModel.setProduct(navArgs.productId)
         productViewModel.getProduct().observe(viewLifecycleOwner) {

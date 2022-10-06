@@ -45,11 +45,6 @@ class SuggestionAdapter(
         }
     }
 
-    fun removeSuggestion(position: Int){
-        suggestions.removeAt(position)
-        notifyItemRemoved(position)
-    }
-
     interface OnClickSuggestion{
         fun onClick(suggestion: SearchSuggestion)
 
@@ -71,14 +66,6 @@ class SuggestionAdapter(
 
     override fun getItemCount(): Int {
         return suggestions.size
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
     }
 
     class DiffUtilCallback(private val oldList: List<SearchSuggestion>, private val newList: List<SearchSuggestion>) :

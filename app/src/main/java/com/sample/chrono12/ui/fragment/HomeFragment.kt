@@ -25,15 +25,13 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-
     private lateinit var binding: FragmentHomeBinding
-    private val mProductListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
+    private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentHomeBinding.inflate(layoutInflater)
         setupCategoriesAdapter()
@@ -50,14 +48,14 @@ class HomeFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (mProductListViewModel.isFirstInitialize) {
+        if (productListViewModel.isFirstInitialize) {
             lifecycleScope.launch {
                 changeVisibility(View.GONE)
                 binding.progressBar.visibility = View.VISIBLE
                 delay(1000)
                 binding.progressBar.visibility = View.GONE
                 changeVisibility(View.VISIBLE)
-                mProductListViewModel.isFirstInitialize = false
+                productListViewModel.isFirstInitialize = false
             }
         }
     }
@@ -75,7 +73,7 @@ class HomeFragment : Fragment() {
     private fun setupAllWatchesButton() {
         binding.btnAllWatches
             .setOnClickListener {
-                mProductListViewModel.setProductListTitle("All Watches")
+                productListViewModel.setProductListTitle("All Watches")
                 filterViewModel.clearSelectedFilterIds()
                 filterViewModel.clearSelectedFilterPosition()
                 findNavController().safeNavigate(
@@ -88,7 +86,7 @@ class HomeFragment : Fragment() {
 
     private fun setupCategoriesAdapter() {
         val categoriesAdapter = CategoriesAdapter(listOf()) { subCategory ->
-            mProductListViewModel.setProductListTitle(subCategory.name + "es")
+            productListViewModel.setProductListTitle(subCategory.name + "es")
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
             filterViewModel.setAppliedFilterIds(subCategory.subCategoryId)
@@ -101,7 +99,7 @@ class HomeFragment : Fragment() {
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = categoriesAdapter
         }
-        mProductListViewModel.getSubCategory().observe(viewLifecycleOwner) {
+        productListViewModel.getSubCategory().observe(viewLifecycleOwner) {
             it?.let {
                 categoriesAdapter.setNewData(it)
             }
@@ -110,7 +108,7 @@ class HomeFragment : Fragment() {
 
     private fun setupBrandsAdapter() {
         val brandAdapter = BrandsAdapter(listOf()) { brand ->
-            mProductListViewModel.setProductListTitle(brand.brandName + " Watches")
+            productListViewModel.setProductListTitle(brand.brandName + " Watches")
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
             filterViewModel.setAppliedFilterIds(getKey(FilterFragment.brands, brand.brandName))
@@ -123,7 +121,7 @@ class HomeFragment : Fragment() {
                 LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
             this.adapter = brandAdapter
         }
-        mProductListViewModel.getBrand().observe(viewLifecycleOwner) {
+        productListViewModel.getBrand().observe(viewLifecycleOwner) {
             it?.let {
                 brandAdapter.setNewData(it)
             }
@@ -141,7 +139,7 @@ class HomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireActivity())
             this.adapter = topWatchAdapter
         }
-        mProductListViewModel.topRatedWatchList.observe(viewLifecycleOwner) {
+        productListViewModel.topRatedWatchList.observe(viewLifecycleOwner) {
             it?.let { topWatchAdapter.setNewData(it) }
         }
     }
@@ -156,7 +154,7 @@ class HomeFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.searchFragment -> {
-                        mProductListViewModel.setSearchText("")
+                        productListViewModel.setSearchText("")
                         findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
                         true
                     }

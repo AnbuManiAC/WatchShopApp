@@ -31,9 +31,7 @@ class CategoriesAdapter(
         fun bind(category: SubCategory){
             binding.root.setOnClickListener { onClickListener.onClick(category) }
             tvCategoryName.text = category.name
-//            ivCategoryImage.load(category.imageUrl)
             ImageUtil.loadImage(category.imageUrl, ivCategoryImage, ImageKey.SMALL)
-//            ivCategoryImage.setImageDrawable(ResourcesCompat.getDrawable(binding.root.resources, R.drawable.ic_load,null))
         }
     }
 

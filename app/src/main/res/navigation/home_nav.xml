@@ -448,6 +448,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_addressFragment_to_deleteAddressDialog"
+            app:destination="@id/deleteAddressDialog" />
     </fragment>
     <fragment
         android:id="@+id/newAddressFragment"
@@ -544,6 +547,9 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"/>
+        <action
+            android:id="@+id/action_addressGroupDetailFragment_to_removeAddressFromGroupDialog"
+            app:destination="@id/removeAddressFromGroupDialog" />
     </fragment>
     <dialog
         android:id="@+id/chooseAddressTypeFragment"
@@ -720,5 +726,27 @@
         android:id="@+id/galleryPermissionDialog"
         android:name="com.sample.chrono12.ui.fragment.dialog.GalleryPermissionDialog"
         android:label="GalleryPermissionDialog" />
+    <dialog
+        android:id="@+id/deleteAddressDialog"
+        android:name="com.sample.chrono12.ui.fragment.dialog.DeleteAddressDialog"
+        android:label="DeleteAddressDialog">
+        <argument
+            android:name="addressId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </dialog>
+    <dialog
+        android:id="@+id/removeAddressFromGroupDialog"
+        android:name="com.sample.chrono12.ui.fragment.dialog.RemoveAddressFromGroupDialog"
+        android:label="RemoveAddressFromGroupDialog">
+        <argument
+            android:name="addressId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+        <argument
+            android:name="addressGroupId"
+            app:argType="integer"
+            android:defaultValue="0"/>
+    </dialog>
 
 </navigation>

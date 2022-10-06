@@ -43,7 +43,7 @@ class ProductListFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
         binding = FragmentProductListBinding.inflate(layoutInflater)

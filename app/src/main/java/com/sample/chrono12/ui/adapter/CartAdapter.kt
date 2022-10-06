@@ -133,7 +133,6 @@ class CartAdapter(
         return cartWithProductInfoList.size
     }
 
-    interface Abcd
 
     interface OnClickDelete {
         fun onDelete(productId: Int, quantity: Int)

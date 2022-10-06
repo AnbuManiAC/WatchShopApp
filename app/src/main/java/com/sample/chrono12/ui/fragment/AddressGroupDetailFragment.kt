@@ -23,7 +23,6 @@ class AddressGroupDetailFragment : Fragment() {
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private val navArgs by navArgs<AddressGroupDetailFragmentArgs>()
     private var addressGroupName = ""
-    private var addressGroupId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,10 +35,7 @@ class AddressGroupDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (navArgs.addressGroupId > 0 && navArgs.addressGroupName != getString(R.string.default_group_name)) {
-            this.addressGroupId = navArgs.addressGroupId
-            setupAdapter(navArgs.addressGroupId)
-        }
+        setupAdapter(navArgs.addressGroupId)
         setupEditButton()
         setupAddNewAddressButton()
         setupAddFromExistingButton()
@@ -47,7 +43,7 @@ class AddressGroupDetailFragment : Fragment() {
     }
 
     private fun setupAddressGroupName() {
-        userViewModel.getAddressGroupName(userViewModel.getLoggedInUser().toInt(), addressGroupId).observe(viewLifecycleOwner) { addressGroupName ->
+        userViewModel.getAddressGroupName(userViewModel.getLoggedInUser().toInt(), navArgs.addressGroupId).observe(viewLifecycleOwner) { addressGroupName ->
             addressGroupName?.let {
                 this.addressGroupName = addressGroupName
                 binding.tvGroupName.text = addressGroupName
@@ -124,18 +120,7 @@ class AddressGroupDetailFragment : Fragment() {
                 addressGroupId: Int,
                 addressGroupName: String
             ) {
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle(getString(R.string.remove_address))
-                    .setMessage(getString(R.string.address_item_remove_alert))
-                    .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                        userViewModel.deleteAddressFromGroup(addressId, addressGroupId)
-                    }
-                    .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-
-                    }
-                    .setCancelable(false)
-
-                builder.create().show()
+                findNavController().safeNavigate(AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToRemoveAddressFromGroupDialog(addressId, addressGroupId))
             }
 
             override fun onClickEdit(addressId: Int) {

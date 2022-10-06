@@ -16,7 +16,7 @@ class ImageSliderAdapter(
 
     class ImageViewHolder(private val binding: ImageSliderItemBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(image: String){
-//            binding.ivImages.load(image)
+            binding.ivImages.load(image)
             ImageUtil.loadImage(image,binding.ivImages, ImageKey.LARGE)
         }
     }

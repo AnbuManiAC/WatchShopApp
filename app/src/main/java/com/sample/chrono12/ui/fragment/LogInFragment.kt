@@ -1,6 +1,5 @@
 package com.sample.chrono12.ui.fragment
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Patterns
@@ -8,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -34,7 +31,7 @@ class LogInFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentLogInBinding.inflate(layoutInflater)
         return binding.root

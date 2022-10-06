@@ -31,7 +31,6 @@ import java.util.*
 
 class SearchFragment : Fragment() {
 
-    private lateinit var adapter: SuggestionAdapter
     private lateinit var binding: FragmentSearchBinding
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
@@ -41,7 +40,7 @@ class SearchFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentSearchBinding.inflate(layoutInflater)
         return binding.root
@@ -79,8 +78,8 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupSuggestionAdapter() {
-        adapter = SuggestionAdapter(getOnClickSuggestionListener())
-        adapter.setData(mutableListOf())
+        val adapter = SuggestionAdapter(getOnClickSuggestionListener())
+        adapter.setData(listOf())
         binding.rvSearchSuggestions.layoutManager = LinearLayoutManager(requireContext())
         binding.rvSearchSuggestions.adapter = adapter
         userViewModel.suggestion.observe(viewLifecycleOwner) { suggestions ->
@@ -88,10 +87,8 @@ class SearchFragment : Fragment() {
                 binding.rvSearchSuggestions.visibility = View.GONE
                 return@observe
             } else {
-                val mutableSuggestions = ArrayList(suggestions)
-                adapter.setNewData(mutableSuggestions)
+                adapter.setNewData(suggestions)
             }
-
         }
 
     }
@@ -146,7 +143,6 @@ class SearchFragment : Fragment() {
                     .setMessage(getString(R.string.remove_suggestion))
                     .setPositiveButton(getString(R.string.remove)) { _, _ ->
                         userViewModel.removeSuggestion(suggestionHistory)
-                        adapter.removeSuggestion(position)
                     }
                     .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
                     .create()

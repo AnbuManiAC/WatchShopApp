@@ -41,7 +41,7 @@ class ProfileFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
         return if (isUserLoggedIn) {
@@ -143,10 +143,6 @@ class ProfileFragment : Fragment() {
             Manifest.permission.READ_EXTERNAL_STORAGE
         )
         if (galleryPermission == PackageManager.PERMISSION_DENIED) {
-//            requestPermissions(
-//                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-//                30
-//            )
             galleryPermissionResultLauncher.launch(
                 Manifest.permission.READ_EXTERNAL_STORAGE
             )
@@ -165,9 +161,6 @@ class ProfileFragment : Fragment() {
             )
 
         if (cameraPermission == PackageManager.PERMISSION_DENIED || galleryWritePermission == PackageManager.PERMISSION_DENIED) {
-//            requestPermissions(
-//                arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), 20
-//            )
             cameraPermissionResultLauncher.launch(
                 arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
             )
@@ -247,13 +240,11 @@ class ProfileFragment : Fragment() {
 
     private fun takePictureFromGallery() {
         val pickPhoto = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-//        startActivityForResult(pickPhoto, 1)
         galleryResultLauncher.launch(pickPhoto)
     }
 
     private fun takePictureFromCamera() {
         val takePicture = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//        startActivityForResult(takePicture, 2)
         cameraResultLauncher.launch(takePicture)
     }
 
@@ -343,57 +334,4 @@ class ProfileFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
-
-    //    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<String?>,
-//        grantResults: IntArray
-//    ) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//        if (requestCode == 20) {
-//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-//                takePictureFromCamera()
-//            } else {
-//                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToCameraPermissionDialog())
-//            }
-//        } else if (requestCode == 30) {
-//            if (requestCode == 30 && grantResults[0] == PackageManager.PERMISSION_GRANTED) takePictureFromGallery()
-//            else {
-//                findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToGalleryPermissionDialog())
-//            }
-//        }
-//    }
-
-    //    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        when (requestCode) {
-//            1 -> {
-//                data?.let {
-//                    val selectedImageUri: Uri? = data.data
-//                    bindingProfile.ivProfilePicture.setImageURI(selectedImageUri)
-//                    val selectedImagePath = selectedImageUri?.let { getPathFromUri(it) }.toString()
-//                    userViewModel.addProfilePicture(
-//                        selectedImagePath,
-//                        userViewModel.getLoggedInUser().toInt()
-//                    )
-//                }
-//
-//            }
-//            2 -> {
-//                data?.let {
-//                    val bundle = data.extras
-//                    bundle?.get("data")?.let {
-//                        val bitmapImage = bundle.get("data") as Bitmap
-//                        bindingProfile.ivProfilePicture.setImageBitmap(bitmapImage)
-//                        val selectedImagePath = getImagePath(bitmapImage)
-//                        userViewModel.addProfilePicture(
-//                            selectedImagePath,
-//                            userViewModel.getLoggedInUser().toInt()
-//                        )
-//                    }
-//                }
-//
-//            }
-//        }
-//    }
 }

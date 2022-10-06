@@ -95,13 +95,18 @@
     <string name="max_units_reached">Max 5 units only</string>
     <string name="only_units_left">Only %d units left</string>
     <string name="order_confirmation_product_quantity_error_msg">%s\nRequired quantity: %d\nAvailable quantity: %d</string>
-    <string name="order_confirmation_error_suggestion">Kindly go back and make changes in the product quantity or address group to continue</string>
+    <string name="order_confirmation_error_suggestion">\nKindly go back and make changes in the product quantity or address group to continue</string>
     <string name="number_of_products_per_order">Number of Products Per Order : %d</string>
     <string name="total_number_of_products">Total Number of Products : %d</string>
     <string name="number_of_products">Number of Products : %d</string>
     <string name="remove_suggestion">Remove from Suggestion History?</string>
     <string name="remove_profile_picture">Remove profile picture</string>
     <string name="remove_profile_picture_alert">Are you sure you want to remove this profile picture?</string>
+    <string name="delete_search_history">Delete Search History</string>
+    <string name="delete_search_history_alert">Are you sure you want to delete search history?</string>
+    <string name="log_out">Log out</string>
+    <string name="log_out_alert">Are you sure you want to log out?</string>
+    <string name="view_order">View Order</string>
 
     //Indian states
     <string-array name="india_states">

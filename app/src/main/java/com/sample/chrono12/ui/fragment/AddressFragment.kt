@@ -29,7 +29,7 @@ class AddressFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddressBinding.inflate(layoutInflater)
         return binding.root
@@ -45,13 +45,13 @@ class AddressFragment : Fragment() {
             binding.fabAddAddress.setOnClickListener {
                 findNavController().safeNavigate(
                     AddressFragmentDirections.actionAddressFragmentToNewAddressFragment(
-                        addressGroupName = getString(R.string.delete_address_group)
+                        addressGroupName = getString(R.string.default_group_name).lowercase()
                     )
                 )
             }
         }
-        setupAddressAdapter()
         if (navArgs.chooseAddress) setupChooseAddressButton()
+        setupAddressAdapter()
     }
 
     private fun setupChooseAddressButton() {
@@ -144,33 +144,11 @@ class AddressFragment : Fragment() {
                 addressGroupId: Int,
                 addressGroupName: String
             ) {
-                if (addressGroupName == getString(R.string.default_group_name)) {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle(getString(R.string.address_item_delete_alert_title))
-                        .setMessage(getString(R.string.address_item_delete_alert_msg))
-                        .setPositiveButton(getString(R.string.delete)) { _, _ ->
-                            userViewModel.deleteAddress(addressId)
-                        }
-                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-
-                        }
-                        .setCancelable(false)
-
-                    builder.create().show()
-                } else {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle(getString(R.string.remove_address))
-                        .setMessage(getString(R.string.address_item_remove_alert))
-                        .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                            userViewModel.deleteAddressFromGroup(addressId, addressGroupId)
-                        }
-                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-
-                        }
-                        .setCancelable(false)
-
-                    builder.create().show()
-                }
+                findNavController().safeNavigate(
+                    AddressFragmentDirections.actionAddressFragmentToDeleteAddressDialog(
+                        addressId
+                    )
+                )
             }
 
             override fun onClickEdit(addressId: Int) {

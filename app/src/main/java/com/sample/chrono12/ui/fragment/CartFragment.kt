@@ -31,7 +31,7 @@ class CartFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
         return if (isUserLoggedIn) {
@@ -96,18 +96,12 @@ class CartFragment : Fragment() {
             .observe(viewLifecycleOwner) { cartItems ->
                 cartViewModel.initPriceCalculating(cartItems)
                 if (cartItems.isNotEmpty()) {
-                    fragmentCartBinding.ivEmptyCart.visibility = View.GONE
-                    fragmentCartBinding.tvEmptyCart.visibility = View.GONE
-                    fragmentCartBinding.tvEmptyCartDesc.visibility = View.GONE
-                    fragmentCartBinding.btnGoHome.visibility = View.GONE
+                    fragmentCartBinding.emptyCart.visibility = View.GONE
                     fragmentCartBinding.layoutPriceOrder.visibility = View.VISIBLE
                 }
                 if (cartItems.isEmpty()) {
-                    fragmentCartBinding.ivEmptyCart.setImageResource(R.drawable.ic_empty_cart_svg)
-                    fragmentCartBinding.ivEmptyCart.visibility = View.VISIBLE
-                    fragmentCartBinding.tvEmptyCart.visibility = View.VISIBLE
-                    fragmentCartBinding.tvEmptyCartDesc.visibility = View.VISIBLE
-                    fragmentCartBinding.btnGoHome.visibility = View.VISIBLE
+//                    fragmentCartBinding.ivEmptyCart.setImageResource(R.drawable.ic_empty_cart_svg)
+                    fragmentCartBinding.emptyCart.visibility = View.VISIBLE
                     fragmentCartBinding.layoutPriceOrder.visibility = View.GONE
                 }
                 adapter.setNewData(cartItems)

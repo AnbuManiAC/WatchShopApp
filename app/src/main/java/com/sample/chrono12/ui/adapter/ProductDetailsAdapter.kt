@@ -9,12 +9,13 @@ import com.sample.chrono12.databinding.ProductDetailsRvItemBinding
 
 class ProductDetailsAdapter(
     private val productDetail: List<ProductDetail>
-): RecyclerView.Adapter<ProductDetailsAdapter.DetailViewHolder>() {
+) : RecyclerView.Adapter<ProductDetailsAdapter.DetailViewHolder>() {
 
-    inner class DetailViewHolder(private val binding: ProductDetailsRvItemBinding): RecyclerView.ViewHolder(binding.root){
+    inner class DetailViewHolder(binding: ProductDetailsRvItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         private val tvDetailContent = binding.tvDetailContent
         private val tvDetailTitle = binding.tvDetailTitle
-        fun bind(productDetail: ProductDetail){
+        fun bind(productDetail: ProductDetail) {
             tvDetailTitle.text = productDetail.title
             tvDetailContent.text = productDetail.content
         }

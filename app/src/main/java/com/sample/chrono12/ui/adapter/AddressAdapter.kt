@@ -46,7 +46,7 @@ class AddressAdapter(
                 landmark.text = address.addressLine2
             }
             cityStatePincode.text = address.city + ", " + address.state + " - " + address.pincode
-            mobile.text = "Mobile Number : " + address.contactNumber.toString()
+            mobile.text = "Mobile Number : " + address.contactNumber
             if (addressGroup.groupName == "default") {
                 binding.btnRemoveAddress.text = "Delete"
             } else {

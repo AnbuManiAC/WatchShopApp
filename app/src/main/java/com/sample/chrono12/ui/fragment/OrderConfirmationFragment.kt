@@ -140,10 +140,12 @@ class OrderConfirmationFragment : Fragment() {
 //                orderViewModel.updateProductStock(it.productWithBrandAndImagesList.productWithBrand.product.productId, updatedStockCount)
 //            }
             cartViewModel.clearCart(userViewModel.getLoggedInUser().toInt())
-            findNavController().safeNavigate(OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(
-                bulkOrderId,
-                orderId
-            ))
+            findNavController().safeNavigate(
+                OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToOrderConfirmedDialog(
+                    bulkOrderId,
+                    orderId
+                )
+            )
         }
     }
 
@@ -173,7 +175,11 @@ class OrderConfirmationFragment : Fragment() {
 
     private fun setupAddressAdapter() {
         binding.rvAddress.layoutManager = LinearLayoutManager(requireActivity())
-        addressAdapter = AddressAdapter(getOnAddressButtonClickListener(), addFromExisting =  false, chooseAddress =  false)
+        addressAdapter = AddressAdapter(
+            getOnAddressButtonClickListener(),
+            addFromExisting = false,
+            chooseAddress = false
+        )
         addressAdapter.setAddresses(listOf())
         binding.rvAddress.adapter = addressAdapter
         addressAdapter.setHideEditAndDeleteButton(true)
@@ -214,9 +220,11 @@ class OrderConfirmationFragment : Fragment() {
     private fun setupProductsAdapter() {
         val cartAdapter = CartAdapter(
             {
-                findNavController().safeNavigate(OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToProductFragment(
-                    it.productId
-                ))
+                findNavController().safeNavigate(
+                    OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToProductFragment(
+                        it.productId
+                    )
+                )
             },
             getOnDeleteClickListener(),
             getOnQuantityClickListener()
@@ -243,58 +251,15 @@ class OrderConfirmationFragment : Fragment() {
                 addressGroupId: Int,
                 addressGroupName: String
             ) {
-                if (addressGroupName == "default") {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle(getString(R.string.address_item_delete_alert_title))
-                        .setMessage(getString(R.string.address_item_delete_alert_msg))
-                        .setPositiveButton(getString(R.string.delete)) { _, _ ->
-                            userViewModel.deleteAddress(addressId)
-                        }
-                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-
-                        }
-                        .setCancelable(false)
-
-                    builder.create().show()
-                } else {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle(getString(R.string.remove_address))
-                        .setMessage(getString(R.string.address_item_remove_alert))
-                        .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                            userViewModel.deleteAddressFromGroup(addressId, addressGroupId)
-                        }
-                        .setNegativeButton(getString(R.string.cancel)) { _, _ ->
-
-                        }
-                        .setCancelable(false)
-
-                    builder.create().show()
-                }
             }
 
             override fun onClickEdit(addressId: Int) {
-                findNavController().safeNavigate(OrderConfirmationFragmentDirections.actionOrderConfirmationFragmentToNewAddressFragment(
-                    addressId
-                ))
             }
-
         }
 
     private fun getOnDeleteClickListener(): CartAdapter.OnClickDelete =
         object : CartAdapter.OnClickDelete {
             override fun onDelete(productId: Int, quantity: Int) {
-                val userId = userViewModel.getLoggedInUser().toInt()
-                val builder = AlertDialog.Builder(requireContext())
-                builder.setTitle(getString(R.string.remove_item))
-                    .setMessage(getString(R.string.cart_item_remove_alert))
-                    .setPositiveButton(getString(R.string.remove)) { _, _ ->
-                        cartViewModel.removeProductFromUserCart(productId, userId)
-                    }
-                    .setNegativeButton(getString(R.string.remove)) { _, _ ->
-
-                    }
-                    .setCancelable(false)
-                builder.create().show()
             }
         }
 
@@ -316,7 +281,11 @@ class OrderConfirmationFragment : Fragment() {
                             Snackbar.LENGTH_SHORT
                         ).show()
                     } else {
-                        Snackbar.make(requireView(), getString(R.string.max_units_reached), Snackbar.LENGTH_SHORT)
+                        Snackbar.make(
+                            requireView(),
+                            getString(R.string.max_units_reached),
+                            Snackbar.LENGTH_SHORT
+                        )
                             .show()
                     }
                     false
@@ -339,9 +308,9 @@ class OrderConfirmationFragment : Fragment() {
         }
 
     private fun getAddressString(address: Address): String {
-        var addressString =  address.contactName + "\n" + address.addressLine1.split("___")
+        var addressString = address.contactName + "\n" + address.addressLine1.split("___")
             .joinToString(", ")
-        if(address.addressLine2.isNotEmpty()){
+        if (address.addressLine2.isNotEmpty()) {
             addressString += "\n" + address.addressLine2
         }
         addressString += "\n" + address.city + ", " + address.state + " - " + address.pincode + "\n" + "Mobile Number : " + address.contactNumber

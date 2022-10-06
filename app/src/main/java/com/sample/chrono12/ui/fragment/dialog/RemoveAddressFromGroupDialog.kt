@@ -5,22 +5,20 @@ import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.sample.chrono12.R
-import com.sample.chrono12.ui.activity.HomeActivity
-import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.viewmodels.UserViewModel
 
-class LogoutDialog : DialogFragment() {
-
+class RemoveAddressFromGroupDialog: DialogFragment() {
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
+    private val navArgs by navArgs<RemoveAddressFromGroupDialogArgs>()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle(getString(R.string.log_out))
-            .setMessage(getString(R.string.log_out_alert))
-            .setPositiveButton(getString(R.string.log_out)) { _, _ ->
-                logoutUser()
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setTitle(getString(R.string.remove_address))
+            .setMessage(getString(R.string.address_item_remove_alert))
+            .setPositiveButton(getString(R.string.remove)) { _, _ ->
+                userViewModel.deleteAddressFromGroup(navArgs.addressId, navArgs.addressGroupId)
             }
             .setNegativeButton(getString(R.string.cancel)) { _, _ ->
                 dismiss()
@@ -31,12 +29,5 @@ class LogoutDialog : DialogFragment() {
         build.setCancelable(false)
         build.setCanceledOnTouchOutside(false)
         return build
-    }
-
-    private fun logoutUser() {
-        SharedPrefUtil.setUserId(requireActivity(), 0)
-        userViewModel.logOutUser()
-        findNavController().popBackStack(R.id.homeFragment, false)
-        (requireActivity() as HomeActivity).disableCartBadge()
     }
 }

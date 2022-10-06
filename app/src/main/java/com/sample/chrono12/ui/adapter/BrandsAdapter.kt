@@ -37,7 +37,6 @@ class BrandsAdapter(
 
     override fun onBindViewHolder(holder: BrandViewHolder, position: Int) {
         holder.bind(brands[position])
-        Log.d("Skew","${System.currentTimeMillis()}")
     }
 
     override fun getItemCount(): Int {

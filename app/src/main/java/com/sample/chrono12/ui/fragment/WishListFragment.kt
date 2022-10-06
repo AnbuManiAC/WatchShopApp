@@ -36,7 +36,7 @@ class WishListFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         isUserLoggedIn = userViewModel.getIsUserLoggedIn()
         return if (isUserLoggedIn) {
@@ -83,7 +83,7 @@ class WishListFragment : Fragment() {
         )
         adapter.setData(mutableListOf())
         val rvWishList = fragmentWishListBinding.rvWishlist
-        rvWishList.layoutManager = LinearLayoutManager(activity)
+        rvWishList.layoutManager = LinearLayoutManager(requireActivity())
         rvWishList.adapter = adapter
         fragmentWishListBinding.btnGoHome.setOnClickListener {
             findNavController().navigateUp()
@@ -91,20 +91,16 @@ class WishListFragment : Fragment() {
         wishListViewModel.getWishListItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
                 if (it.isEmpty()) {
-                    fragmentWishListBinding.ivEmptyCart.visibility = View.VISIBLE
-                    fragmentWishListBinding.tvEmptyCart.visibility = View.VISIBLE
-                    fragmentWishListBinding.tvEmptyCartDesc.visibility = View.VISIBLE
-                    fragmentWishListBinding.btnGoHome.visibility = View.VISIBLE
+                    fragmentWishListBinding.emptyWishlist.visibility = View.VISIBLE
                 }
                 if (it.isNotEmpty()) {
-                    fragmentWishListBinding.ivEmptyCart.visibility = View.GONE
-                    fragmentWishListBinding.tvEmptyCart.visibility = View.GONE
-                    fragmentWishListBinding.tvEmptyCartDesc.visibility = View.GONE
-                    fragmentWishListBinding.btnGoHome.visibility = View.GONE
+                    fragmentWishListBinding.emptyWishlist.visibility = View.GONE
                 }
                 adapter.setNewData(it)
             }
     }
+
+
 
     private fun getOnClickAddToCartListener(): WishListAdapter.OnClickAddToCart =
         object : WishListAdapter.OnClickAddToCart {

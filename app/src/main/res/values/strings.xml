@@ -23,6 +23,7 @@
     <string name="detail">Detail</string>
     <string name="add_to_cart">Add to Cart</string>
     <string name="added_to_cart">Added to Cart</string>
+    <string name="in_cart">In Cart</string>
     <string name="go_to_cart">Go to Cart</string>
     <string name="product_name">Product Name</string>
     <string name="brand_name">Brand Name</string>

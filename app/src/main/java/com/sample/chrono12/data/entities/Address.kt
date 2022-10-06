@@ -1,8 +1,6 @@
 package com.sample.chrono12.data.entities
 
-import androidx.fragment.app.Fragment
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 

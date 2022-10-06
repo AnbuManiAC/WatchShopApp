@@ -87,7 +87,7 @@ class SignUpFragment : Fragment() {
                         userViewModel.insertIntoAddressGroup(
                             AddressGroup(
                                 userId = userViewModel.getLoggedInUser().toInt(),
-                                groupName = getString(R.string.default_group_name)
+                                groupName = getString(R.string.default_group_name).lowercase()
                             )
                         )
                     }

@@ -141,7 +141,7 @@ class WishListFragment : Fragment() {
         }
 
     private fun changeButtonToText(button: MaterialButton) {
-        button.text = getString(R.string.added_to_cart)
+        button.text = getString(R.string.in_cart)
         button.icon = ResourcesCompat.getDrawable(
             resources,
             R.drawable.ic_done_small,

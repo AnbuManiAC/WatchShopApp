@@ -100,7 +100,6 @@ class CartFragment : Fragment() {
                     fragmentCartBinding.layoutPriceOrder.visibility = View.VISIBLE
                 }
                 if (cartItems.isEmpty()) {
-//                    fragmentCartBinding.ivEmptyCart.setImageResource(R.drawable.ic_empty_cart_svg)
                     fragmentCartBinding.emptyCart.visibility = View.VISIBLE
                     fragmentCartBinding.layoutPriceOrder.visibility = View.GONE
                 }

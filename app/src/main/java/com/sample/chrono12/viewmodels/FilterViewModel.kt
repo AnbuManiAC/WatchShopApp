@@ -14,6 +14,7 @@ class FilterViewModel : ViewModel() {
     get() = if (isClearClicked) HashSet() else _selectedFilterIds
 
     var isClearClicked = false
+    var isFilterChanged = false
 
     private val _filterCount = MutableLiveData<Int>()
     val filterCount: LiveData<Int>
@@ -53,6 +54,7 @@ class FilterViewModel : ViewModel() {
         _appliedFilterIds.clear()
         _appliedFilterIds.addAll(filterIds)
         _filterCount.value = _appliedFilterIds.size
+        isFilterChanged = true
     }
 
     fun setAppliedFilterIds(filterId: Int){

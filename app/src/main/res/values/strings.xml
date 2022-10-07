@@ -108,6 +108,16 @@
     <string name="log_out">Log out</string>
     <string name="log_out_alert">Are you sure you want to log out?</string>
     <string name="view_order">View Order</string>
+    <string name="add_address_group">Add address group</string>
+    <string name="select_address_group">Select Address Group</string>
+    <string name="no_address_group_found">No Address Group Found</string>
+    <string name="looks_like_you_haven_t_added_n_any_address_group_yet">Looks like you haven\'t added\n any address group yet</string>
+    <string name="empty_address_image">Empty address image</string>
+    <string name="add_address">Add address</string>
+    <string name="select_address">Select Address</string>
+    <string name="empty_address_group_image">Empty address group image</string>
+    <string name="no_address">No Address Found</string>
+    <string name="looks_like_you_haven_t_n_added_any_address_yet">Looks like you haven\'t\n added any address yet</string>
 
     //Indian states
     <string-array name="india_states">

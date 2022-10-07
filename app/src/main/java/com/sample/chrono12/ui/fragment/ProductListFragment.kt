@@ -45,7 +45,7 @@ class ProductListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
+        syncTitle()
         binding = FragmentProductListBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -56,19 +56,23 @@ class ProductListFragment : Fragment() {
         setupProductListAdapter()
         setupSortButtonListener()
         setupFilterButtonListener()
-
     }
 
     private fun setupFilterButtonListener() {
         filterViewModel.filterCount.observe(viewLifecycleOwner) { filterCount ->
             filterCount?.let {
-                if (filterCount >= 1) {
+                if (filterCount > 0) {
                     binding.btnFilter.text =
                         resources.getString(R.string.filter_button_text, filterCount)
                 } else {
                     binding.btnFilter.text = resources.getString(R.string.filter)
 
                 }
+            }
+            if(filterViewModel.isFilterChanged){
+                productListViewModel.setProductListTitle("Watches")
+                syncTitle()
+                filterViewModel.isFilterChanged = false
             }
         }
         binding.btnFilter.setOnClickListener {
@@ -133,6 +137,10 @@ class ProductListFragment : Fragment() {
             RATING_LOW_TO_HIGH.toString() -> RATING_LOW_TO_HIGH
             else -> RATING_HIGH_TO_LOW
         }
+    }
+
+    private fun syncTitle() {
+        (requireActivity() as HomeActivity).setActionBarTitle(productListViewModel.getProductListTitle())
     }
 
     private fun setupMenu() {

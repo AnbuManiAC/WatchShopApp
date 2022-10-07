@@ -27,6 +27,7 @@ class UserViewModel @Inject constructor(
     private var loggedInUser: Long = 0
     private var userDetails = MutableLiveData<UserDetails>()
     private var userField = MutableLiveData<UserField>()
+
     var suggestedLoginEmail = ""
     var suggestedSignupEmail = ""
     private val _suggestions = MutableLiveData<List<SearchSuggestion>>()
@@ -37,6 +38,12 @@ class UserViewModel @Inject constructor(
     private var addressId = MutableLiveData<Int>()
     private var addressGroupId = MutableLiveData<Int>()
     private val addressIds = MutableLiveData<List<Int>>()
+    private var _selectedAddressId: Int = 0
+    val selectedAddressId: Int
+        get() = _selectedAddressId
+
+    fun setSelectedAddressId(addressId: Int) {_selectedAddressId = addressId}
+
     private var profileSettingAction = MutableLiveData<ProfileSettingAction>()
 
     fun setProfileSettingAction(action: ProfileSettingAction) {

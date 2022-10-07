@@ -66,8 +66,8 @@
         <entry key="app/src/main/res/layout/categories_rv_item.xml" value="0.375" />
         <entry key="app/src/main/res/layout/filter_rv_item.xml" value="0.1" />
         <entry key="app/src/main/res/layout/filter_value_rv_item.xml" value="0.22857142857142856" />
-        <entry key="app/src/main/res/layout/fragment_address.xml" value="0.45740740740740743" />
-        <entry key="app/src/main/res/layout/fragment_address_group.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_address.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_address_group.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_address_group_detail.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_cart.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_choose_address_type.xml" value="0.335" />

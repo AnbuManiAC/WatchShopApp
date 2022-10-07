@@ -238,7 +238,7 @@ class ProductListViewModel @Inject constructor(
                 }
                 filterResult = filterResultSet.toList()
             }
-            _watchList.postValue(filterResult)
+            _watchList.postValue(sortProductList(filterResult, _sortType.value!!))
         }
 
     }

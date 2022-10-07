@@ -1,101 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragment.AddressGroupFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAddressGroup"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/rvAddressGroup"
-        android:paddingTop="@dimen/padding_small"
         android:paddingStart="@dimen/padding_small"
+        android:paddingTop="@dimen/padding_small"
         android:paddingEnd="@dimen/padding_small"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnSelectGroup"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnSelectGroup"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddAddress"
+        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_small"
-        app:tint="@color/white"
-        style="@style/Widget.MaterialComponents.ExtendedFloatingActionButton.Icon"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnSelectGroup"
         android:src="@drawable/ic_add"
-        android:id="@+id/fabAddAddress"/>
+        app:layout_constraintBottom_toTopOf="@id/btnSelectGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        android:contentDescription="@string/add_address_group" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSelectGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnSelectGroup"
-        android:text="Select Address Group"
-        android:textAllCaps="true"
-        android:visibility="gone"
-        android:background="@color/primaryColor"
         android:elevation="4dp"
+        android:padding="@dimen/padding_small"
+        android:layout_margin="@dimen/padding_small"
+        android:text="@string/select_address_group"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textColor="@color/white"
         android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        android:padding="@dimen/padding_small"
+        android:visibility="gone"
+        app:cornerRadius="@dimen/margin_large"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clNoDataFound"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/clNoDataFound"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/ivEmptyAddressGroup"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:id="@+id/ivEmptyAddressGroup"
             android:src="@drawable/ic_no_data_svg"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tvEmptyCart"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tvEmptyCart"/>
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintVertical_chainStyle="packed"
+            android:contentDescription="@string/empty_address_group_image" />
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/tvEmptyCart"
-            android:layout_margin="@dimen/margin_small"
-            android:text="No Address Group Found"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ivEmptyAddressGroup"
-            app:layout_constraintBottom_toTopOf="@id/tvEmptyCartDesc"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/tvEmptyCartDesc"
             android:layout_margin="@dimen/margin_small"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textColor="@color/ashGrey"
-            android:text="Looks like you haven't added\n any address group yet"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/no_address_group_found"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintBottom_toTopOf="@id/tvEmptyCartDesc"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivEmptyAddressGroup"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <TextView
+            android:id="@+id/tvEmptyCartDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:gravity="center"
+            android:text="@string/looks_like_you_haven_t_added_n_any_address_group_yet"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@color/ashGrey"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvEmptyCart"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintVertical_bias="0.5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

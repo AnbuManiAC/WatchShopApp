@@ -1,6 +1,5 @@
 package com.sample.chrono12.ui.fragment
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

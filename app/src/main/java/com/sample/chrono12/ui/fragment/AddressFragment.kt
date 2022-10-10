@@ -131,6 +131,9 @@ class AddressFragment : Fragment() {
                         binding.btnSelectAddress.visibility = View.GONE
                     } else {
                         binding.clNoDataFound.visibility = View.GONE
+                        if(navArgs.chooseAddress){
+                            binding.btnSelectAddress.visibility = View.VISIBLE
+                        }
                     }
                 }
         }

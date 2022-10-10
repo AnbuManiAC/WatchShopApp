@@ -67,17 +67,6 @@ class SignUpFragment : Fragment() {
                 else -> false
             }
         }
-    }
-
-    private fun setupForm() {
-        binding.tilEtEmail.setText(userViewModel.suggestedSignupEmail)
-        binding.tilEtName.setText("")
-        binding.tilEtMobile.setText("")
-        binding.tilEtPassword.setText("")
-        binding.tilEtCPassword.setText("")
-    }
-
-    private fun initiateSignup() {
         userViewModel.getUserFieldInfo().observe(viewLifecycleOwner) { field ->
             field?.let {
                 deliverFieldMessage(it)
@@ -96,6 +85,17 @@ class SignUpFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun setupForm() {
+        binding.tilEtEmail.setText(userViewModel.suggestedSignupEmail)
+        binding.tilEtName.setText("")
+        binding.tilEtMobile.setText("")
+        binding.tilEtPassword.setText("")
+        binding.tilEtCPassword.setText("")
+    }
+
+    private fun initiateSignup() {
         cancelErrors()
         if (inputCheck()) {
             val name = binding.tilEtName.text.toString()

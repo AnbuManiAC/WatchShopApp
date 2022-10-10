@@ -67,10 +67,9 @@ interface WatchDao {
             "(select productId from ProductCategoryCrossRef where subCategoryId in (:args3))) "+
             "and brandName in (:args4)")
     suspend fun getFilterResult(
-        args1: List<Int> = listOf(1,2,3),
-        args2: List<Int> = listOf(4,5,6),
-        args3: List<Int> = listOf(7,8,9,10,11),
-        args4: List<String> = listOf("Fastrack", "Titan", "Sonata", "Timex", "Maxima", "Helix", "Fossil")
+        args1: List<Int>,
+        args2: List<Int>,
+        args3: List<Int>,
+        args4: List<String>
         ): List<ProductWithBrandAndImages>
-
 }

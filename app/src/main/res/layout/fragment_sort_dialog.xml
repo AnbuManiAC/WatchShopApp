@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/padding_small"
             android:paddingEnd="@dimen/padding_small"
-            android:buttonTint="@color/primaryDarkColor"
+            android:buttonTint="?attr/colorPrimary"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/price_high_to_low" />
 
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/padding_small"
             android:paddingEnd="@dimen/padding_small"
-            android:buttonTint="@color/primaryDarkColor"
+            android:buttonTint="?attr/colorPrimary"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/price_low_to_high" />
 
@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/padding_small"
             android:paddingEnd="@dimen/padding_small"
-            android:buttonTint="@color/primaryDarkColor"
+            android:buttonTint="?attr/colorPrimary"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/rating_high_to_low" />
 
@@ -81,7 +81,7 @@
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/padding_small"
             android:paddingEnd="@dimen/padding_small"
-            android:buttonTint="@color/primaryDarkColor"
+            android:buttonTint="?attr/colorPrimary"
             android:foreground="?attr/selectableItemBackground"
             android:text="@string/rating_low_to_high" />
     </RadioGroup>

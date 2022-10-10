@@ -3,6 +3,7 @@ package com.sample.chrono12.ui.fragment.dialog
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -36,7 +37,12 @@ class LogoutDialog : DialogFragment() {
     private fun logoutUser() {
         SharedPrefUtil.setUserId(requireActivity(), 0)
         userViewModel.logOutUser()
+        clearNotificationsIfAny()
         findNavController().popBackStack(R.id.homeFragment, false)
         (requireActivity() as HomeActivity).disableCartBadge()
+    }
+
+    private fun clearNotificationsIfAny() {
+        NotificationManagerCompat.from(requireContext()).cancelAll()
     }
 }

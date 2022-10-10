@@ -119,22 +119,41 @@ class UserViewModel @Inject constructor(
     }
 
     fun initiateSignUp(user: User) = viewModelScope.launch {
-        if (!isExistingEmail(user.email)) {
-            if (isExistingMobileNumber(user.mobileNumber)) {
+        val isEmailExists = isExistingEmail(user.email)
+        val isMobileNumberExists = isExistingMobileNumber(user.mobileNumber)
+        if(isEmailExists || isMobileNumberExists){
+            if(isEmailExists){
+                userField.value = UserField.EMAIL.also { userField ->
+                    userField.response =
+                        Response.FAILURE.also { it.message = "Email id already Exists" }
+                    suggestedLoginEmail = user.email
+                }
+            }
+            if(isMobileNumberExists){
                 userField.value = UserField.MOBILE.also { userField ->
                     userField.response =
                         Response.FAILURE.also { it.message = "Mobile Number already Exists" }
                 }
-            } else {
-                createUser(user)
             }
-        } else {
-            userField.value = UserField.EMAIL.also { userField ->
-                userField.response =
-                    Response.FAILURE.also { it.message = "Email id already Exists" }
-                suggestedLoginEmail = user.email
-            }
+        } else{
+            createUser(user)
         }
+//        if (!isExistingEmail(user.email)) {
+//            if (isExistingMobileNumber(user.mobileNumber)) {
+//                userField.value = UserField.MOBILE.also { userField ->
+//                    userField.response =
+//                        Response.FAILURE.also { it.message = "Mobile Number already Exists" }
+//                }
+//            } else {
+//                createUser(user)
+//            }
+//        } else {
+//            userField.value = UserField.EMAIL.also { userField ->
+//                userField.response =
+//                    Response.FAILURE.also { it.message = "Email id already Exists" }
+//                suggestedLoginEmail = user.email
+//            }
+//        }
     }
 
     private fun createUser(user: User) = viewModelScope.launch {

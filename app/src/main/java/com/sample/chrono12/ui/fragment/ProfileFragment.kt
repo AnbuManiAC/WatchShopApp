@@ -175,34 +175,17 @@ class ProfileFragment : Fragment() {
             bindingProfile.tvEmail.text = user.email
             bindingProfile.tvMobileNumber.text = user.mobile
             if (user.image.isNullOrEmpty()) {
-                bindingProfile.ivProfilePicture.setImageDrawable(
-                    ResourcesCompat.getDrawable(
-                        resources,
-                        R.drawable.ic_profile_picture,
-                        null
-                    )
-                )
+                setDefaultProfilePicture()
                 hasProfilePicture = false
             } else {
                 hasProfilePicture = try {
                     val bitmap = BitmapFactory.decodeFile(user.image)
                     if (bitmap != null) bindingProfile.ivProfilePicture.setImageBitmap(bitmap)
-                    else bindingProfile.ivProfilePicture.setImageDrawable(
-                        ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_profile_picture,
-                            null
-                        )
-                    )
+                    else setDefaultProfilePicture()
+
                     true
                 } catch (e: Exception) {
-                    bindingProfile.ivProfilePicture.setImageDrawable(
-                        ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.ic_profile_picture,
-                            null
-                        )
-                    )
+                    setDefaultProfilePicture()
                     false
                 }
             }
@@ -228,6 +211,16 @@ class ProfileFragment : Fragment() {
         }
     }
 
+    private fun setDefaultProfilePicture() {
+        bindingProfile.ivProfilePicture.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_profile_picture,
+                null
+            )
+        )
+    }
+
     private fun setupLoginPrompt() {
         bindingLoginPrompt.btnLogIn.setOnClickListener {
             findNavController().safeNavigate(ProfileFragmentDirections.actionProfileFragmentToLogInFragment())
@@ -248,15 +241,33 @@ class ProfileFragment : Fragment() {
         cameraResultLauncher.launch(takePicture)
     }
 
-    private val cameraResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            data?.let {
-                val bundle = data.extras
-                bundle?.get("data")?.let {
-                    val bitmapImage = bundle.get("data") as Bitmap
-                    bindingProfile.ivProfilePicture.setImageBitmap(bitmapImage)
-                    val selectedImagePath = getImagePath(bitmapImage)
+    private val cameraResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                data?.let {
+                    val bundle = data.extras
+                    bundle?.get("data")?.let {
+                        val bitmapImage = bundle.get("data") as Bitmap
+                        bindingProfile.ivProfilePicture.setImageBitmap(bitmapImage)
+                        val selectedImagePath = getImagePath(bitmapImage)
+                        userViewModel.addProfilePicture(
+                            selectedImagePath,
+                            userViewModel.getLoggedInUser().toInt()
+                        )
+                    }
+                }
+            }
+        }
+
+    private val galleryResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                data?.let {
+                    val selectedImageUri: Uri? = data.data
+                    bindingProfile.ivProfilePicture.setImageURI(selectedImageUri)
+                    val selectedImagePath = selectedImageUri?.let { getPathFromUri(it) }.toString()
                     userViewModel.addProfilePicture(
                         selectedImagePath,
                         userViewModel.getLoggedInUser().toInt()
@@ -264,22 +275,6 @@ class ProfileFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private val galleryResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val data: Intent? = result.data
-            data?.let {
-                val selectedImageUri: Uri? = data.data
-                bindingProfile.ivProfilePicture.setImageURI(selectedImageUri)
-                val selectedImagePath = selectedImageUri?.let { getPathFromUri(it) }.toString()
-                userViewModel.addProfilePicture(
-                    selectedImagePath,
-                    userViewModel.getLoggedInUser().toInt()
-                )
-            }
-        }
-    }
 
     private fun getPathFromUri(contentUri: Uri): String {
         val filePath: String

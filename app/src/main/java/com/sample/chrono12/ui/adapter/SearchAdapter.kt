@@ -22,7 +22,7 @@ class SuggestionAdapter(
 
     private lateinit var suggestions : MutableList<SearchSuggestion>
 
-    inner class SuggestionViewHolder(binding: SuggestionRvItemBinding): RecyclerView.ViewHolder(binding.root){
+    inner class SuggestionViewHolder(val binding: SuggestionRvItemBinding): RecyclerView.ViewHolder(binding.root){
         private val tvSuggestion = binding.tvSuggestion
         private val ibRemove = binding.ibRemove
         private val ivSearch = binding.ivSearchIcon
@@ -30,10 +30,10 @@ class SuggestionAdapter(
         fun bind(suggestionHistory: SearchSuggestion){
             tvSuggestion.text = suggestionHistory.suggestion
             if (suggestionHistory.userId!=null) {
-                ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_history,null))
+                ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_history,binding.root.context.theme))
                 ibRemove.visibility = View.VISIBLE
             }else{
-                ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_search_icon,null))
+                ivSearch.setImageDrawable(ResourcesCompat.getDrawable(itemView.resources,R.drawable.ic_search_icon,binding.root.context.theme))
                 ibRemove.visibility = View.GONE
             }
             ibRemove.setOnClickListener {

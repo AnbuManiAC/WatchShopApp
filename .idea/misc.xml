@@ -27,6 +27,7 @@
         <entry key="app/src/main/res/drawable/ic_fav_unselected.xml" value="0.114" />
         <entry key="app/src/main/res/drawable/ic_fav_unselected1.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_favorite.xml" value="0.251" />
+        <entry key="app/src/main/res/drawable/ic_history.xml" value="0.125" />
         <entry key="app/src/main/res/drawable/ic_image_loaading.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/ic_image_loading.xml" value="0.237" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.165" />
@@ -39,6 +40,7 @@
         <entry key="app/src/main/res/drawable/ic_no_result_found.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_order_confirmed.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_profile_picture.xml" value="0.1525" />
+        <entry key="app/src/main/res/drawable/ic_search_icon.xml" value="0.125" />
         <entry key="app/src/main/res/drawable/ic_search_svg.xml" value="0.165" />
         <entry key="app/src/main/res/drawable/ic_shopping_bag.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_sign_out.xml" value="0.1" />

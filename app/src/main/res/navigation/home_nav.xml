@@ -221,18 +221,6 @@
         android:id="@+id/productListFragment"
         android:name="com.sample.chrono12.ui.fragment.ProductListFragment"
         tools:layout="@layout/fragment_product_list" >
-        <argument
-            android:name="subCategoryId"
-            android:defaultValue="0"
-            app:argType="integer"/>
-        <argument
-            android:name="brandId"
-            android:defaultValue="0"
-            app:argType="integer"/>
-        <argument
-            android:name="fromAllWatches"
-            android:defaultValue="false"
-            app:argType="boolean"/>
         <action
             android:id="@+id/action_productListFragment_to_productFragment"
             app:destination="@id/productFragment"

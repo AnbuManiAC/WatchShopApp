@@ -25,21 +25,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
 
-    private val navArgs by navArgs<ProductListFragmentArgs>()
     private lateinit var binding: FragmentProductListBinding
     private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val filterViewModel by lazy { ViewModelProvider(requireActivity())[FilterViewModel::class.java] }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (navArgs.subCategoryId > 0) {
-            productListViewModel.setSubcategoryWithProductList(navArgs.subCategoryId, getSortType())
-        } else if (navArgs.brandId > 0) {
-            productListViewModel.setBrandWithProductList(navArgs.brandId, getSortType())
-        } else if (navArgs.fromAllWatches) {
-            productListViewModel.setAllWatches(getSortType())
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -127,16 +115,6 @@ class ProductListFragment : Fragment() {
                     binding.ivNoProductFound.visibility = View.GONE
                 }
             }
-    }
-
-    private fun getSortType(): SortType {
-        return when (SharedPrefUtil.getSortType(requireActivity())) {
-            PRICE_LOW_TO_HIGH.toString() -> PRICE_LOW_TO_HIGH
-            PRICE_HIGH_TO_LOW.toString() -> PRICE_HIGH_TO_LOW
-            RATING_HIGH_TO_LOW.toString() -> RATING_HIGH_TO_LOW
-            RATING_LOW_TO_HIGH.toString() -> RATING_LOW_TO_HIGH
-            else -> RATING_HIGH_TO_LOW
-        }
     }
 
     private fun syncTitle() {

@@ -11,10 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
+import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.databinding.FragmentHomeBinding
 import com.sample.chrono12.ui.adapter.BrandsAdapter
 import com.sample.chrono12.ui.adapter.CategoriesAdapter
 import com.sample.chrono12.ui.adapter.ProductListAdapter
+import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
@@ -76,12 +78,23 @@ class HomeFragment : Fragment() {
                 productListViewModel.setProductListTitle("All Watches")
                 filterViewModel.clearSelectedFilterIds()
                 filterViewModel.clearSelectedFilterPosition()
+                productListViewModel.setAllWatches(getSortType())
                 findNavController().safeNavigate(
                     HomeFragmentDirections.actionHomeFragmentToProductListFragment(
-                        fromAllWatches = true
+
                     )
                 )
             }
+    }
+
+    private fun getSortType(): SortType {
+        return when (SharedPrefUtil.getSortType(requireActivity())) {
+            SortType.PRICE_LOW_TO_HIGH.toString() -> SortType.PRICE_LOW_TO_HIGH
+            SortType.PRICE_HIGH_TO_LOW.toString() -> SortType.PRICE_HIGH_TO_LOW
+            SortType.RATING_HIGH_TO_LOW.toString() -> SortType.RATING_HIGH_TO_LOW
+            SortType.RATING_LOW_TO_HIGH.toString() -> SortType.RATING_LOW_TO_HIGH
+            else -> SortType.RATING_HIGH_TO_LOW
+        }
     }
 
     private fun setupCategoriesAdapter() {
@@ -90,9 +103,8 @@ class HomeFragment : Fragment() {
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
             filterViewModel.setAppliedFilterIds(subCategory.subCategoryId)
-            findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(
-                subCategoryId = subCategory.subCategoryId
-            ))
+            productListViewModel.setSubcategoryWithProductList(subCategory.subCategoryId, getSortType())
+            findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment())
         }
         binding.rvCategories.apply {
             layoutManager =
@@ -112,8 +124,9 @@ class HomeFragment : Fragment() {
             filterViewModel.clearSelectedFilterPosition()
             filterViewModel.clearSelectedFilterIds()
             filterViewModel.setAppliedFilterIds(getKey(FilterFragment.brands, brand.brandName))
+            productListViewModel.setBrandWithProductList(brand.brandId, getSortType())
             findNavController().safeNavigate(HomeFragmentDirections.actionHomeFragmentToProductListFragment(
-                brandId = brand.brandId
+
             ))
         }
         binding.rvBrands.apply {

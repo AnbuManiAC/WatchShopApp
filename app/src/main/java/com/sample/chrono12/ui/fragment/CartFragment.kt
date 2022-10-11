@@ -16,6 +16,7 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.databinding.FragmentCartBinding
 import com.sample.chrono12.databinding.LoginPromptCartWishlistDialogBinding
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.CartAdapter
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.CartViewModel
@@ -95,13 +96,12 @@ class CartFragment : Fragment() {
         cartViewModel.getCartItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) { cartItems ->
                 cartViewModel.initPriceCalculating(cartItems)
-                if (cartItems.isNotEmpty()) {
-                    fragmentCartBinding.emptyCart.visibility = View.GONE
-                    fragmentCartBinding.layoutPriceOrder.visibility = View.VISIBLE
-                }
                 if (cartItems.isEmpty()) {
                     fragmentCartBinding.emptyCart.visibility = View.VISIBLE
                     fragmentCartBinding.layoutPriceOrder.visibility = View.GONE
+                }else{
+                    fragmentCartBinding.emptyCart.visibility = View.GONE
+                    fragmentCartBinding.layoutPriceOrder.visibility = View.VISIBLE
                 }
                 adapter.setNewData(cartItems)
             }

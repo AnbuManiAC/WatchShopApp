@@ -4,4 +4,5 @@
     <dimen name="padding_large">16dp</dimen>
     <dimen name="margin_small">16dp</dimen>
     <dimen name="margin_large">32dp</dimen>
+    <dimen name="button_height_min">56dp</dimen>
 </resources>

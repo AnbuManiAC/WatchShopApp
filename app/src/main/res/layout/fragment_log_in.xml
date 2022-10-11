@@ -33,7 +33,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textEmailAddress"
-                android:saveEnabled="false" />
+                android:maxLength="320"
+                android:imeOptions="actionNext"
+                android:nextFocusDown="@id/tiEtPassword"/>
 
             <requestFocus />
 
@@ -60,8 +62,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
-                android:maxLength="15"
-                android:saveEnabled="false" />
+                android:maxLength="16"
+                android:imeOptions="actionDone"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 

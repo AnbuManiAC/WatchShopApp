@@ -38,7 +38,10 @@
             android:id="@+id/tilEtAddressGroupName"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textPersonName" />
+            android:inputType="textPersonName"
+            android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM "
+            android:imeOptions="actionDone"
+            android:maxLength="30"/>
         <requestFocus/>
 
     </com.google.android.material.textfield.TextInputLayout>

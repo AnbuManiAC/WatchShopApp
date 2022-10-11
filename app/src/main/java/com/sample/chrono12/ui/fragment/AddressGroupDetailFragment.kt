@@ -63,6 +63,7 @@ class AddressGroupDetailFragment : Fragment() {
 
     private fun setupAddFromExistingButton() {
         binding.btnAddFromExisting.setOnClickListener {
+            userViewModel.clearSelectedAddressIds()
             findNavController().safeNavigate(AddressGroupDetailFragmentDirections.actionAddressGroupDetailFragmentToAddressFragment(
                 addressGroupName = addressGroupName,
                 addFromExisting = true
@@ -105,9 +106,11 @@ class AddressGroupDetailFragment : Fragment() {
                         text = getString(R.string.addresses, addressGroupWithAddress.addressList.size)
                     }
                     binding.rvGroupAddresses.visibility = View.VISIBLE
+                    binding.clNoDataFound.visibility = View.GONE
                 } else{
                     binding.rvGroupAddresses.visibility = View.GONE
                     binding.tvAddresses.visibility = View.GONE
+                    binding.clNoDataFound.visibility = View.VISIBLE
                 }
             }
         }

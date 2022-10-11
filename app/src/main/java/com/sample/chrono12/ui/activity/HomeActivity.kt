@@ -71,14 +71,14 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupNetworkConnectionMonitor() {
         connectivityViewModel.networkState.observe(this){ hasInternet ->
-            if (!hasInternet) {
-                val snackBar = Snackbar.make(
-                    findViewById(R.id.snackBarLayout),
-                    R.string.no_internet, Snackbar.LENGTH_INDEFINITE
-                )
-                snackBar.setAction(getString(R.string.okay)){
-                    snackBar.dismiss()
-                }
+            val snackBar = Snackbar.make(
+                findViewById(R.id.snackBarLayout),
+                R.string.no_internet, Snackbar.LENGTH_INDEFINITE
+            )
+            snackBar.setAction(getString(R.string.okay)){
+                snackBar.dismiss()
+            }
+            if(!hasInternet) {
                 snackBar.show()
                 connectivityViewModel.setNetWorkState(true)
             }

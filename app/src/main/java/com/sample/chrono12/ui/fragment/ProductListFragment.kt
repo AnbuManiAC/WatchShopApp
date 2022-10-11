@@ -64,17 +64,24 @@ class ProductListFragment : Fragment() {
             }
         }
         binding.btnFilter.setOnClickListener {
+            filterViewModel.setSelectedFilterIds(filterViewModel.appliedFilterIds)
             findNavController().safeNavigate(ProductListFragmentDirections.actionProductListFragmentToFilterFragment())
         }
     }
 
     private fun setupSortButtonListener() {
         productListViewModel.sortType.observe(viewLifecycleOwner) { sortType ->
-            if (sortType == PRICE_HIGH_TO_LOW || sortType == PRICE_LOW_TO_HIGH) {
-                binding.btnSort.text = resources.getString(R.string.sort_button_text, "Price")
+            if (sortType == PRICE_HIGH_TO_LOW) {
+                binding.btnSort.text = resources.getString(R.string.sort_button_text, "Price ⬇")
             }
-            if (sortType == RATING_HIGH_TO_LOW || sortType == RATING_LOW_TO_HIGH) {
-                binding.btnSort.text = resources.getString(R.string.sort_button_text, "Rating")
+            if (sortType == RATING_HIGH_TO_LOW) {
+                binding.btnSort.text = resources.getString(R.string.sort_button_text, "Rating ⬇")
+            }
+            if (sortType == PRICE_LOW_TO_HIGH) {
+                binding.btnSort.text = resources.getString(R.string.sort_button_text, "Price ⬆")
+            }
+            if (sortType == RATING_LOW_TO_HIGH) {
+                binding.btnSort.text = resources.getString(R.string.sort_button_text, "Rating ⬆")
             }
         }
         binding.btnSort.setOnClickListener {

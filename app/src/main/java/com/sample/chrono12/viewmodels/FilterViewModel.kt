@@ -25,16 +25,16 @@ class FilterViewModel : ViewModel() {
         get() = _selectedFilterPosition
 
     private fun addSelectedFilter(filterId: Int) {
-        selectedFilterIds.add(filterId)
+        _selectedFilterIds.add(filterId)
     }
 
     private fun removeSelectedFilter(filterId: Int) {
-        selectedFilterIds.remove(filterId)
+        _selectedFilterIds.remove(filterId)
     }
 
     fun setSelectedFilterIds(filterIds: HashSet<Int>){
-        selectedFilterIds.clear()
-        selectedFilterIds.addAll(filterIds)
+        _selectedFilterIds.clear()
+        _selectedFilterIds.addAll(filterIds)
     }
 
     fun addDeleteSelectedFilter(filterId: Int, isAdd: Boolean) {

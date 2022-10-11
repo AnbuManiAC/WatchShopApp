@@ -19,19 +19,22 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_large"
             android:hint="@string/name"
-            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@+id/tilDoorNum"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5">
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtAddressName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM ."
+                android:maxLength="30"
                 android:inputType="textPersonName" />
 
+            <requestFocus />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,6 +55,7 @@
                 android:id="@+id/tilEtDoorNum"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:maxLength="10"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -74,7 +78,8 @@
                 android:id="@+id/tilEtStreet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="text" />
+                android:inputType="text"
+                android:maxLength="50"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,7 +101,8 @@
                 android:id="@+id/tilEtLandmark"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="text" />
+                android:inputType="text"
+                android:maxLength="50"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -118,7 +124,8 @@
                 android:id="@+id/tilEtCity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="text" />
+                android:inputType="text"
+                android:maxLength="50"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,7 +147,9 @@
                 android:id="@+id/tilEtState"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="text" />
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:nextFocusDown="@id/tilEtPincode" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -163,7 +172,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
-                android:maxLength="6"/>
+                android:maxLength="6" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -176,19 +185,19 @@
             android:layout_marginTop="@dimen/margin_large"
             android:layout_marginBottom="@dimen/margin_large"
             android:hint="Mobile Number"
-            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tilPincode"
-            app:layout_constraintVertical_bias="0.5">
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintVertical_chainStyle="packed">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/tilEtMobile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="number"
-                android:maxLength="10"/>
+                android:maxLength="10" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

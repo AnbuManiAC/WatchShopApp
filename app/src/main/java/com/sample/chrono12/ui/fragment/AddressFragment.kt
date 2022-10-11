@@ -1,6 +1,5 @@
 package com.sample.chrono12.ui.fragment
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import androidx.core.view.MenuHost
@@ -15,6 +14,7 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Address
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.FragmentAddressBinding
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.AddressAdapter
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.UserViewModel
@@ -56,14 +56,13 @@ class AddressFragment : Fragment() {
 
     private fun setupChooseAddressButton() {
         binding.btnSelectAddress.visibility = View.VISIBLE
+        syncSelectButtonState()
         binding.btnSelectAddress.setOnClickListener {
-            if (addressAdapter.getSelectedAddressId().second > 0) {
-                val groupId = addressAdapter.getSelectedAddressId().first
-                val addressId = addressAdapter.getSelectedAddressId().second
+            if (userViewModel.selectedAddressId > 0) {
+                val addressId = userViewModel.selectedAddressId
                 findNavController().safeNavigate(
                     AddressFragmentDirections.actionAddressFragmentToOrderConfirmationFragment(
-                        groupId,
-                        addressId
+                        addressId = addressId
                     )
                 )
             }
@@ -81,7 +80,13 @@ class AddressFragment : Fragment() {
         binding.rvAddress.layoutManager = LinearLayoutManager(requireContext())
         binding.rvAddress.adapter = addressAdapter
 
+        if(navArgs.chooseAddress){
+            addressAdapter.setOnSelectionChangeListener(getOnSelectionChangeListener())
+            addressAdapter.setSelectedAddressId(userViewModel.selectedAddressId)
+        }
         if (navArgs.addFromExisting) {
+            addressAdapter.setOnAddressCheckedListener(getOnAddressCheckedListener())
+            addressAdapter.setSelectedAddressIds(userViewModel.selectedAddressIds)
             val addressIds: List<Int> = userViewModel.getAddressIds() ?: emptyList()
             userViewModel.getUserAddresses(
                 userViewModel.getLoggedInUser().toInt()
@@ -99,7 +104,9 @@ class AddressFragment : Fragment() {
                     )
                     addressAdapter.setAddressGroup(addressGroupWithAddress.addressGroup)
                     addressAdapter.setNewData(addressGroupWithAddress.addressList)
+                    setTitle(addressGroupWithAddress.addressList.size)
                     if (addressGroupWithAddress.addressList.isEmpty()) {
+                        setTitle(0)
                         if (it.addressList.isEmpty()) {
                             binding.tvEmptyAddressDesc.text =
                                 resources.getString(R.string.no_address_found)
@@ -125,10 +132,12 @@ class AddressFragment : Fragment() {
                         binding.rvAddress.visibility = View.VISIBLE
                         addressAdapter.setAddressGroup(addressWithAddressGroup.addressGroup)
                         addressAdapter.setNewData(addressWithAddressGroup.addressList)
+                        setTitle(addressWithAddressGroup.addressList.size)
                     }
                     if (it == null || it.addressList.isEmpty()) {
                         binding.clNoDataFound.visibility = View.VISIBLE
                         binding.btnSelectAddress.visibility = View.GONE
+                        setTitle(0)
                     } else {
                         binding.clNoDataFound.visibility = View.GONE
                         if(navArgs.chooseAddress){
@@ -138,6 +147,28 @@ class AddressFragment : Fragment() {
                 }
         }
 
+    }
+
+    private fun getOnAddressCheckedListener() = object : AddressAdapter.OnAddressCheckedListener {
+        override fun onChecked(addressId: Int, isChecked: Boolean) {
+            userViewModel.addDeleteSelectedAddressId(addressId, isChecked)
+            addressAdapter.setSelectedAddressIds(userViewModel.selectedAddressIds)
+        }
+
+    }
+
+    private fun getOnSelectionChangeListener() =
+        object : AddressAdapter.OnSelectionChangeListener {
+            override fun onChanged(selectedAddressId: Int) {
+                userViewModel.isSelectAddressEnabled = true
+                syncSelectButtonState()
+                userViewModel.setSelectedAddressAndGroupId(selectedAddressId)
+                addressAdapter.setSelectedAddressId(userViewModel.selectedAddressId)
+            }
+        }
+
+    private fun syncSelectButtonState() {
+        binding.btnSelectAddress.isEnabled = userViewModel.isSelectAddressEnabled
     }
 
     private fun getOnAddressButtonClickListener() =
@@ -163,6 +194,14 @@ class AddressFragment : Fragment() {
             }
 
         }
+
+    private fun setTitle(size: Int){
+        if(size>0){
+            (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.address_title, size))
+        }else{
+            (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.address))
+        }
+    }
 
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
@@ -190,4 +229,5 @@ class AddressFragment : Fragment() {
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
+
 }

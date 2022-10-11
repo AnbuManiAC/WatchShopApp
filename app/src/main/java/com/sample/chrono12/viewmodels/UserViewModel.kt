@@ -38,11 +38,37 @@ class UserViewModel @Inject constructor(
     private var addressId = MutableLiveData<Int>()
     private var addressGroupId = MutableLiveData<Int>()
     private val addressIds = MutableLiveData<List<Int>>()
-    private var _selectedAddressId: Int = 0
+
+    private var _selectedAddressId = 0
     val selectedAddressId: Int
         get() = _selectedAddressId
 
-    fun setSelectedAddressId(addressId: Int) {_selectedAddressId = addressId}
+    private val _selectedAddressIds = HashSet<Int>()
+    val selectedAddressIds: Set<Int>
+        get() = _selectedAddressIds
+
+    var isSelectAddressEnabled = false
+
+    fun addDeleteSelectedAddressId(addressId: Int, isAdd: Boolean) {
+        if (isAdd) {
+            addSelectedAddressId(addressId)
+        } else {
+            removeSelectedAddressId(addressId)
+        }
+    }
+
+    fun clearSelectedAddressIds() = _selectedAddressIds.clear()
+
+    private fun addSelectedAddressId(addressId: Int) {
+        _selectedAddressIds.add(addressId)
+    }
+
+    private fun removeSelectedAddressId(addressId: Int) {
+        _selectedAddressIds.remove(addressId)
+    }
+
+
+    fun setSelectedAddressAndGroupId(addressId: Int) {_selectedAddressId = addressId}
 
     private var profileSettingAction = MutableLiveData<ProfileSettingAction>()
 
@@ -253,10 +279,9 @@ class UserViewModel @Inject constructor(
 
     fun getAddressGroupWithAddressByAddressId(
         userId: Int,
-        addressGroupId: Int,
         addressId: Int
     ): LiveData<AddressGroupWithAddress> =
-        userRepository.getAddressGroupWithAddressByAddressId(userId, addressGroupId, addressId)
+        userRepository.getAddressGroupWithAddressByAddressId(userId, addressId, groupName = "default")
 
     fun getAddressGroupName(userId: Int, addressGroupId: Int): LiveData<String> =
         userRepository.getAddressGroupName(userId, addressGroupId)
@@ -269,6 +294,12 @@ class UserViewModel @Inject constructor(
                 insertIntoAddressAndGroupCrossRef(id.toInt(), addressGroupName)
             }
             insertIntoAddressAndGroupCrossRef(id.toInt(), "default")
+        }
+    }
+
+    fun editAddress(address: Address) {
+        viewModelScope.launch {
+            userRepository.editAddress(address)
         }
     }
 

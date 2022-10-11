@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -13,7 +14,9 @@ import androidx.navigation.fragment.navArgs
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.AddressGroup
 import com.sample.chrono12.databinding.AddAddressGroupNameBinding
+import com.sample.chrono12.utils.hideInput
 import com.sample.chrono12.utils.safeNavigate
+import com.sample.chrono12.utils.showKeyboard
 import com.sample.chrono12.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -55,6 +58,7 @@ class CreateAddressGroupDialog : DialogFragment() {
         etGroupName.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 etGroupNameLayout.error = null
+                etGroupName.showKeyboard()
             }
         }
 
@@ -80,7 +84,18 @@ class CreateAddressGroupDialog : DialogFragment() {
                 }
             }
         }
+        binding.tilEtAddressGroupName.setOnEditorActionListener { v, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    v.clearFocus()
+                    v.hideInput()
+                    true
+                }
+                else -> false
+            }
+        }
     }
+
 
     private fun addAddressGroup(groupName: String) {
         if (navArgs.addressGroupId > 0) {

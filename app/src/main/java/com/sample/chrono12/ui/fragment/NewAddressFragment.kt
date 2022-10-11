@@ -2,6 +2,7 @@ package com.sample.chrono12.ui.fragment
 
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import androidx.core.text.isDigitsOnly
 import androidx.core.view.MenuHost
@@ -15,6 +16,8 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Address
 import com.sample.chrono12.databinding.FragmentNewAddressBinding
 import com.sample.chrono12.ui.activity.HomeActivity
+import com.sample.chrono12.utils.hideInput
+import com.sample.chrono12.utils.showKeyboard
 import com.sample.chrono12.viewmodels.UserViewModel
 
 class NewAddressFragment : Fragment() {
@@ -43,6 +46,7 @@ class NewAddressFragment : Fragment() {
                 val doorAndStreet = address.addressLine1.split("___")
                 with(binding) {
                     tilEtAddressName.setText(address.contactName)
+                    tilEtAddressName.setSelection(address.contactName.length)
                     tilEtDoorNum.setText(doorAndStreet[0])
                     tilEtStreet.setText(doorAndStreet[1])
                     tilEtLandmark.setText(address.addressLine2)
@@ -55,6 +59,16 @@ class NewAddressFragment : Fragment() {
         } else {
             (requireActivity() as HomeActivity).setActionBarTitle("New Address")
         }
+        binding.tilEtMobile.setOnEditorActionListener { v, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_DONE -> {
+                    v.clearFocus()
+                    v.hideInput()
+                    true
+                }
+                else -> false
+            }
+        }
         setupStatesDropDownAdapter()
     }
 
@@ -62,6 +76,9 @@ class NewAddressFragment : Fragment() {
         val states = resources.getStringArray(R.array.india_states)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.state_name_item, states)
         binding.tilEtState.setAdapter(arrayAdapter)
+        binding.tilEtState.setOnItemClickListener { _, _, _, _ ->
+            binding.tilEtPincode.requestFocus()
+        }
     }
 
     private fun cancelErrors() {
@@ -160,8 +177,8 @@ class NewAddressFragment : Fragment() {
         val state = binding.tilEtState.text.toString()
         val pincode = binding.tilEtPincode.text.toString().toInt()
         val mobile = binding.tilEtMobile.text.toString()
-        val address = if (navArgs.addressId > 0) {
-            Address(
+        if (navArgs.addressId > 0) {
+            val address = Address(
                 addressId = navArgs.addressId,
                 contactName = name,
                 addressLine1 = addressLine1,
@@ -171,8 +188,9 @@ class NewAddressFragment : Fragment() {
                 pincode = pincode,
                 contactNumber = mobile
             )
+            userViewModel.editAddress(address)
         } else {
-            Address(
+            val address = Address(
                 contactName = name,
                 addressLine1 = addressLine1,
                 addressLine2 = addressLine2,
@@ -181,20 +199,16 @@ class NewAddressFragment : Fragment() {
                 pincode = pincode,
                 contactNumber = mobile
             )
+            userViewModel.insertAddress(address, navArgs.addressGroupName)
         }
-//        userViewModel.insertAddress(address)
-//        userViewModel.getAddressId().observe(viewLifecycleOwner) {
-//            it?.let {
-//                userViewModel.insertIntoAddressAndGroupCrossRef(it, navArgs.addressGroupName)
-//            }
-//        }
-        userViewModel.insertAddress(address, navArgs.addressGroupName)
-
     }
 
     private fun setUpFocusChangeListeners() {
         binding.tilEtAddressName.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tilAddressName.error = null
+            if (hasFocus) {
+                binding.tilAddressName.error = null
+                binding.tilEtAddressName.showKeyboard()
+            }
         }
         binding.tilEtDoorNum.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) binding.tilDoorNum.error = null
@@ -209,7 +223,10 @@ class NewAddressFragment : Fragment() {
             if (hasFocus) binding.tilCity.error = null
         }
         binding.tilEtState.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) binding.tilState.error = null
+            if (hasFocus) {
+                binding.tilState.error = null
+                binding.tilEtState.showDropDown()
+            }
         }
         binding.tilEtPincode.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) binding.tilPincode.error = null

@@ -113,7 +113,6 @@ class FilterFragment : Fragment() {
 
     private fun setupFilterValueAdapter() {
         binding.rvFilterValues.layoutManager = LinearLayoutManager(requireContext())
-        filterViewModel.setSelectedFilterIds(filterViewModel.appliedFilterIds)
         filterValuesAdapter = FilterValuesAdapter { filterId, isChecked ->
             filterViewModel.addDeleteSelectedFilter(filterId, isChecked)
             filterValuesAdapter.setSelectedFilterIds(filterViewModel.selectedFilterIds)

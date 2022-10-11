@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FragmentOrderHistoryBinding
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.OrderHistoryAdapter
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.OrderViewModel
@@ -65,4 +67,5 @@ class OrderHistoryFragment : Fragment() {
                 )
             }
         }
+
 }

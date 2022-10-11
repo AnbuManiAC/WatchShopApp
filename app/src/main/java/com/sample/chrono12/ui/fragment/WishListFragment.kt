@@ -17,6 +17,7 @@ import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Cart
 import com.sample.chrono12.databinding.FragmentWishlistBinding
 import com.sample.chrono12.databinding.LoginPromptCartWishlistDialogBinding
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.WishListAdapter
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.CartViewModel
@@ -91,9 +92,10 @@ class WishListFragment : Fragment() {
         wishListViewModel.getWishListItems(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
                 if (it.isEmpty()) {
+                    setTitle(0)
                     fragmentWishListBinding.emptyWishlist.visibility = View.VISIBLE
-                }
-                if (it.isNotEmpty()) {
+                }else{
+                    setTitle(it.size)
                     fragmentWishListBinding.emptyWishlist.visibility = View.GONE
                 }
                 adapter.setNewData(it)
@@ -172,6 +174,13 @@ class WishListFragment : Fragment() {
             }
         }
 
+    private fun setTitle(size: Int){
+        if(size>0){
+            (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.wishlist_title, size))
+        }else{
+            (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.wishlist))
+        }
+    }
 
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {

@@ -15,10 +15,17 @@ class AddressGroupAdapter(
     private val chooseGroup: Boolean
 ) : RecyclerView.Adapter<AddressGroupAdapter.AddressGroupViewHolder>() {
 
+    private lateinit var onSelectionChangeListener: AddressAdapter.OnSelectionChangeListener
     private lateinit var addressGroupList: List<AddressGroupWithAddress>
     private var selectedGroupId: Int = 0
 
-    fun getSelectedGroupId() = selectedGroupId
+    fun setSelectedGroupId(groupId: Int) {
+        selectedGroupId = groupId
+    }
+
+    fun setOnSelectionChangeListener(listener: AddressAdapter.OnSelectionChangeListener){
+        onSelectionChangeListener = listener
+    }
 
     inner class AddressGroupViewHolder(val binding: AddressGroupRvItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -35,13 +42,12 @@ class AddressGroupAdapter(
                 val groupId = addressGroupWithAddress.addressGroup.addressGroupId
                 binding.rbSelect.setOnClickListener {
                     if(addressGroupWithAddress.addressList.isEmpty()){
-                        Toast.makeText(binding.root.context, "Address group empty", Toast.LENGTH_SHORT).show()
-                        notifyDataSetChanged()
+                        Toast.makeText(binding.root.context, "No address found in this group", Toast.LENGTH_SHORT).show()
                     }
                     else{
-                        selectedGroupId = groupId
-                        notifyDataSetChanged()
+                        onSelectionChangeListener.onChanged(groupId)
                     }
+                    notifyDataSetChanged()
                 }
                 binding.rbSelect.isChecked = selectedGroupId == groupId
             } else {

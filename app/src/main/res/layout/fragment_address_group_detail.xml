@@ -7,116 +7,151 @@
     android:padding="@dimen/padding_large"
     tools:context=".ui.fragment.AddressGroupDetailFragment">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/svGroupAddresses"
+    <TextView
+        android:id="@+id/tvGroupName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:hint="Group name"
+        android:paddingVertical="@dimen/padding_small"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+        app:layout_constraintEnd_toStartOf="@id/btnEditGroupName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnEditGroupName"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:backgroundTint="@color/editButtonBackground"
+        android:checked="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:src="@drawable/ic_edit"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/tvGroupName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvGroupName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="?attr/colorPrimary" />
+
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider13"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvGroupName" />
+
+    <Button
+        android:id="@+id/btnAddNewAddress"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/padding_small"
+        android:allowClickWhenDisabled="false"
+        android:clickable="true"
+        android:drawableStart="@drawable/ic_add"
+        android:focusable="true"
+        android:text="+ Add new address"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/btnAddFromExisting"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider13" />
+
+    <Button
+        android:id="@+id/btnAddFromExisting"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:allowClickWhenDisabled="false"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="+ Add from existing"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:textCursorDrawable="@color/primaryDarkColor"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/btnAddNewAddress"
+        app:layout_constraintTop_toTopOf="@id/btnAddNewAddress" />
+
+    <TextView
+        android:id="@+id/tvAddresses"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="10 Addresses"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnAddNewAddress" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvGroupAddresses"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/padding_small"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvAddresses" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clNoDataFound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/btnAddNewAddress">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ivEmptyAddress"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="@string/empty_address_image"
+            android:src="@drawable/ic_no_data_svg"
+            app:layout_constraintBottom_toTopOf="@id/tvEmptyAddress"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintVertical_chainStyle="packed" />
 
-            <TextView
-                android:id="@+id/tvGroupName"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/margin_small"
-                android:hint="Group name"
-                android:paddingVertical="@dimen/padding_small"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                app:layout_constraintEnd_toStartOf="@id/btnEditGroupName"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/tvEmptyAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:text="@string/no_address"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            app:layout_constraintBottom_toTopOf="@id/tvEmptyAddressDesc"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivEmptyAddress"
+            app:layout_constraintVertical_bias="0.5" />
 
-            <ImageButton
-                android:id="@+id/btnEditGroupName"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:backgroundTint="@color/editButtonBackground"
-                app:tint="?attr/colorPrimary"
-                android:checked="false"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/ic_edit"
-                android:visibility="visible"
-                app:layout_constraintBottom_toBottomOf="@id/tvGroupName"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tvGroupName"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <com.google.android.material.divider.MaterialDivider
-                android:id="@+id/divider13"
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvGroupName" />
-
-            <Button
-                android:id="@+id/btnAddNewAddress"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/padding_small"
-                android:allowClickWhenDisabled="false"
-                android:clickable="true"
-                android:drawableStart="@drawable/ic_add"
-                android:focusable="true"
-                android:text="+ Add new address"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toStartOf="@id/btnAddFromExisting"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider13" />
-
-            <Button
-                android:id="@+id/btnAddFromExisting"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:allowClickWhenDisabled="false"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="+ Add from existing"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-                android:textCursorDrawable="@color/primaryDarkColor"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@id/btnAddNewAddress"
-                app:layout_constraintTop_toTopOf="@id/btnAddNewAddress" />
-
-            <TextView
-                android:id="@+id/tvAddresses"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Addresses(10)"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/btnAddNewAddress" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvGroupAddresses"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_small"
-                android:nestedScrollingEnabled="false"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvAddresses" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
+        <TextView
+            android:id="@+id/tvEmptyAddressDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_small"
+            android:gravity="center"
+            android:text="@string/looks_like_you_haven_t_n_added_any_address_yet"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            android:textColor="@color/ashGrey"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvEmptyAddress"
+            app:layout_constraintVertical_bias="0.5" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

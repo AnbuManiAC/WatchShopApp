@@ -10,9 +10,8 @@
         android:id="@+id/rvAddressGroup"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingStart="@dimen/padding_small"
+        android:paddingHorizontal="@dimen/padding_large"
         android:paddingTop="@dimen/padding_small"
-        android:paddingEnd="@dimen/padding_small"
         app:layout_constraintBottom_toTopOf="@id/btnSelectGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,19 +23,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_small"
+        android:contentDescription="@string/add_address_group"
         android:src="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@id/btnSelectGroup"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white"
-        android:contentDescription="@string/add_address_group" />
+        app:tint="@color/white" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSelectGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin_small"
+        android:layout_marginVertical="@dimen/padding_small"
         android:elevation="4dp"
+        android:minHeight="@dimen/button_height_min"
         android:padding="@dimen/padding_small"
-        android:layout_margin="@dimen/padding_small"
         android:text="@string/select_address_group"
         android:textAllCaps="true"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
@@ -46,7 +47,8 @@
         app:cornerRadius="@dimen/margin_large"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clNoDataFound"
@@ -62,14 +64,14 @@
             android:id="@+id/ivEmptyAddressGroup"
             android:layout_width="200dp"
             android:layout_height="200dp"
+            android:contentDescription="@string/empty_address_group_image"
             android:src="@drawable/ic_no_data_svg"
             app:layout_constraintBottom_toTopOf="@id/tvEmptyCart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
-            app:layout_constraintVertical_chainStyle="packed"
-            android:contentDescription="@string/empty_address_group_image" />
+            app:layout_constraintVertical_chainStyle="packed" />
 
         <TextView
             android:id="@+id/tvEmptyCart"

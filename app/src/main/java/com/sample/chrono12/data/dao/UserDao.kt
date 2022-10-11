@@ -115,6 +115,9 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertIntoAddress(address: Address): Long
 
+    @Update
+    suspend fun editAddress(address: Address)
+
     @Query("DELETE FROM Address WHERE addressId = :addressId")
     fun deleteAddress(addressId: Int)
 
@@ -131,11 +134,11 @@ interface UserDao {
         addressGroupId: Int
     ): LiveData<AddressGroupWithAddress>
 
-    @Query("SELECT * FROM AddressGroup, Address WHERE userId =:userId And addressId = :addressId And addressGroupId = :addressGroupId")
+    @Query("SELECT * FROM AddressGroup, Address WHERE userId =:userId And addressId = :addressId And groupName = :groupName")
     fun getAddressGroupWithAddressByAddressId(
         userId: Int,
-        addressGroupId: Int,
-        addressId: Int
+        addressId: Int,
+        groupName: String
     ): LiveData<AddressGroupWithAddress>
 
     @Query("SELECT addressGroupId FROM AddressGroup where userId =:userId AND groupName =:groupName")

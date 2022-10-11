@@ -42,7 +42,7 @@
     <string name="sort_button_text">Sort (%s)</string>
     <string name="filter_button_text">Filter (%d)</string>
     <string name="filter">Filter</string>
-    <string name="product_count">Products(%d)</string>
+    <string name="product_count">%d Products</string>
     <string name="price_high_to_low">Price - High to Low</string>
     <string name="price_low_to_high">Price - Low to High</string>
     <string name="rating_high_to_low">Rating - High to Low</string>
@@ -56,7 +56,7 @@
     <string name="order_id">Order Id : %d</string>
     <string name="bulk_ord_id">Bulk Order Id : %d</string>
     <string name="password_doesnt_match">Password does not match</string>
-    <string name="password_min_character">Password must contains atleast 8 characters</string>
+    <string name="password_min_character">Password must be between 8 and 16 characters</string>
     <string name="not_a_mobile">Invalid mobile number</string>
     <string name="invalid_state_name">Invalid state name</string>
     <string name="not_an_email">Invalid email address</string>
@@ -92,7 +92,7 @@
     <string name="address_group_delete_alert">Are you sure you want to delete this Address group?</string>
     <string name="remove">Remove</string>
     <string name="default_group_name">Default</string>
-    <string name="addresses">Addresses(%d)</string>
+    <string name="addresses">%d Addresses</string>
     <string name="max_units_reached">Max 5 units only</string>
     <string name="only_units_left">Only %d units left</string>
     <string name="order_confirmation_product_quantity_error_msg">%s\nRequired quantity: %d\nAvailable quantity: %d</string>
@@ -118,6 +118,13 @@
     <string name="empty_address_group_image">Empty address group image</string>
     <string name="no_address">No Address Found</string>
     <string name="looks_like_you_haven_t_n_added_any_address_yet">Looks like you haven\'t\n added any address yet</string>
+    <string name="address_title">Address (%d)</string>
+    <string name="address">Address</string>
+    <string name="address_group_title">Address Group (%d)</string>
+    <string name="order_history_title">Order History (%d)</string>
+    <string name="cart_title">Cart (%d)</string>
+    <string name="wishlist_title">Wishlist (%d)</string>
+    <string name="wishlist">Wishlist</string>
 
     //Indian states
     <string-array name="india_states">

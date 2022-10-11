@@ -18,22 +18,23 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_large"
             android:hint="@string/name"
-            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintBottom_toTopOf="@+id/tilEmail"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.5"
+            app:layout_constraintVertical_chainStyle="packed"
             app:startIconDrawable="@drawable/ic_person">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:saveEnabled="false"
                 android:id="@+id/tilEtName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="text" />
+                android:digits="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM ."
+                android:inputType="textPersonName"
+                android:maxLength="30" />
 
-            <requestFocus/>
+            <requestFocus />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -52,11 +53,11 @@
             app:startIconDrawable="@drawable/ic_mail">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:saveEnabled="false"
                 android:id="@+id/tilEtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                android:maxLength="320" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -76,7 +77,6 @@
             app:startIconDrawable="@drawable/ic_mobile">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:saveEnabled="false"
                 android:id="@+id/tilEtMobile"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -102,12 +102,11 @@
             app:startIconDrawable="@drawable/ic_lock">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:saveEnabled="false"
                 android:id="@+id/tilEtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
-                android:maxLength="15" />
+                android:maxLength="16" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -127,12 +126,11 @@
             app:startIconDrawable="@drawable/ic_lock">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:saveEnabled="false"
                 android:id="@+id/tilEtCPassword"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:inputType="textPassword"
-                android:maxLength="15" />
+                android:maxLength="16" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -159,13 +157,13 @@
             android:layout_marginBottom="@dimen/margin_large"
             android:text="@string/already_have_an_account"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
-            app:layout_constraintTop_toBottomOf="@+id/btnSignup"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/toLogIn"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.5"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSignup"
+            app:layout_constraintVertical_bias="0.5" />
 
         <TextView
             android:id="@+id/toLogIn"
@@ -177,9 +175,9 @@
             app:layout_constraintBottom_toBottomOf="@id/tv2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintVertical_bias="0.5"
             app:layout_constraintStart_toEndOf="@id/tv2"
-            app:layout_constraintTop_toTopOf="@id/tv2" />
+            app:layout_constraintTop_toTopOf="@id/tv2"
+            app:layout_constraintVertical_bias="0.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

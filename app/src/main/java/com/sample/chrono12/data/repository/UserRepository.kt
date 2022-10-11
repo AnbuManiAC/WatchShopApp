@@ -148,10 +148,10 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
 
     fun getAddressGroupWithAddressByAddressId(
         userId: Int,
-        addressGroupId: Int,
-        addressId: Int
+        addressId: Int,
+        groupName: String
     ): LiveData<AddressGroupWithAddress> =
-        userDao.getAddressGroupWithAddressByAddressId(userId, addressGroupId, addressId)
+        userDao.getAddressGroupWithAddressByAddressId(userId, addressId, groupName)
 
     suspend fun getAddressGroupId(userId: Int, groupName: String) =
         userDao.getAddressGroupId(userId, groupName)
@@ -162,6 +162,10 @@ class UserRepository @Inject constructor(private val userDao: UserDao) {
 
     suspend fun insertAddress(address: Address): Long = withContext(Dispatchers.IO) {
         userDao.insertIntoAddress(address)
+    }
+
+    suspend fun editAddress(address: Address) = withContext(Dispatchers.IO) {
+        userDao.editAddress(address)
     }
 
     suspend fun insertAddressGroup(addressGroup: AddressGroup): Long = withContext(Dispatchers.IO) {

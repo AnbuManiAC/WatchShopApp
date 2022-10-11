@@ -19,16 +19,33 @@ class AddressAdapter(
     private lateinit var addressGroup: AddressGroup
     private lateinit var addresses:  List<Address>
 
-    private val selectedIds = mutableSetOf<Int>()
-    private var selectedAddressAndGroupId = Pair(0,0)
+    private var selectedAddressIds = setOf<Int>()
+    private var selectedAddressId = 0
     private var hideEditAndDeleteButton = false
+    private lateinit var onSelectionChangeListener: OnSelectionChangeListener
+    private lateinit var onAddressCheckedListener: OnAddressCheckedListener
+
+    fun setOnSelectionChangeListener(listener: OnSelectionChangeListener){
+        onSelectionChangeListener = listener
+    }
+
+    fun setOnAddressCheckedListener(listener: OnAddressCheckedListener){
+        onAddressCheckedListener = listener
+    }
+
+    fun setSelectedAddressId(addressId: Int){
+        selectedAddressId = addressId
+    }
+
+    fun setSelectedAddressIds(addressIds: Set<Int>){
+        selectedAddressIds = addressIds
+    }
 
     fun setHideEditAndDeleteButton(status: Boolean){
         hideEditAndDeleteButton = status
     }
 
-    fun getSelectedAddressId() = selectedAddressAndGroupId
-    fun getSelectedIds() = selectedIds
+    fun getSelectedIds() = selectedAddressIds
 
     inner class AddressViewHolder(val binding: AddressRvItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -65,12 +82,16 @@ class AddressAdapter(
                 )
             }
             if (addFromExisting) {
-                binding.cbSelect.setOnCheckedChangeListener { _, isChecked ->
-                    if (isChecked) {
-                        selectedIds.add(address.addressId)
-                    } else {
-                        selectedIds.remove(address.addressId)
+                binding.cbSelect.isChecked = selectedAddressIds.contains(address.addressId)
+                binding.cbSelect.setOnCheckedChangeListener { button, isChecked ->
+                    if(button.isPressed){
+                        onAddressCheckedListener.onChecked(address.addressId, isChecked)
                     }
+//                    if (isChecked) {
+//                        selectedIds.add(address.addressId)
+//                    } else {
+//                        selectedIds.remove(address.addressId)
+//                    }
                 }
             }
             if (chooseAddress) {
@@ -78,12 +99,11 @@ class AddressAdapter(
                 binding.btnEditAddress.visibility = View.GONE
                 val rbSelectAddress = binding.rbChoose
                 val addressId = address.addressId
-                val groupId = addressGroup.addressGroupId
                 rbSelectAddress.setOnClickListener {
-                    selectedAddressAndGroupId = Pair(groupId, addressId)
+                    onSelectionChangeListener.onChanged(addressId)
                     notifyDataSetChanged()
                 }
-                rbSelectAddress.isChecked = selectedAddressAndGroupId.second == addressId
+                rbSelectAddress.isChecked = selectedAddressId == addressId
             }
             if(hideEditAndDeleteButton){
                 binding.btnRemoveAddress.visibility = View.GONE
@@ -130,6 +150,14 @@ class AddressAdapter(
     interface OnClickAddressButton {
         fun onClickRemove(addressId: Int, addressGroupId: Int, addressGroupName: String)
         fun onClickEdit(addressId: Int)
+    }
+
+    interface OnSelectionChangeListener {
+        fun onChanged(selectedAddressId: Int)
+    }
+
+    interface OnAddressCheckedListener {
+        fun onChecked(addressId: Int, isChecked: Boolean)
     }
 
     class DiffUtilCallback(private val oldList: List<Address>, private val newList: List<Address>) :

@@ -184,7 +184,7 @@ class OrderConfirmationFragment : Fragment() {
         addressAdapter.setHideEditAndDeleteButton(true)
         if (navArgs.addressId > 0) {
             userViewModel.getAddressGroupWithAddressByAddressId(
-                userViewModel.getLoggedInUser().toInt(), navArgs.addressGroupId, navArgs.addressId
+                userViewModel.getLoggedInUser().toInt(), navArgs.addressId
             )
                 .observe(viewLifecycleOwner) {
                     val addresses = mutableListOf<Address>()
@@ -251,7 +251,6 @@ class OrderConfirmationFragment : Fragment() {
                 addressGroupName: String
             ) {
             }
-
             override fun onClickEdit(addressId: Int) {
             }
         }

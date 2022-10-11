@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.relations.AddressGroupWithAddress
 import com.sample.chrono12.databinding.FragmentAddressGroupBinding
+import com.sample.chrono12.ui.activity.HomeActivity
+import com.sample.chrono12.ui.adapter.AddressAdapter
 import com.sample.chrono12.ui.adapter.AddressGroupAdapter
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.UserViewModel
@@ -44,12 +46,17 @@ class AddressGroupFragment : Fragment() {
 
     private fun setupChooseGroupButton() {
         binding.btnSelectGroup.visibility = View.VISIBLE
+        syncSelectButtonState()
         binding.btnSelectGroup.setOnClickListener {
-            val groupId = addressGroupAdapter.getSelectedGroupId()
+            val groupId = userViewModel.selectedAddressId
             if(groupId>0){
                 findNavController().safeNavigate(AddressGroupFragmentDirections.actionAddressGroupFragmentToOrderConfirmationFragment(addressGroupId = groupId))
             }
         }
+    }
+
+    private fun syncSelectButtonState() {
+        binding.btnSelectGroup.isEnabled = userViewModel.isSelectAddressEnabled
     }
 
     private fun setupAddressGroupAdapter() {
@@ -61,12 +68,18 @@ class AddressGroupFragment : Fragment() {
         addressGroupAdapter.setData(listOf())
         binding.rvAddressGroup.layoutManager = LinearLayoutManager(requireContext())
         binding.rvAddressGroup.adapter = addressGroupAdapter
+        if(navArgs.chooseGroup){
+            addressGroupAdapter.setOnSelectionChangeListener(getOnSelectionChangeListener())
+            addressGroupAdapter.setSelectedGroupId(userViewModel.selectedAddressId)
+        }
         userViewModel.getAddressGroupWithAddresses(userViewModel.getLoggedInUser().toInt())
             .observe(viewLifecycleOwner) {
                 it?.let {
                     addressGroupAdapter.setNewData(it)
+                    setTitle(it.size)
                 }
                 if(it.isEmpty()){
+                    setTitle(0)
                     binding.clNoDataFound.visibility = View.VISIBLE
                     binding.btnSelectGroup.visibility = View.GONE
                 }else{
@@ -75,6 +88,16 @@ class AddressGroupFragment : Fragment() {
 
             }
     }
+
+    private fun getOnSelectionChangeListener() =
+        object : AddressAdapter.OnSelectionChangeListener {
+            override fun onChanged(selectedAddressId: Int) {
+                userViewModel.isSelectAddressEnabled = true
+                syncSelectButtonState()
+                userViewModel.setSelectedAddressAndGroupId(selectedAddressId)
+                addressGroupAdapter.setSelectedGroupId(userViewModel.selectedAddressId)
+            }
+        }
 
     private fun getOnDeleteClickListener() =
         object : AddressGroupAdapter.OnClickDelete {
@@ -103,5 +126,13 @@ class AddressGroupFragment : Fragment() {
                 ))
             }
         }
+
+    private fun setTitle(size: Int){
+        if(size>0){
+            (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.address_group_title, size))
+        }else{
+            (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.address_group))
+        }
+    }
 
 }

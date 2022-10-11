@@ -6,14 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.sample.chrono12.databinding.FragmentChooseAddressTypeBinding
 import com.sample.chrono12.utils.safeNavigate
+import com.sample.chrono12.viewmodels.UserViewModel
 
 
 class ChooseAddressTypeDialog : DialogFragment() {
 
     private lateinit var binding: FragmentChooseAddressTypeBinding
+    private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
 
     override fun onResume() {
         super.onResume()
@@ -42,6 +45,8 @@ class ChooseAddressTypeDialog : DialogFragment() {
         binding.btnSelect.setOnClickListener {
             when (binding.rgChooseAddressType.checkedRadioButtonId) {
                 binding.rbFromAddresses.id -> {
+                    userViewModel.setSelectedAddressAndGroupId(0)
+                    userViewModel.isSelectAddressEnabled = false
                     findNavController().safeNavigate(
                         ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressFragment(
                             chooseAddress = true
@@ -49,6 +54,8 @@ class ChooseAddressTypeDialog : DialogFragment() {
                     )
                 }
                 binding.rbFromAddressGroups.id -> {
+                    userViewModel.setSelectedAddressAndGroupId(0)
+                    userViewModel.isSelectAddressEnabled = false
                     findNavController().safeNavigate(
                         ChooseAddressTypeDialogDirections.actionChooseAddressTypeFragmentToAddressGroupFragment(
                             chooseGroup = true

@@ -182,6 +182,11 @@ class HomeFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        productListViewModel.setSearchText("")
+    }
+
     private fun <K, V> getKey(hashMap: Map<K, V>, target: V): K {
         return hashMap.filter { target == it.value }.keys.first()
     }

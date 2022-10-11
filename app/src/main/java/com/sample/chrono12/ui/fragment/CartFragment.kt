@@ -11,12 +11,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.databinding.FragmentCartBinding
 import com.sample.chrono12.databinding.LoginPromptCartWishlistDialogBinding
-import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.CartAdapter
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.CartViewModel
@@ -29,6 +29,7 @@ class CartFragment : Fragment() {
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private val cartViewModel by lazy { ViewModelProvider(requireActivity())[CartViewModel::class.java] }
     private var isUserLoggedIn = false
+    private var enablePlaceOrder = true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -78,7 +79,11 @@ class CartFragment : Fragment() {
         fragmentCartBinding.rvCart.layoutManager = LinearLayoutManager(activity)
         fragmentCartBinding.rvCart.adapter = adapter
         fragmentCartBinding.btnPlaceOrder.setOnClickListener {
-            findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment())
+            if(!enablePlaceOrder){
+                Snackbar.make(fragmentCartBinding.snackBarLayout, "One or more products out of stock", Snackbar.LENGTH_LONG).show()
+            }else {
+                findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToChooseAddressTypeFragment())
+            }
         }
         cartViewModel.getTotalCurrentPrice().observe(viewLifecycleOwner) {
             fragmentCartBinding.tvTotalCurrentPrice.text = getString(R.string.price, it)
@@ -100,6 +105,10 @@ class CartFragment : Fragment() {
                     fragmentCartBinding.emptyCart.visibility = View.VISIBLE
                     fragmentCartBinding.layoutPriceOrder.visibility = View.GONE
                 }else{
+                    enablePlaceOrder = true
+                    cartItems.forEach { cart ->
+                        enablePlaceOrder = enablePlaceOrder  && cart.productWithBrandAndImagesList.productWithBrand.product.stockCount>0
+                    }
                     fragmentCartBinding.emptyCart.visibility = View.GONE
                     fragmentCartBinding.layoutPriceOrder.visibility = View.VISIBLE
                 }
@@ -127,6 +136,13 @@ class CartFragment : Fragment() {
 
     private fun getOnQuantityClickListener(): CartAdapter.OnClickQuantity =
         object : CartAdapter.OnClickQuantity {
+            override fun initButton(button: MaterialButton, view: View, product: Product) {
+                if(product.stockCount<=0){
+                    button.visibility = View.VISIBLE
+                    view.visibility = View.GONE
+                }
+            }
+
             override fun onClickPlus(product: Product, quantity: Int): Boolean {
                 return if (quantity < 5 && product.stockCount > quantity) {
                     cartViewModel.updateQuantity(
@@ -172,15 +188,11 @@ class CartFragment : Fragment() {
     private fun setupMenu(){
         (requireActivity() as MenuHost).addMenuProvider(object: MenuProvider{
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.search_wishlist_menu, menu)
+                menuInflater.inflate(R.menu.wishlist_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.searchFragment -> {
-                        findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToSearchFragment())
-                        true
-                    }
                     R.id.wishlistFragment -> {
                         findNavController().safeNavigate(CartFragmentDirections.actionCartFragmentToWishlistFragment())
                         true

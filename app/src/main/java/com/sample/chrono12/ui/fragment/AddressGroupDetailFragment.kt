@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
 import com.sample.chrono12.databinding.FragmentAddressGroupDetailBinding
+import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.AddressAdapter
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.UserViewModel
@@ -28,6 +29,7 @@ class AddressGroupDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.address_group))
         binding = FragmentAddressGroupDetailBinding.inflate(layoutInflater)
         return binding.root
     }

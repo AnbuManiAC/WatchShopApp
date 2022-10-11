@@ -24,6 +24,7 @@
     <string name="add_to_cart">Add to Cart</string>
     <string name="added_to_cart">Added to Cart</string>
     <string name="in_cart">In Cart</string>
+    <string name="out_of_stock1">Out of Stock</string>
     <string name="go_to_cart">Go to Cart</string>
     <string name="product_name">Product Name</string>
     <string name="brand_name">Brand Name</string>
@@ -78,8 +79,8 @@
     <string name="out_of_stock">Currently out of stock</string>
     <string name="order_soon">Only %d left in stock - Order soon.</string>
     <string name="offer_percentage">%d%% Off</string>
-    <string name="product_is_added_to_wishlist">Product is added to Wishlist</string>
-    <string name="product_is_removed_from_wishlist">Product is removed from Wishlist</string>
+    <string name="product_is_added_to_wishlist">Product added to Wishlist</string>
+    <string name="product_is_removed_from_wishlist">Product removed from Wishlist</string>
     <string name="remove_item">Remove Product</string>
     <string name="wishlist_item_remove_alert">Are you sure you want to Remove this product from Wishlist?</string>
     <string name="cart_item_remove_alert">Are you sure you want to Remove this product from Cart?</string>
@@ -118,6 +119,7 @@
     <string name="empty_address_group_image">Empty address group image</string>
     <string name="no_address">No Address Found</string>
     <string name="looks_like_you_haven_t_n_added_any_address_yet">Looks like you haven\'t\n added any address yet</string>
+    <string name="looks_like_you_haven_t_n_added_any_address_to_this_group">Looks like you haven\'t added\n any address to this group</string>
     <string name="address_title">Address (%d)</string>
     <string name="address">Address</string>
     <string name="address_group_title">Address Group (%d)</string>

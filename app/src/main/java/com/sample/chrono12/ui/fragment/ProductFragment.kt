@@ -26,10 +26,7 @@ import com.sample.chrono12.ui.adapter.ImageSliderAdapter
 import com.sample.chrono12.ui.adapter.ProductDetailsAdapter
 import com.sample.chrono12.ui.adapter.ThumbnailAdapter
 import com.sample.chrono12.utils.safeNavigate
-import com.sample.chrono12.viewmodels.CartViewModel
-import com.sample.chrono12.viewmodels.ProductViewModel
-import com.sample.chrono12.viewmodels.UserViewModel
-import com.sample.chrono12.viewmodels.WishListViewModel
+import com.sample.chrono12.viewmodels.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -39,6 +36,7 @@ class ProductFragment : Fragment() {
     private val navArgs by navArgs<ProductFragmentArgs>()
     private lateinit var binding: FragmentProductBinding
     private val productViewModel by lazy { ViewModelProvider(this)[ProductViewModel::class.java] }
+    private val productListViewModel by lazy { ViewModelProvider(requireActivity())[ProductListViewModel::class.java] }
     private val cartViewModel by lazy { ViewModelProvider(requireActivity())[CartViewModel::class.java] }
     private val userViewModel by lazy { ViewModelProvider(requireActivity())[UserViewModel::class.java] }
     private val wishListViewModel by lazy { ViewModelProvider(requireActivity())[WishListViewModel::class.java] }
@@ -240,6 +238,7 @@ class ProductFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.searchFragment -> {
+                        productListViewModel.setSearchText("")
                         findNavController().safeNavigate(ProductFragmentDirections.actionProductFragmentToSearchFragment())
                         true
                     }

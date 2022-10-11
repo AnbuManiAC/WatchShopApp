@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.WorkManager
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.Address
@@ -263,6 +264,10 @@ class OrderConfirmationFragment : Fragment() {
 
     private fun getOnQuantityClickListener(): CartAdapter.OnClickQuantity =
         object : CartAdapter.OnClickQuantity {
+            override fun initButton(button: MaterialButton, view: View, product: Product) {
+
+            }
+
             override fun onClickPlus(product: Product, quantity: Int): Boolean {
                 return if (quantity < 5 && product.stockCount > quantity) {
                     cartViewModel.updateQuantity(

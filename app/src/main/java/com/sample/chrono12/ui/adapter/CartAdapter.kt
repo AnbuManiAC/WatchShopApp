@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.sample.chrono12.R
+import com.google.android.material.button.MaterialButton
 import com.sample.chrono12.data.entities.Product
 import com.sample.chrono12.data.entities.relations.CartWithProductInfo
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
-import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
+import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.CartRvItemBinding
+import com.sample.chrono12.utils.ImageUtil
 
 class CartAdapter(
     val onProductClickListener: ProductListAdapter.OnClickProduct,
@@ -45,7 +45,7 @@ class CartAdapter(
             val brand = productWithBrandAndImages.productWithBrand.brand
             val image = productWithBrandAndImages.images[0].imageUrl
             binding.root.setOnClickListener { onProductClickListener.onClick(product) }
-            productImage.load(image)
+            ImageUtil.loadImage(image, productImage, ImageKey.MEDIUM)
             productName.text = product.name
             brandName.text = brand.brandName
             currentPrice.text = "₹" + product.currentPrice.toInt().toString()
@@ -67,6 +67,7 @@ class CartAdapter(
         }
 
         fun bindProductQuantity(product: Product, quantity: Int) {
+            onQuantityClickListener.initButton(binding.btnAddToCart, binding.cvQuantity, product)
             productQuantity.text = quantity.toString()
             if (quantity == 1) {
                 btnQuantityMinus.alpha = 0.7F
@@ -139,6 +140,7 @@ class CartAdapter(
     }
 
     interface OnClickQuantity {
+        fun initButton(button: MaterialButton, view: View, product: Product)
         fun onClickPlus(product: Product, quantity: Int): Boolean
         fun onClickMinus(product: Product, quantity: Int): Boolean
     }

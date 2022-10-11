@@ -17,28 +17,30 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/searchFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_homeFragment_to_productFragment"
             app:destination="@id/productFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_productListFragment"
             app:destination="@id/productListFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_homeFragment_to_wishlistFragment"
             app:destination="@id/wishlistFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -53,48 +55,47 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"
-            />
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_cartFragment_to_logInFragment"
             app:destination="@id/logInFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_cartFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left"/>
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_cartFragment_to_wishlistFragment"
             app:destination="@id/wishlistFragment"
-            app:popUpTo="@id/wishlistFragment"
-            app:popUpToInclusive="true"
-            app:popUpToSaveState="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/wishlistFragment"
+            app:popUpToInclusive="true"
+            app:popUpToSaveState="true" />
         <action
             android:id="@+id/action_cartFragment_to_productFragment"
             app:destination="@id/productFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_cartFragment_to_chooseAddressTypeFragment"
             app:destination="@id/chooseAddressTypeFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
 
     <fragment
@@ -107,23 +108,23 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_searchFragment_to_wishlistFragment"
             app:destination="@id/wishlistFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_searchFragment_to_productListFragment"
-            app:popUpTo="@id/productListFragment"
-            app:popUpToInclusive="true"
             app:destination="@id/productListFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment
@@ -139,41 +140,41 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_wishlistFragment_to_cartFragment"
             app:destination="@id/cartFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToSaveState="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToSaveState="true" />
         <action
             android:id="@+id/action_wishlistFragment_to_productFragment"
             app:destination="@id/productFragment"
-            app:popUpTo="@id/productFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/productFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_wishlistFragment_to_searchFragment"
             app:destination="@id/searchFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_wishlistFragment_to_homeFragment"
             app:destination="@id/homeFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_left"
             app:exitAnim="@anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
-            app:popExitAnim="@anim/slide_out_left"/>
+            app:popExitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/productFragment"
@@ -183,79 +184,92 @@
         <argument
             android:name="productId"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <action
             android:id="@+id/action_productFragment_to_logInFragment"
             app:destination="@id/logInFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_productFragment_to_searchFragment"
             app:destination="@id/searchFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/productFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_productFragment_to_cartFragment"
             app:destination="@id/cartFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToSaveState="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToSaveState="true" />
         <action
             android:id="@+id/action_productFragment_to_wishlistFragment"
-            app:popUpTo="@id/wishlistFragment"
-            app:popUpToInclusive="true"
             app:destination="@id/wishlistFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/wishlistFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/productListFragment"
         android:name="com.sample.chrono12.ui.fragment.ProductListFragment"
-        tools:layout="@layout/fragment_product_list" >
+        tools:layout="@layout/fragment_product_list">
         <action
             android:id="@+id/action_productListFragment_to_productFragment"
             app:destination="@id/productFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_productListFragment_to_searchFragment"
             app:destination="@id/searchFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/productListFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_productListFragment_to_wishlistFragment"
             app:destination="@id/wishlistFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_productListFragment_to_sortDialog"
             app:destination="@id/sortDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_productListFragment_to_filterFragment"
             app:destination="@id/filterFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_productListFragment_to_cartFragment"
+            app:destination="@id/cartFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToSaveState="true" />
 
     </fragment>
 
@@ -271,63 +285,63 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_logoutDialog"
             app:destination="@id/logoutDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_wishlistFragment"
             app:destination="@id/wishlistFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_addressFragment"
             app:destination="@id/addressFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_addressGroupFragment"
             app:destination="@id/addressGroupFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_orderHistoryFragment"
             app:destination="@id/orderHistoryFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_signUpFragment"
             app:destination="@id/signUpFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_deleteSearchDialog"
             app:destination="@id/deleteSearchDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_profilePictureDialog"
             app:destination="@id/profilePictureDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
 
 
         <action
@@ -336,14 +350,14 @@
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_profileFragment_to_galleryPermissionDialog"
             app:destination="@id/galleryPermissionDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
 
     </fragment>
 
@@ -351,38 +365,38 @@
         android:id="@+id/logInFragment"
         android:name="com.sample.chrono12.ui.fragment.LogInFragment"
         android:label="Log In"
-        tools:layout="@layout/fragment_log_in" >
+        tools:layout="@layout/fragment_log_in">
         <action
             android:id="@+id/action_logInFragment_to_signUpFragment"
-            app:popUpTo="@id/signUpFragment"
-            app:popUpToInclusive="true"
             app:destination="@id/signUpFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/signUpFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_logInFragment_to_profileFragment3"
             app:destination="@id/profileFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.sample.chrono12.ui.fragment.SignUpFragment"
         android:label="Sign Up"
-        tools:layout="@layout/fragment_sign_up" >
+        tools:layout="@layout/fragment_sign_up">
         <action
             android:id="@+id/action_signUpFragment_to_logInFragment"
-            app:popUpTo="@id/logInFragment"
-            app:popUpToInclusive="true"
             app:destination="@id/logInFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/logInFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <dialog
         android:id="@+id/logoutDialog"
@@ -392,114 +406,113 @@
         android:id="@+id/addressFragment"
         android:name="com.sample.chrono12.ui.fragment.AddressFragment"
         android:label="Addresses"
-        tools:layout="@layout/fragment_address" >
+        tools:layout="@layout/fragment_address">
         <argument
             android:name="addressGroupName"
             android:defaultValue="default"
-            app:argType="string"/>
+            app:argType="string" />
         <argument
             android:name="addFromExisting"
             android:defaultValue="false"
-            app:argType="boolean"/>
+            app:argType="boolean" />
         <argument
             android:name="chooseAddress"
             android:defaultValue="false"
-            app:argType="boolean"/>
+            app:argType="boolean" />
         <action
             android:id="@+id/action_addressFragment_to_newAddressFragment"
             app:destination="@id/newAddressFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addressFragment_to_orderConfirmationFragment"
             app:destination="@id/orderConfirmationFragment"
-            app:popUpTo="@id/cartFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/cartFragment" />
         <action
             android:id="@+id/action_addressFragment_to_addressGroupDetailFragment"
             app:destination="@id/addressGroupDetailFragment"
-            app:popUpTo="@id/addressGroupDetailFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/addressGroupDetailFragment"
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_addressFragment_to_createAddressGroupDialog"
             app:destination="@id/createAddressGroupDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addressFragment_to_deleteAddressDialog"
             app:destination="@id/deleteAddressDialog" />
     </fragment>
     <fragment
         android:id="@+id/newAddressFragment"
-        android:name="com.sample.chrono12.ui.fragment.NewAddressFragment"
-       >
+        android:name="com.sample.chrono12.ui.fragment.NewAddressFragment">
         <argument
             android:name="addressId"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <argument
             android:name="addressGroupName"
             android:defaultValue="default"
-            app:argType="string"/>
+            app:argType="string" />
         <action
             android:id="@+id/action_newAddressFragment_to_addressGroupDetailFragment"
             app:destination="@id/addressGroupDetailFragment"
-            app:popUpTo="@id/addressGroupDetailFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/addressGroupDetailFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/addressGroupFragment"
         android:name="com.sample.chrono12.ui.fragment.AddressGroupFragment"
         android:label="Address Groups"
-        tools:layout="@layout/fragment_address_group" >
+        tools:layout="@layout/fragment_address_group">
         <argument
             android:name="chooseGroup"
             android:defaultValue="false"
-            app:argType="boolean"/>
+            app:argType="boolean" />
         <action
             android:id="@+id/action_addressGroupFragment_to_addressFragment"
             app:destination="@id/addressFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addressGroupFragment_to_addressGroupDetailFragment"
             app:destination="@id/addressGroupDetailFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addressGroupFragment_to_orderConfirmationFragment"
             app:destination="@id/orderConfirmationFragment"
-            app:popUpTo="@id/cartFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/cartFragment" />
         <action
             android:id="@+id/action_addressGroupFragment_to_createAddressGroupDialog"
             app:destination="@id/createAddressGroupDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/addressGroupDetailFragment"
@@ -509,32 +522,32 @@
         <argument
             android:name="addressGroupId"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <argument
             android:name="addressGroupName"
             android:defaultValue="0"
-            app:argType="string"/>
+            app:argType="string" />
         <action
             android:id="@+id/action_addressGroupDetailFragment_to_addressFragment"
             app:destination="@id/addressFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addressGroupDetailFragment_to_newAddressFragment"
             app:destination="@id/newAddressFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addressGroupDetailFragment_to_createAddressGroupDialog"
             app:destination="@id/createAddressGroupDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_addressGroupDetailFragment_to_removeAddressFromGroupDialog"
             app:destination="@id/removeAddressFromGroupDialog" />
@@ -543,21 +556,21 @@
         android:id="@+id/chooseAddressTypeFragment"
         android:name="com.sample.chrono12.ui.fragment.dialog.ChooseAddressTypeDialog"
         android:label="fragment_choose_address_type"
-        tools:layout="@layout/fragment_choose_address_type" >
+        tools:layout="@layout/fragment_choose_address_type">
         <action
             android:id="@+id/action_chooseAddressTypeFragment_to_addressFragment"
             app:destination="@id/addressFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_chooseAddressTypeFragment_to_addressGroupFragment"
             app:destination="@id/addressGroupFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </dialog>
     <dialog
         android:id="@+id/sortDialog"
@@ -568,17 +581,16 @@
         android:id="@+id/filterFragment"
         android:name="com.sample.chrono12.ui.fragment.FilterFragment"
         android:label="Filter"
-        tools:layout="@layout/fragment_filter"
-        >
+        tools:layout="@layout/fragment_filter">
         <action
             android:id="@+id/action_filterFragment_to_productListFragment"
             app:destination="@id/productListFragment"
-            app:popUpTo="@id/productListFragment"
-            app:popUpToInclusive="true"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/productListFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/orderConfirmationFragment"
@@ -587,68 +599,68 @@
         <argument
             android:name="addressGroupId"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <argument
             android:name="addressId"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <action
             android:id="@+id/action_orderConfirmationFragment_to_productFragment"
             app:destination="@id/productFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_orderConfirmationFragment_to_newAddressFragment"
             app:destination="@id/newAddressFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/action_orderConfirmationFragment_to_orderConfirmedDialog"
             app:destination="@id/orderConfirmedDialog"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <dialog
         android:id="@+id/orderConfirmedDialog"
         android:name="com.sample.chrono12.ui.fragment.dialog.OrderConfirmedDialog"
         android:label="fragment_order_confirmed_dialog"
-        tools:layout="@layout/fragment_order_confirmed_dialog" >
+        tools:layout="@layout/fragment_order_confirmed_dialog">
         <argument
             android:name="bulk_order_id"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <argument
             android:name="order_id"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <action
             android:id="@+id/action_orderConfirmedDialog_to_orderDetailFragment"
             app:destination="@id/orderDetailFragment"
-            app:popUpTo="@id/homeFragment"
-            app:popUpToInclusive="false"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="false" />
     </dialog>
     <fragment
         android:id="@+id/orderHistoryFragment"
         android:name="com.sample.chrono12.ui.fragment.OrderHistoryFragment"
         android:label="Order History"
-        tools:layout="@layout/fragment_order_history" >
+        tools:layout="@layout/fragment_order_history">
         <action
             android:id="@+id/action_orderHistoryFragment_to_orderDetailFragment"
             app:destination="@id/orderDetailFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/orderDetailFragment"
@@ -658,18 +670,18 @@
         <argument
             android:name="bulk_order_id"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <argument
             android:name="order_id"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <action
             android:id="@+id/action_orderDetailFragment_to_productFragment"
             app:destination="@id/productFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <dialog
         android:id="@+id/deleteSearchDialog"
@@ -684,27 +696,27 @@
         <argument
             android:name="hasPicture"
             android:defaultValue="false"
-            app:argType="boolean"/>
+            app:argType="boolean" />
     </dialog>
     <dialog
         android:id="@+id/createAddressGroupDialog"
         android:name="com.sample.chrono12.ui.fragment.dialog.CreateAddressGroupDialog"
-        android:label="CreateAddressGroupDialog" >
+        android:label="CreateAddressGroupDialog">
         <argument
             android:name="addressGroupId"
             android:defaultValue="0"
-            app:argType="integer"/>
+            app:argType="integer" />
         <argument
             android:name="addressGroupName"
             android:defaultValue=""
-            app:argType="string"/>
+            app:argType="string" />
         <action
             android:id="@+id/action_createAddressGroupDialog_to_addressGroupDetailFragment"
             app:destination="@id/addressGroupDetailFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
-            app:popExitAnim="@anim/slide_out_right"/>
+            app:popExitAnim="@anim/slide_out_right" />
     </dialog>
     <dialog
         android:id="@+id/cameraPermissionDialog"
@@ -720,8 +732,8 @@
         android:label="DeleteAddressDialog">
         <argument
             android:name="addressId"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            android:defaultValue="0"
+            app:argType="integer" />
     </dialog>
     <dialog
         android:id="@+id/removeAddressFromGroupDialog"
@@ -729,12 +741,12 @@
         android:label="RemoveAddressFromGroupDialog">
         <argument
             android:name="addressId"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            android:defaultValue="0"
+            app:argType="integer" />
         <argument
             android:name="addressGroupId"
-            app:argType="integer"
-            android:defaultValue="0"/>
+            android:defaultValue="0"
+            app:argType="integer" />
     </dialog>
 
 </navigation>

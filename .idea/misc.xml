@@ -36,6 +36,7 @@
         <entry key="app/src/main/res/drawable/ic_logout.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_mailbox.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_minus.xml" value="0.1245" />
+        <entry key="app/src/main/res/drawable/ic_no_address_in_group_svg.xml" value="0.1805" />
         <entry key="app/src/main/res/drawable/ic_no_data_svg.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/ic_no_result_found.xml" value="0.1525" />
         <entry key="app/src/main/res/drawable/ic_order_confirmed.xml" value="0.1525" />
@@ -118,7 +119,7 @@
         <entry key="app/src/main/res/menu/menu.xml" value="0.22" />
         <entry key="app/src/main/res/menu/search_cart_menu.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/menu/search_fav_menu.xml" value="0.21388888888888888" />
-        <entry key="app/src/main/res/menu/search_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/search_menu.xml" value="0.335" />
         <entry key="app/src/main/res/menu/search_wishlist_cart_menu.xml" value="0.28489583333333335" />
         <entry key="app/src/main/res/menu/search_wishlist_menu.xml" value="0.30416666666666664" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_app_icon.xml" value="0.1395" />

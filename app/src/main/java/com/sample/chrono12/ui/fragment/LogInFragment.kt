@@ -63,6 +63,17 @@ class LogInFragment : Fragment() {
                 else -> false
             }
         }
+
+        userViewModel.getUserFieldInfo().observe(viewLifecycleOwner) { field ->
+            field?.let {
+                deliverFieldMessage(it)
+                if (field.response == Response.SUCCESS) {
+                    SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
+                    findNavController().popBackStack(R.id.logInFragment, true)
+                    (requireActivity() as HomeActivity).enableCartBadge()
+                }
+            }
+        }
     }
 
     private fun setUpFocusChangeListeners() {
@@ -86,16 +97,7 @@ class LogInFragment : Fragment() {
     }
 
     private fun initiateLogin() {
-        userViewModel.getUserFieldInfo().observe(viewLifecycleOwner) { field ->
-            field?.let {
-                deliverFieldMessage(it)
-                if (field.response == Response.SUCCESS) {
-                    SharedPrefUtil.setUserId(requireActivity(), userViewModel.getLoggedInUser())
-                    findNavController().popBackStack(R.id.logInFragment, true)
-                    (requireActivity() as HomeActivity).enableCartBadge()
-                }
-            }
-        }
+
         val email = binding.tiEtEmail.text.toString()
         val password = binding.tiEtPassword.text.toString()
         if (isInputNonNull(email, password)) {

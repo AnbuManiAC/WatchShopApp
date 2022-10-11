@@ -4,17 +4,14 @@ import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.Toast
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.snackbar.Snackbar
-import com.sample.chrono12.data.entities.SubCategory
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.entities.relations.WishListWithProductInfo
+import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.WishlistRvItemBinding
+import com.sample.chrono12.utils.ImageUtil
 
 class WishListAdapter(
     val onProductClickListener: ProductListAdapter.OnClickProduct,
@@ -39,7 +36,7 @@ class WishListAdapter(
             val brand = productWithBrandAndImages.productWithBrand.brand
             val image = productWithBrandAndImages.images[0].imageUrl
             binding.root.setOnClickListener { onProductClickListener.onClick(product) }
-            productImage.load(image)
+            ImageUtil.loadImage(image, productImage, ImageKey.MEDIUM)
             productName.text = product.name
             brandName.text = brand.brandName
             currentPrice.text = "₹" + product.currentPrice.toInt().toString()
@@ -61,9 +58,9 @@ class WishListAdapter(
             }
         }
 
-        fun bindAddToCartButton(productId: Int) {
+        fun bindAddToCartButton(productId: Int, isInStock: Boolean) {
 
-            onAddToCartClickListener.initButton(binding.btnAddToCart, productId)
+            onAddToCartClickListener.initButton(binding.btnAddToCart, productId, isInStock)
 
             binding.btnAddToCart.setOnClickListener {
                 onAddToCartClickListener.onClickAdd(it as MaterialButton, productId)
@@ -83,8 +80,10 @@ class WishListAdapter(
     }
 
     override fun onBindViewHolder(holder: WishListViewHolder, position: Int) {
-        holder.bind(wishListWithProductInfoList[position].productWithBrandAndImagesList)
-        holder.bindAddToCartButton(wishListWithProductInfoList[position].productWithBrandAndImagesList.productWithBrand.product.productId)
+        val products = wishListWithProductInfoList[position].productWithBrandAndImagesList
+        val product = products.productWithBrand.product
+        holder.bind(products)
+        holder.bindAddToCartButton(product.productId, product.stockCount>0)
     }
 
     override fun getItemCount(): Int {
@@ -96,7 +95,7 @@ class WishListAdapter(
     }
 
     interface OnClickAddToCart {
-        fun initButton(button: MaterialButton, productId: Int)
+        fun initButton(button: MaterialButton, productId: Int, isInStock: Boolean)
         fun onClickAdd(button: MaterialButton, productId: Int)
     }
 

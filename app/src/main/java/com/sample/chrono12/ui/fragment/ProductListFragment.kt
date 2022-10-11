@@ -8,15 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sample.chrono12.R
-import com.sample.chrono12.data.models.SortType
 import com.sample.chrono12.data.models.SortType.*
 import com.sample.chrono12.databinding.FragmentProductListBinding
 import com.sample.chrono12.ui.activity.HomeActivity
 import com.sample.chrono12.ui.adapter.ProductListAdapter
-import com.sample.chrono12.utils.SharedPrefUtil
 import com.sample.chrono12.utils.safeNavigate
 import com.sample.chrono12.viewmodels.FilterViewModel
 import com.sample.chrono12.viewmodels.ProductListViewModel
@@ -131,13 +128,17 @@ class ProductListFragment : Fragment() {
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.search_wishlist_menu, menu)
+                menuInflater.inflate(R.menu.search_wishlist_cart_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.wishlistFragment -> {
                         findNavController().safeNavigate(ProductListFragmentDirections.actionProductListFragmentToWishlistFragment())
+                        true
+                    }
+                    R.id.cartFragment -> {
+                        findNavController().safeNavigate(ProductListFragmentDirections.actionProductListFragmentToCartFragment())
                         true
                     }
                     R.id.searchFragment -> {

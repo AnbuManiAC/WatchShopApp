@@ -16,7 +16,7 @@ object ImageUtil {
 
     init {
         val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
-        val cacheSize = maxMemory / 8
+        val cacheSize = maxMemory * 2
         memoryCache = object : LruCache<String, Bitmap>(cacheSize) {
             override fun sizeOf(key: String, value: Bitmap): Int {
                 return value.byteCount / 1024
@@ -62,12 +62,12 @@ object ImageUtil {
 
 
                 try {
-                    withContext(Dispatchers.Main) {
+
                         val bitmap = result.await()
                         if (bitmap != null) {
                             memoryCache.put(url+imageKey.toString(), bitmap)
+                            withContext(Dispatchers.Main) {
                             imageview.setImageBitmap(bitmap)
-                            imageview.setTag(666,true)
                         }
 
                     }

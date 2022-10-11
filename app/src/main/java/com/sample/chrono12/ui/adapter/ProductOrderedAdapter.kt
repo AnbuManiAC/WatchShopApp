@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.sample.chrono12.R
 import com.sample.chrono12.data.entities.relations.OrderedProductInfo
+import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.ProductRvItemBinding
+import com.sample.chrono12.utils.ImageUtil
 
 class ProductOrderedAdapter(
     val onProductClickListener: ProductListAdapter.OnClickProduct
@@ -37,7 +38,7 @@ class ProductOrderedAdapter(
             val brand = productWithBrandAndImages.productWithBrand.brand
             val image = productWithBrandAndImages.images[0].imageUrl
             binding.root.setOnClickListener { onProductClickListener.onClick(product) }
-            productImage.load(image)
+            ImageUtil.loadImage(image, productImage, ImageKey.MEDIUM)
             with(productQuantity) {
                 visibility = View.VISIBLE
                 text = "Quantity : " + orderedProductInfo.productOrdered.quantity

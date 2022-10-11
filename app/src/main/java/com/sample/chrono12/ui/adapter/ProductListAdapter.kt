@@ -1,15 +1,12 @@
 package com.sample.chrono12.ui.adapter
 
 import android.graphics.Paint
-import android.media.Image
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.sample.chrono12.data.entities.Product
-import com.sample.chrono12.data.entities.ProductBrand
 import com.sample.chrono12.data.entities.relations.ProductWithBrandAndImages
 import com.sample.chrono12.data.models.ImageKey
 import com.sample.chrono12.databinding.ProductRvItemBinding

@@ -94,7 +94,7 @@ class WishListFragment : Fragment() {
                 if (it.isEmpty()) {
                     setTitle(0)
                     fragmentWishListBinding.emptyWishlist.visibility = View.VISIBLE
-                }else{
+                } else {
                     setTitle(it.size)
                     fragmentWishListBinding.emptyWishlist.visibility = View.GONE
                 }
@@ -103,11 +103,10 @@ class WishListFragment : Fragment() {
     }
 
 
-
     private fun getOnClickAddToCartListener(): WishListAdapter.OnClickAddToCart =
         object : WishListAdapter.OnClickAddToCart {
 
-            override fun initButton(button: MaterialButton, productId: Int) {
+            override fun initButton(button: MaterialButton, productId: Int, isInStock: Boolean) {
                 lifecycleScope.launch {
                     val isInCart = cartViewModel.isProductInUserCart(
                         productId,
@@ -116,29 +115,24 @@ class WishListFragment : Fragment() {
                     if (isInCart) {
                         changeButtonToText(button)
                     } else {
-                        button.text = getString(R.string.add_to_cart)
+                        if(!isInStock){
+                            disableButton(button)
+                        }
+                        else{
+                            button.text = getString(R.string.add_to_cart)
+                        }
                     }
                 }
             }
 
             override fun onClickAdd(button: MaterialButton, productId: Int) {
-                lifecycleScope.launch {
-                    val isInCart = cartViewModel.isProductInUserCart(
-                        productId,
-                        userViewModel.getLoggedInUser().toInt()
+                cartViewModel.addProductToUserCart(
+                    Cart(
+                        productId = productId,
+                        userId = userViewModel.getLoggedInUser().toInt()
                     )
-                    if (isInCart) {
-                        findNavController().safeNavigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
-                    } else {
-                        cartViewModel.addProductToUserCart(
-                            Cart(
-                                productId = productId,
-                                userId = userViewModel.getLoggedInUser().toInt()
-                            )
-                        )
-                        changeButtonToText(button)
-                    }
-                }
+                )
+                changeButtonToText(button)
             }
         }
 
@@ -153,6 +147,13 @@ class WishListFragment : Fragment() {
         button.iconTint = resources.getColorStateList(R.color.white, null)
         button.backgroundTintList =
             resources.getColorStateList(R.color.green1, null)
+        button.isEnabled = false
+    }
+
+    private fun disableButton(button: MaterialButton){
+        button.text = getString(R.string.out_of_stock1)
+        button.backgroundTintList =
+            resources.getColorStateList(R.color.unselected, null)
         button.isEnabled = false
     }
 
@@ -174,10 +175,15 @@ class WishListFragment : Fragment() {
             }
         }
 
-    private fun setTitle(size: Int){
-        if(size>0){
-            (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.wishlist_title, size))
-        }else{
+    private fun setTitle(size: Int) {
+        if (size > 0) {
+            (requireActivity() as HomeActivity).setActionBarTitle(
+                getString(
+                    R.string.wishlist_title,
+                    size
+                )
+            )
+        } else {
             (requireActivity() as HomeActivity).setActionBarTitle(getString(R.string.wishlist))
         }
     }
@@ -185,15 +191,11 @@ class WishListFragment : Fragment() {
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.search_cart_menu, menu)
+                menuInflater.inflate(R.menu.cart_menu, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.searchFragment -> {
-                        findNavController().safeNavigate(WishListFragmentDirections.actionWishlistFragmentToSearchFragment())
-                        true
-                    }
                     R.id.cartFragment -> {
                         findNavController().safeNavigate(WishListFragmentDirections.actionWishlistFragmentToCartFragment())
                         true

@@ -24,10 +24,30 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/deleteButtonBackground"
             android:src="@drawable/ic_delete"
+            android:layout_marginTop="@dimen/padding_small"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@id/tvItemCurrentPrice"
-            app:layout_constraintTop_toTopOf="@id/cvQuantity"
+            app:layout_constraintTop_toBottomOf="@id/tvItemCurrentPrice"
             app:tint="@color/mattRed" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddToCart"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/padding_small"
+            android:layout_marginTop="@dimen/padding_small"
+            android:backgroundTint="@color/unselected"
+            android:maxLines="1"
+            android:enabled="false"
+            android:minHeight="35dp"
+            android:visibility="gone"
+            android:text="Out of Stock"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btnDelete"
+            app:layout_constraintTop_toBottomOf="@id/tvItemCurrentPrice" />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cvQuantity"
